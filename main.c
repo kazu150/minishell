@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-// gcc main.c - lreadline - o main
+// gcc main.c -lreadline -o main
 int	main(void)
 {
 	char *line = NULL;
@@ -18,7 +18,7 @@ int	main(void)
 			break ;
 		}
 		printf("line is %s\n", line);
-		// add_history(line);
+		add_history(line);
 		free(line);
 	}
 	printf("exit\n");
