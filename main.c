@@ -58,6 +58,7 @@ int	main(int argc, char **argv, char **envp)
 		pid = fork();
 		if (pid == -1)
 			error_exit(FORK);
+		// TODO: 入力文字列の解析（parsing）
 		if (pid == 0)
 			return (execute(line, envp));
 		else
