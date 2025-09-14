@@ -6,11 +6,11 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 14:45:29 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/08/30 17:49:45 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/14 15:15:50 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "minishell.h"
 
 static int	count_words(const char *str, char c)
 {

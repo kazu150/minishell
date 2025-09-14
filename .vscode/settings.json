@@ -1,8 +1,0 @@
-{
-	"files.associations": {
-		"string.h": "c",
-		"pipex.h": "c",
-		"history.h": "c",
-		"readline.h": "c"
-	}
-}

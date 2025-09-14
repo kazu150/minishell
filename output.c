@@ -6,11 +6,11 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 15:18:32 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/08/30 18:42:54 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/14 15:15:50 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "minishell.h"
 
 int	output_child_process(char **argv, int pipe_in, char **envp)
 {

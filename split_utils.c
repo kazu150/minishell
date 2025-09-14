@@ -6,11 +6,11 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:53:20 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/08/30 17:40:18 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/14 15:15:50 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "minishell.h"
 
 int	free_strs(char **strs, int count)
 {

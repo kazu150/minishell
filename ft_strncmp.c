@@ -6,11 +6,11 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 16:26:37 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/08/26 13:49:34 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/14 15:15:50 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "minishell.h"
 
 int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
