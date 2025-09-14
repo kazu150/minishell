@@ -32,10 +32,6 @@
 # define WAITPID "waitpid"
 # define EXECVE "execve"
 # define MALLOC "malloc"
-# define R_IN "<"
-# define R_OUT ">"
-# define R_APP ">>"
-# define R_HDOC "<<"
 # define PIPE_SIGN "|"
 
 int					output(pid_t pid, char **argv, int d_pipe[2], char **envp);
