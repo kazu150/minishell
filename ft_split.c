@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 14:45:29 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/14 18:14:11 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/14 18:15:35 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,21 +23,22 @@ static int	count_words(const char *str, char c)
 	n = 0;
 	while (*str)
 	{
-		if (n == 'l' ||)
-			word[count] = n;
-		if (n + 1 == ' ' || n + 1 == '|' ...)
-			word[count] = n;
-		n++;
-		// if (*str != c && in_word == 0)
-		// {
-		// 	in_word = 1;
-		// 	count++;
-		// }
-		// else if (*str == c)
-		// 	in_word = 0;
-		// else if (*str == '|' || *str == '<' || *str == '>')
-		// {}
-		// str++;
+		// if (n == 'l' ||)
+		// 	word[count] = n;
+		// if (n + 1 == ' ' || n + 1 == '|' ...)
+		// 	word[count] = n;
+		// n++;
+		if (*str != c && in_word == 0)
+		{
+			in_word = 1;
+			count++;
+		}
+		else if (*str == c)
+			in_word = 0;
+		else if (*str == '|' || *str == '<' || *str == '>')
+		{
+		}
+		str++;
 	}
 	return (count);
 }

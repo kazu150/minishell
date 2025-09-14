@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/14 17:37:21 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/14 18:16:17 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int	main(int argc, char **argv, char **envp)
 		if (pid == -1)
 			error_exit(FORK);
 		// TODO: 入力文字列の解析（parsing）
-		cmds = perse_input(line);
+		cmds = parse_input(line);
 		if (pid == 0)
 			return (execute(line, envp));
 		else

@@ -34,23 +34,6 @@
 # define MALLOC "malloc"
 # define PIPE_SIGN "|"
 
-int					output(pid_t pid, char **argv, int d_pipe[2], char **envp);
-int					input_child_process(char **argv, int d_pipe[2],
-						char **envp);
-int					output_child_process(char **argv, int pipe_in, char **envp);
-void				error_exit(char *error_target);
-char				**ft_split(const char *str, char c);
-void				free_split(char **args);
-char				*ft_strjoin(const char *str1, const char *str2);
-void				handle_command_path_error(char **args,
-						int has_permission_error, char **paths);
-char				*build_command_path(char **args, char **envp);
-int					ft_strncmp(const char *s1, const char *s2, size_t n);
-size_t				ft_strlen(const char *s);
-void				execve_error_exit(char *cmd);
-int					is_qt(char c);
-int					free_strs(char **strs, int count);
-
 typedef enum e_node_type
 {
 	NODE_COMMAND,
@@ -88,5 +71,23 @@ typedef struct s_cmd
 	t_redir			*redirs;
 	struct s_cmd	*next;
 }					t_cmd;
+
+t_cmd				*parse_input(char *input);
+int					output(pid_t pid, char **argv, int d_pipe[2], char **envp);
+int					input_child_process(char **argv, int d_pipe[2],
+						char **envp);
+int					output_child_process(char **argv, int pipe_in, char **envp);
+void				error_exit(char *error_target);
+char				**ft_split(const char *str, char c);
+void				free_split(char **args);
+char				*ft_strjoin(const char *str1, const char *str2);
+void				handle_command_path_error(char **args,
+						int has_permission_error, char **paths);
+char				*build_command_path(char **args, char **envp);
+int					ft_strncmp(const char *s1, const char *s2, size_t n);
+size_t				ft_strlen(const char *s);
+void				execve_error_exit(char *cmd);
+int					is_qt(char c);
+int					free_strs(char **strs, int count);
 
 #endif
