@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 14:45:29 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/15 14:12:55 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/15 15:08:26 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,9 @@ static int	count_words(const char *str, char c)
 {
 	int	count;
 	int	in_word;
-	int	n;
 
 	count = 0;
 	in_word = 0;
-	n = 0;
 	while (*str)
 	{
 		if (is_letter(*str, c) && in_word == 0)
@@ -151,29 +149,30 @@ char	**ft_split(const char *str, char c)
 	return (dest);
 }
 
-// #include "stdio.h"
+#include "stdio.h"
 
-// int	main(void)
-// {
-// 	char		**res;
-// 	const char	*hoge = "echo aa |  ><>> <<   'a\"aa'";
+int	main(void)
+{
+	char		**res;
+	const char	*hoge = "echo aa |  ><<>> <<   'a\"aa'";
 
-// 	// const char	*hoge1 = "abc          'def'";
-// 	// const char	*hoge2 = "abc'          'def";
-// 	res = ft_split(hoge, ' ');
-// 	printf("%s\n", res[0]);
-// 	printf("%s\n", res[1]);
-// 	printf("%s\n", res[2]);
-// 	printf("%s\n", res[3]);
-// 	printf("%s\n", res[4]);
-// 	printf("%s\n", res[5]);
-// 	printf("%s\n", res[6]);
-// 	printf("%s\n", res[7]);
-// 	printf("%s\n", res[8]);
-// 	// res = ft_split(hoge1, ' ');
-// 	// printf("%s\n", res[0]);
-// 	// printf("%s\n", res[1]);
-// 	// res = ft_split(hoge2, ' ');
-// 	// printf("%s\n", res[0]);
-// 	// printf("%s\n", res[1]);
-// }
+	// const char	*hoge1 = "abc          'def'";
+	// const char	*hoge2 = "abc'          'def";
+	res = ft_split(hoge, ' ');
+	printf("%s\n", res[0]);
+	printf("%s\n", res[1]);
+	printf("%s\n", res[2]);
+	printf("%s\n", res[3]);
+	printf("%s\n", res[4]);
+	printf("%s\n", res[5]);
+	printf("%s\n", res[6]);
+	printf("%s\n", res[7]);
+	printf("%s\n", res[8]);
+	// res = ft_split(hoge1, ' ');
+	// printf("%s\n", res[0]);
+	// printf("%s\n", res[1]);
+	// res = ft_split(hoge2, ' ');
+	// printf("%s\n", res[0]);
+	// printf("%s\n", res[1]);
+	free_split(res);
+}
