@@ -6,11 +6,26 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 14:45:29 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/14 18:15:35 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/15 14:11:22 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	is_letter(const char str, char c)
+{
+	if (!str)
+		return (0);
+	if (str == c)
+		return (0);
+	if (str == '|')
+		return (0);
+	if (str == '<')
+		return (0);
+	if (str == '>')
+		return (0);
+	return (1);
+}
 
 static int	count_words(const char *str, char c)
 {
@@ -23,12 +38,7 @@ static int	count_words(const char *str, char c)
 	n = 0;
 	while (*str)
 	{
-		// if (n == 'l' ||)
-		// 	word[count] = n;
-		// if (n + 1 == ' ' || n + 1 == '|' ...)
-		// 	word[count] = n;
-		// n++;
-		if (*str != c && in_word == 0)
+		if (is_letter(*str, c) && in_word == 0)
 		{
 			in_word = 1;
 			count++;
@@ -37,6 +47,12 @@ static int	count_words(const char *str, char c)
 			in_word = 0;
 		else if (*str == '|' || *str == '<' || *str == '>')
 		{
+			in_word = 0;
+			count++;
+			if (*str == '<' && *(str + 1) == '<')
+				str++;
+			if (*str == '>' && *(str + 1) == '>')
+				str++;
 		}
 		str++;
 	}
@@ -88,9 +104,19 @@ static void	split_words(char **strs, const char *str, int str_length, char c)
 	s.inside_qt = 0;
 	while (s.i < str_length)
 	{
+		while (str[s.i] == '|' || str[s.i] == '<' || str[s.i] == '>')
+		{
+			if ((str[s.i] == '<' && str[s.i + 1] == '<') || (str[s.i] == '>'
+					&& str[s.i + 1] == '>'))
+				s.w_len = 2;
+			else
+				s.w_len = 1;
+			s.i += create_word(strs, str, s);
+			s.j++;
+		}
 		s.current_qt = ' ';
 		s.w_len = 0;
-		while ((str[s.w_len + s.i] && str[s.w_len + s.i] != c) || s.inside_qt)
+		while (is_letter(str[s.w_len + s.i], c) || s.inside_qt)
 		{
 			idx = s.w_len + s.i;
 			if (is_qt(str[idx]) && !(s.inside_qt && str[idx] != s.current_qt))
@@ -99,11 +125,6 @@ static void	split_words(char **strs, const char *str, int str_length, char c)
 				s.current_qt = str[idx];
 			}
 			s.w_len++;
-		}
-		if (str[s.w_len] == '|')
-		{
-			strs[s.i] == '|';
-			s.i++;
 		}
 		s.i += create_word(strs, str, s);
 		if (s.w_len > 0)
@@ -130,22 +151,29 @@ char	**ft_split(const char *str, char c)
 	return (dest);
 }
 
-// #include "stdio.h"
+#include "stdio.h"
 
-// int	main(void)
-// {
-// 	const char	*hoge = "echo 'a\"aa'";
-// 	char		**res;
+int	main(void)
+{
+	char		**res;
+	const char	*hoge = "echo aa |  ><>> <<   'a\"aa'";
 
-// 	// const char	*hoge1 = "abc          'def'";
-// 	// const char	*hoge2 = "abc'          'def";
-// 	res = ft_split(hoge, ' ');
-// 	printf("%s\n", res[0]);
-// 	printf("%s\n", res[1]);
-// 	// res = ft_split(hoge1, ' ');
-// 	// printf("%s\n", res[0]);
-// 	// printf("%s\n", res[1]);
-// 	// res = ft_split(hoge2, ' ');
-// 	// printf("%s\n", res[0]);
-// 	// printf("%s\n", res[1]);
-// }
+	// const char	*hoge1 = "abc          'def'";
+	// const char	*hoge2 = "abc'          'def";
+	res = ft_split(hoge, ' ');
+	printf("%s\n", res[0]);
+	printf("%s\n", res[1]);
+	printf("%s\n", res[2]);
+	printf("%s\n", res[3]);
+	printf("%s\n", res[4]);
+	printf("%s\n", res[5]);
+	printf("%s\n", res[6]);
+	printf("%s\n", res[7]);
+	printf("%s\n", res[8]);
+	// res = ft_split(hoge1, ' ');
+	// printf("%s\n", res[0]);
+	// printf("%s\n", res[1]);
+	// res = ft_split(hoge2, ' ');
+	// printf("%s\n", res[0]);
+	// printf("%s\n", res[1]);
+}
