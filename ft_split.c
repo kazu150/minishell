@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 14:45:29 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/18 15:15:02 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/18 15:16:42 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static int	count_tokens(const char *str, char c)
 	return (count);
 }
 
-static void	copy_word(int word_length, char *strs, const char *str,
+static void	copy_strs(int word_length, char *strs, const char *str,
 		char current_quote)
 {
 	int	k;
@@ -95,14 +95,14 @@ static void	copy_word(int word_length, char *strs, const char *str,
 	strs[k] = 0;
 }
 
-int	create_word(char **strs, const char *str, t_splt s)
+int	create_new_token(char **strs, const char *str, t_splt s)
 {
 	if (s.token_len == 0)
 		return (1);
 	strs[s.j] = malloc(sizeof(char) * (s.token_len + 1));
 	if (strs[s.j] == NULL)
 		(free_strs(strs, s.j), exit(1));
-	copy_word(s.token_len, strs[s.j], &(str[s.i]), s.current_quote);
+	copy_strs(s.token_len, strs[s.j], &(str[s.i]), s.current_quote);
 	return (s.token_len);
 }
 
@@ -114,7 +114,7 @@ void	split_delimiter(char **strs, const char *str, t_splt *s)
 			(*s).token_len = 2;
 		else
 			(*s).token_len = 1;
-		(*s).i += create_word(strs, str, *s);
+		(*s).i += create_new_token(strs, str, *s);
 		(*s).j++;
 	}
 }
@@ -134,7 +134,7 @@ void	split_arg(char **strs, const char *str, t_splt *s, char c)
 		}
 		(*s).token_len++;
 	}
-	(*s).i += create_word(strs, str, *s);
+	(*s).i += create_new_token(strs, str, *s);
 }
 
 static void	split_tokens(char **strs, const char *str, int str_length, char c)
