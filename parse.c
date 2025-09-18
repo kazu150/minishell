@@ -6,11 +6,24 @@
 /*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:35:42 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/18 10:21:04 by cyang            ###   ########.fr       */
+/*   Updated: 2025/09/18 12:04:58 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	free_all(char **array)
+{
+	int	i;
+
+	i = 0;
+	while (array[i])
+	{
+		free(array[i]);
+		i++;
+	}
+	free(array);
+}
 
 static int	is_redirect(char *s)
 {
@@ -59,7 +72,7 @@ static t_cmd	*new_cmd(void)
 
 	node = malloc(sizeof(t_cmd));
 	if (!node)
-		exit(MALLOC);
+		error_exit(MALLOC);
 	node->args = NULL;
 	node->redirs= NULL;
 	node->next = NULL;
@@ -72,7 +85,7 @@ static t_redir	*new_redir(t_redir_type type, char *target)
 
 	node = malloc(sizeof(t_redir));
 	if (!node)
-		exit(MALLOC);
+		error_exit(MALLOC);
 	node->type = type;
 	node->target = target;
 	node->next = NULL;
@@ -93,7 +106,7 @@ static void	append_arg(t_cmd *cmd, char *token)
 		n++;
 	new = malloc(sizeof(char *) * (n + 2));
 	if (!new)
-		exit(MALLOC);
+		error_exit(MALLOC);
 	if (old)
 		ft_memcpy(new, old, sizeof(char*) * n);
 	new[n] = ft_strdup(token);
@@ -125,7 +138,8 @@ t_cmd	*parse_input(char *input)
 	if (!input)
 		return (NULL);
 	//新しいバージョンft_splitを入れ替え
-	// tokens = ft_split(input, ' ');
+	tokens = ft_split(input, ' ');
+	// char	*tokens[] = {"ls", "|", "cat"};
 	head_cmd = NULL;
 	current = NULL;
 	i = 0;
@@ -135,7 +149,7 @@ t_cmd	*parse_input(char *input)
 		{
 			// words[i]がREDIRなら、現在のnodeのredirsに追加
 			//redirectの後に必ずtargetがくるそうです
-			if (!token[i + 1])
+			if (!tokens[i + 1])
 			{
 				ft_putendl_fd("minishell: syntax error", 2);
 				free_all(tokens);
@@ -143,7 +157,7 @@ t_cmd	*parse_input(char *input)
 			}
 			t_redir *redir = new_redir(get_redir_type(tokens[i]), tokens[i + 1]);
 			add_redir_back(&current->redirs, redir);
-			i = i + 2:
+			i = i + 2;
 		}
 		else if (ft_strncmp(tokens[i], "|", 2) == 0)
 		{

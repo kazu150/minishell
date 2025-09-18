@@ -86,6 +86,10 @@ void				handle_command_path_error(char **args,
 char				*build_command_path(char **args, char **envp);
 int					ft_strncmp(const char *s1, const char *s2, size_t n);
 size_t				ft_strlen(const char *s);
+void				ft_putendl_fd(char *s, int fd);
+void				*ft_memcpy(void *dest, const void *src, size_t n);
+char				*ft_strdup(const char *s);
+size_t				ft_strlcpy(char *dest, const char *src, size_t size);
 void				execve_error_exit(char *cmd);
 int					is_qt(char c);
 int					free_strs(char **strs, int count);
