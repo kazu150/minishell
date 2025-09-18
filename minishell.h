@@ -52,6 +52,7 @@ typedef struct s_splt
 
 typedef enum e_redir_type
 {
+	R_NONE,
 	R_IN,
 	R_OUT,
 	R_APP,
