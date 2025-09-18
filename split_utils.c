@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:53:20 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/15 15:09:18 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/15 15:11:01 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	is_qt(char c)
 
 void	free_split(char **args)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (args[i])

@@ -6,11 +6,22 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 14:45:29 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/15 15:08:26 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/16 01:33:17 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	is_op(char str)
+{
+	if (str == '|')
+		return (1);
+	if (str == '<')
+		return (1);
+	if (str == '>')
+		return (1);
+	return (0);
+}
 
 int	is_letter(const char str, char c)
 {
@@ -18,13 +29,18 @@ int	is_letter(const char str, char c)
 		return (0);
 	if (str == c)
 		return (0);
-	if (str == '|')
-		return (0);
-	if (str == '<')
-		return (0);
-	if (str == '>')
+	if (is_op(str))
 		return (0);
 	return (1);
+}
+
+int	is_shift_op(const char *str)
+{
+	if (*str == '<' && *(str + 1) == '<')
+		return (1);
+	if (*str == '>' && *(str + 1) == '>')
+		return (1);
+	return (0);
 }
 
 static int	count_words(const char *str, char c)
@@ -43,13 +59,11 @@ static int	count_words(const char *str, char c)
 		}
 		else if (*str == c)
 			in_word = 0;
-		else if (*str == '|' || *str == '<' || *str == '>')
+		else if (is_op(*str))
 		{
 			in_word = 0;
 			count++;
-			if (*str == '<' && *(str + 1) == '<')
-				str++;
-			if (*str == '>' && *(str + 1) == '>')
+			if (is_shift_op(str))
 				str++;
 		}
 		str++;
@@ -92,39 +106,50 @@ int	create_word(char **strs, const char *str, t_splt s)
 	return (s.w_len);
 }
 
+void	split_op(char **strs, const char *str, t_splt *s)
+{
+	while (is_op(str[(*s).i]))
+	{
+		if (is_shift_op(&(str[(*s).i])))
+			(*s).w_len = 2;
+		else
+			(*s).w_len = 1;
+		(*s).i += create_word(strs, str, *s);
+		(*s).j++;
+	}
+}
+
+void	split_token(char **strs, const char *str, t_splt *s, char c)
+{
+	int	index;
+
+	index = (*s).w_len + (*s).i;
+	while (is_letter(str[(*s).w_len + (*s).i], c) || (*s).inside_qt)
+	{
+		if (is_qt(str[index]) && !((*s).inside_qt
+				&& str[index] != (*s).current_qt))
+		{
+			(*s).inside_qt = !(*s).inside_qt;
+			(*s).current_qt = str[index];
+		}
+		(*s).w_len++;
+	}
+	(*s).i += create_word(strs, str, *s);
+}
+
 static void	split_words(char **strs, const char *str, int str_length, char c)
 {
 	t_splt	s;
-	int		idx;
 
 	s.i = 0;
 	s.j = 0;
 	s.inside_qt = 0;
 	while (s.i < str_length)
 	{
-		while (str[s.i] == '|' || str[s.i] == '<' || str[s.i] == '>')
-		{
-			if ((str[s.i] == '<' && str[s.i + 1] == '<') || (str[s.i] == '>'
-					&& str[s.i + 1] == '>'))
-				s.w_len = 2;
-			else
-				s.w_len = 1;
-			s.i += create_word(strs, str, s);
-			s.j++;
-		}
+		split_op(strs, str, &s);
 		s.current_qt = ' ';
 		s.w_len = 0;
-		while (is_letter(str[s.w_len + s.i], c) || s.inside_qt)
-		{
-			idx = s.w_len + s.i;
-			if (is_qt(str[idx]) && !(s.inside_qt && str[idx] != s.current_qt))
-			{
-				s.inside_qt = !s.inside_qt;
-				s.current_qt = str[idx];
-			}
-			s.w_len++;
-		}
-		s.i += create_word(strs, str, s);
+		split_token(strs, str, &s, c);
 		if (s.w_len > 0)
 			s.j++;
 	}

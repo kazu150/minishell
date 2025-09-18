@@ -6,12 +6,11 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 19:12:11 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/15 15:09:08 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/16 00:51:41 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 void	handle_command_path_error(char **args, int has_permission_error,
 		char **paths)
