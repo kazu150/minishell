@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 14:45:29 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/18 15:39:36 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/19 00:17:12 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ int	is_letter(const char str, char c)
 
 int	is_shift_operator(const char *str)
 {
-	if (ft_strncmp("<<", str, 2))
+	if (ft_strncmp("<<", str, 2) == 0)
 		return (1);
-	if (ft_strncmp(">>", str, 2))
+	if (ft_strncmp(">>", str, 2) == 0)
 		return (1);
 	return (0);
 }
@@ -185,7 +185,7 @@ char	**ft_split(const char *str, char c)
 // int	main(void)
 // {
 // 	char		**res;
-// 	const char	*hoge = "echo aa |  ><<>> <<   'a\"aa'";
+// 	const char	*hoge = "echo aa |  ><<>> <<   'a\".  aa'";
 
 // 	// const char	*hoge1 = "abc          'def'";
 // 	// const char	*hoge2 = "abc'          'def";
