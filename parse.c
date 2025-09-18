@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:35:42 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/18 15:26:25 by cyang            ###   ########.fr       */
+/*   Updated: 2025/09/18 15:46:33 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ static void	free_all(char **array)
 
 static int	is_redirect(char *s)
 {
-	if (!ft_strncmp(s, ">", 2) || !ft_strncmp(s, "<", 2) || !ft_strncmp(s, ">>", 3) || !ft_strncmp(s, "<<", 3))
+	if (!ft_strncmp(s, ">", 2) || !ft_strncmp(s, "<", 2) || !ft_strncmp(s, ">>",
+			3) || !ft_strncmp(s, "<<", 3))
 		return (1);
 	else
 		return (0);
@@ -42,6 +43,7 @@ static int	is_redirect(char *s)
 void	cmd_add_back(t_cmd **lst, t_cmd *new)
 {
 	t_cmd	*tmp;
+
 	if (!lst || !new)
 		return ;
 	if (!*lst)
@@ -80,7 +82,7 @@ static t_cmd	*new_cmd(void)
 	if (!node)
 		error_exit(MALLOC);
 	node->args = NULL;
-	node->redirs= NULL;
+	node->redirs = NULL;
 	node->next = NULL;
 	return (node);
 }
@@ -119,7 +121,7 @@ static void	append_arg(t_cmd *cmd, char *token)
 	if (!new)
 		error_exit(MALLOC);
 	if (old)
-		ft_memcpy(new, old, sizeof(char*) * n);
+		ft_memcpy(new, old, sizeof(char *) * n);
 	new[n] = ft_strdup(token);
 	new[n + 1] = NULL;
 	free(old);
@@ -142,16 +144,15 @@ static t_redir_type	get_redir_type(char *token)
 // input: cat input.txt|grep hello >out.txt
 t_cmd	*parse_input(char *input)
 {
-	char 	**tokens;
-	int 	i;
+	char	**tokens;
+	int		i;
 	t_cmd	*head_cmd;
 	t_cmd	*current;
+	t_redir	*redir;
 
 	if (!input)
 		return (NULL);
-	//新しいバージョンft_splitを入れ替え
 	tokens = ft_split(input, ' ');
-	// char	*tokens[] = {"ls", "|", "cat"};
 	head_cmd = NULL;
 	current = NULL;
 	i = 0;
@@ -160,21 +161,20 @@ t_cmd	*parse_input(char *input)
 		if (is_redirect(tokens[i]))
 		{
 			// words[i]がREDIRなら、現在のnodeのredirsに追加
-			//redirectの後に必ずtargetがくるそうです
+			// redirectの後に必ずtargetがくるそうです
 			if (!current)
 			{
 				current = new_cmd();
 				if (!head_cmd)
 					head_cmd = current;
 			}
-			
 			if (!tokens[i + 1])
 			{
 				ft_putendl_fd("minishell: syntax error", 2);
 				free_all(tokens);
 				return (NULL);
 			}
-			t_redir *redir = new_redir(get_redir_type(tokens[i]), tokens[i + 1]);
+			redir = new_redir(get_redir_type(tokens[i]), tokens[i + 1]);
 			redir_add_back(&current->redirs, redir);
 			i = i + 2;
 		}
@@ -207,8 +207,10 @@ int	main(void)
 {
 	t_cmd	*output;
 	int		i;
+	char	*str;
 
-	output = parse_input("ls > out.txt");
+	str = "ls >>  out.txt";
+	output = parse_input(str);
 	i = 0;
 	while (output->args[i])
 	{

@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 14:45:29 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/18 15:26:43 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/18 15:39:36 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,7 +180,7 @@ char	**ft_split(const char *str, char c)
 // - "$XXX"のパース処理
 // - クオーテーション系のバグ修正（token count失敗、実際に入ってない）
 
-// #include "stdio.h"
+#include "stdio.h"
 
 // int	main(void)
 // {
