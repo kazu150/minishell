@@ -45,9 +45,9 @@ typedef struct s_splt
 {
 	int				i;
 	int				j;
-	int				w_len;
-	int				inside_qt;
-	char			current_qt;
+	int				token_len;
+	int				inside_quote;
+	char			current_quote;
 }					t_splt;
 
 typedef enum e_redir_type
@@ -92,7 +92,7 @@ void				*ft_memcpy(void *dest, const void *src, size_t n);
 char				*ft_strdup(const char *s);
 size_t				ft_strlcpy(char *dest, const char *src, size_t size);
 void				execve_error_exit(char *cmd);
-int					is_qt(char c);
+int					is_quote(char c);
 int					free_strs(char **strs, int count);
 
 #endif

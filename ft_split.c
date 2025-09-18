@@ -6,11 +6,22 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 14:45:29 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/15 14:12:55 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/18 15:26:43 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	is_delimiter(char str)
+{
+	if (str == '|')
+		return (1);
+	if (str == '<')
+		return (1);
+	if (str == '>')
+		return (1);
+	return (0);
+}
 
 int	is_letter(const char str, char c)
 {
@@ -18,24 +29,27 @@ int	is_letter(const char str, char c)
 		return (0);
 	if (str == c)
 		return (0);
-	if (str == '|')
-		return (0);
-	if (str == '<')
-		return (0);
-	if (str == '>')
+	if (is_delimiter(str))
 		return (0);
 	return (1);
 }
 
-static int	count_words(const char *str, char c)
+int	is_shift_operator(const char *str)
+{
+	if (ft_strncmp("<<", str, 2))
+		return (1);
+	if (ft_strncmp(">>", str, 2))
+		return (1);
+	return (0);
+}
+
+static int	count_tokens(const char *str, char c)
 {
 	int	count;
 	int	in_word;
-	int	n;
 
 	count = 0;
 	in_word = 0;
-	n = 0;
 	while (*str)
 	{
 		if (is_letter(*str, c) && in_word == 0)
@@ -45,13 +59,11 @@ static int	count_words(const char *str, char c)
 		}
 		else if (*str == c)
 			in_word = 0;
-		else if (*str == '|' || *str == '<' || *str == '>')
+		else if (is_delimiter(*str))
 		{
 			in_word = 0;
 			count++;
-			if (*str == '<' && *(str + 1) == '<')
-				str++;
-			if (*str == '>' && *(str + 1) == '>')
+			if (is_shift_operator(str))
 				str++;
 		}
 		str++;
@@ -59,7 +71,7 @@ static int	count_words(const char *str, char c)
 	return (count);
 }
 
-static void	copy_word(int word_length, char *strs, const char *str,
+static void	copy_strs(int word_length, char *strs, const char *str,
 		char current_quote)
 {
 	int	k;
@@ -71,7 +83,7 @@ static void	copy_word(int word_length, char *strs, const char *str,
 		word_length -= 2;
 	while (k < word_length)
 	{
-		if (is_qt(str[i]) && str[i] == current_quote)
+		if (is_quote(str[i]) && str[i] == current_quote)
 		{
 			i++;
 			continue ;
@@ -83,51 +95,65 @@ static void	copy_word(int word_length, char *strs, const char *str,
 	strs[k] = 0;
 }
 
-int	create_word(char **strs, const char *str, t_splt s)
+int	create_new_token(char **strs, const char *str, t_splt s)
 {
-	if (s.w_len == 0)
+	if (s.token_len == 0)
 		return (1);
-	strs[s.j] = malloc(sizeof(char) * (s.w_len + 1));
+	strs[s.j] = malloc(sizeof(char) * (s.token_len + 1));
 	if (strs[s.j] == NULL)
 		(free_strs(strs, s.j), exit(1));
-	copy_word(s.w_len, strs[s.j], &(str[s.i]), s.current_qt);
-	return (s.w_len);
+	copy_strs(s.token_len, strs[s.j], &(str[s.i]), s.current_quote);
+	return (s.token_len);
 }
 
-static void	split_words(char **strs, const char *str, int str_length, char c)
+void	split_delimiter(char **strs, const char *str, t_splt *s)
+{
+	while (is_delimiter(str[(*s).i]))
+	{
+		if (is_shift_operator(&(str[(*s).i])))
+			(*s).token_len = 2;
+		else
+			(*s).token_len = 1;
+		(*s).i += create_new_token(strs, str, *s);
+		(*s).j++;
+	}
+}
+
+void	split_arg(char **strs, const char *str, t_splt *s, char c)
+{
+	int	index;
+
+	index = (*s).token_len + (*s).i;
+	while (is_letter(str[(*s).token_len + (*s).i], c) || (*s).inside_quote)
+	{
+		(*s).token_len++;
+		if (!(*s).inside_quote)
+			continue ;
+		if (str[index] == (*s).current_quote)
+			continue ;
+		if (is_quote(str[index]))
+		{
+			(*s).inside_quote = !(*s).inside_quote;
+			(*s).current_quote = str[index];
+		}
+	}
+	(*s).i += create_new_token(strs, str, *s);
+}
+
+static void	split_tokens(char **strs, const char *str, int str_length, char c)
 {
 	t_splt	s;
-	int		idx;
 
 	s.i = 0;
 	s.j = 0;
-	s.inside_qt = 0;
+	s.inside_quote = 0;
 	while (s.i < str_length)
 	{
-		while (str[s.i] == '|' || str[s.i] == '<' || str[s.i] == '>')
-		{
-			if ((str[s.i] == '<' && str[s.i + 1] == '<') || (str[s.i] == '>'
-					&& str[s.i + 1] == '>'))
-				s.w_len = 2;
-			else
-				s.w_len = 1;
-			s.i += create_word(strs, str, s);
-			s.j++;
-		}
-		s.current_qt = ' ';
-		s.w_len = 0;
-		while (is_letter(str[s.w_len + s.i], c) || s.inside_qt)
-		{
-			idx = s.w_len + s.i;
-			if (is_qt(str[idx]) && !(s.inside_qt && str[idx] != s.current_qt))
-			{
-				s.inside_qt = !s.inside_qt;
-				s.current_qt = str[idx];
-			}
-			s.w_len++;
-		}
-		s.i += create_word(strs, str, s);
-		if (s.w_len > 0)
+		split_delimiter(strs, str, &s);
+		s.current_quote = ' ';
+		s.token_len = 0;
+		split_arg(strs, str, &s, c);
+		if (s.token_len > 0)
 			s.j++;
 	}
 	strs[s.j] = 0;
@@ -135,28 +161,31 @@ static void	split_words(char **strs, const char *str, int str_length, char c)
 
 char	**ft_split(const char *str, char c)
 {
-	int		strs_count;
+	int		tokens_count;
 	char	**dest;
 	int		i;
 
-	strs_count = 1;
 	i = 0;
 	while (str[i] != 0)
 		i++;
-	strs_count = count_words(str, c);
-	dest = malloc(sizeof(char *) * (strs_count + 1));
+	tokens_count = count_tokens(str, c);
+	dest = malloc(sizeof(char *) * (tokens_count + 1));
 	if (dest == NULL)
 		return (NULL);
-	split_words(dest, str, i, c);
+	split_tokens(dest, str, i, c);
 	return (dest);
 }
+
+// TODO:
+// - "$XXX"のパース処理
+// - クオーテーション系のバグ修正（token count失敗、実際に入ってない）
 
 // #include "stdio.h"
 
 // int	main(void)
 // {
 // 	char		**res;
-// 	const char	*hoge = "echo aa |  ><>> <<   'a\"aa'";
+// 	const char	*hoge = "echo aa |  ><<>> <<   'a\"aa'";
 
 // 	// const char	*hoge1 = "abc          'def'";
 // 	// const char	*hoge2 = "abc'          'def";
@@ -176,4 +205,5 @@ char	**ft_split(const char *str, char c)
 // 	// res = ft_split(hoge2, ' ');
 // 	// printf("%s\n", res[0]);
 // 	// printf("%s\n", res[1]);
+// 	free_split(res);
 // }
