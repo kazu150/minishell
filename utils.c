@@ -6,24 +6,11 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 19:12:11 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/14 15:15:50 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/16 00:51:41 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	free_split(char **args)
-{
-	int	i;
-
-	i = 0;
-	while (args[i])
-	{
-		free(args[i]);
-		i++;
-	}
-	free(args);
-}
 
 void	handle_command_path_error(char **args, int has_permission_error,
 		char **paths)
