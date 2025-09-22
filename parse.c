@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:35:42 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/18 15:46:33 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/22 21:09:39 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,19 @@ static t_redir_type	get_redir_type(char *token)
 	return (R_NONE);
 }
 
+static int	is_valid_target(char *s)
+{
+	if (!s)
+		return (0);
+	else if (ft_strncmp(s, "|", 2) == 0)
+		return (0);
+	else if (is_redirect(s))
+		return (0);
+	//他の状況があるのかな？　テストしながら追加しましょう！
+	else
+		return (1);
+}
+
 // input: cat input.txt|grep hello >out.txt
 t_cmd	*parse_input(char *input)
 {
@@ -168,7 +181,7 @@ t_cmd	*parse_input(char *input)
 				if (!head_cmd)
 					head_cmd = current;
 			}
-			if (!tokens[i + 1])
+			if (!tokens[i + 1] || !is_valid_target(tokens[i + 1]))
 			{
 				ft_putendl_fd("minishell: syntax error", 2);
 				free_all(tokens);
@@ -209,10 +222,12 @@ int	main(void)
 	int		i;
 	char	*str;
 
-	str = "ls >>  out.txt";
+	str = "ls >> <";
 	output = parse_input(str);
 	i = 0;
-	while (output->args[i])
+	if (output == NULL)
+		return (1);
+	while (output && output->args[i])
 	{
 		printf("%s\n", output->args[i]);
 		i++;
@@ -222,6 +237,8 @@ int	main(void)
 		printf("%u\n", output->redirs->type);
 		if (output->redirs->target)
 			printf("%s\n", output->redirs->target);
+		else if (output->redirs->target == NULL)
+			printf("target is NULL\n");
 	}
 	return (0);
 }
