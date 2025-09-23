@@ -41,14 +41,12 @@ typedef enum e_node_type
 	NODE_REDIR
 }					t_node_type;
 
-typedef struct s_splt
+typedef struct s_split
 {
 	int				i;
 	int				j;
 	int				token_len;
-	int				inside_quote;
-	char			current_quote;
-}					t_splt;
+}					t_split;
 
 typedef enum e_redir_type
 {
@@ -79,7 +77,7 @@ int					input_child_process(char **argv, int d_pipe[2],
 						char **envp);
 int					output_child_process(char **argv, int pipe_in, char **envp);
 void				error_exit(char *error_target);
-char				**ft_split(const char *str, char c);
+char				**ft_split(const char *str);
 void				free_split(char **args);
 char				*ft_strjoin(const char *str1, const char *str2);
 void				handle_command_path_error(char **args,
@@ -94,5 +92,10 @@ size_t				ft_strlcpy(char *dest, const char *src, size_t size);
 void				execve_error_exit(char *cmd);
 int					is_quote(char c);
 int					free_strs(char **strs, int count);
+int					is_delimiter(char str);
+int					is_letter(const char str);
+int					is_shift_operator(const char *str);
+void				copy_strs(int word_length, char *strs, const char *str);
+int					create_new_token(char **strs, const char *str, t_split s);
 
 #endif

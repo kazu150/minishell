@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/14 18:16:17 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/23 11:15:36 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	execute(char *str, char **envp)
 	extern char	**environ;
 	char		**args;
 
-	args = ft_split(str, ' ');
+	args = ft_split(str);
 	if (!args)
 		error_exit(MALLOC);
 	if (args[0] == NULL)
