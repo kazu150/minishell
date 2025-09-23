@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/23 13:58:00 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/23 17:19:08 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,52 @@ void	execve_error_exit(char *cmd)
 	exit(127);
 }
 
-int	execute(char *str, char **envp)
+char	*expand(char *str)
+{
+	// TODO
+	return (str);
+}
+
+char	**expand_all(char **strs)
+{
+	int	i;
+
+	i = 0;
+	while (strs[i])
+	{
+		strs[i] = expand(strs[i]);
+		i++;
+	}
+	return (strs);
+}
+
+int	execute(char **args, t_redir *redirs, char **envp)
 {
 	char		*cmd;
 	extern char	**environ;
-	char		**args;
+	int			fd;
 
-	args = tokenize(str);
+	// redirs対応
+	while (redirs)
+	{
+		if (redirs->type == R_IN)
+		{
+			fd = open(expand(redirs->target), O_RDONLY);
+			// TODO: free something
+			dup2(fd, STDIN_FILENO);
+			close(fd);
+		}
+		else if (redirs->type == R_OUT)
+		{
+			fd = open(expand(redirs->target), O_WRONLY | O_CREAT | O_TRUNC,
+					0644);
+			// TODO: free something
+			dup2(fd, STDOUT_FILENO);
+			close(fd);
+		}
+		redirs = redirs->next;
+	}
+	args = expand_all(args);
 	if (!args)
 		error_exit(MALLOC);
 	if (args[0] == NULL)
@@ -80,14 +119,19 @@ int	main(int argc, char **argv, char **envp)
 		pid = fork();
 		if (pid == -1)
 			error_exit(FORK);
-		// TODO: 入力文字列の解析（parsing）
 		cmds = parse_input(line);
-		if (pid == 0)
-			return (execute(line, envp));
-		else
+		// TODO
+		// - PIPEで次のコマンドに実行結果を渡す(nextがあったら)
+		while (cmds)
 		{
-			waitpid(pid, &status, 0);
-			free(line);
+			if (pid == 0)
+				return (execute(cmds->args, cmds->redirs, envp));
+			else
+			{
+				waitpid(pid, &status, 0);
+				free(line);
+			}
+			cmds = cmds->next;
 		}
 	}
 	printf("exit\n");
