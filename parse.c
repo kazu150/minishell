@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:35:42 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/23 13:12:53 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/23 14:00:51 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,7 @@ t_cmd	*parse_input(char *input)
 
 	if (!input)
 		return (NULL);
-	tokens = ft_split(input, ' ');
+	tokens = tokenize(input);
 	head_cmd = NULL;
 	current = NULL;
 	i = 0;

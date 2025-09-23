@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 15:18:46 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/14 15:15:50 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/23 13:38:07 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	input_child_process(char **argv, int d_pipe[2], char **envp)
 	extern char	**environ;
 	char		**args;
 
-	args = ft_split(argv[2], ' ');
+	args = tokenize(argv[2]);
 	if (!args)
 		error_exit(MALLOC);
 	close(d_pipe[0]);

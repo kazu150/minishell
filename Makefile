@@ -6,7 +6,11 @@
 #    By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/03 16:26:12 by kaisogai          #+#    #+#              #
+<<<<<<< HEAD
+#    Updated: 2025/09/23 13:44:52 by kaisogai         ###   ########.fr        #
+=======
 #    Updated: 2025/09/23 13:14:31 by kaisogai         ###   ########.fr        #
+>>>>>>> main
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +21,7 @@ INCLUDE	= -I./ -I./libft
 
 LIBFT	= libft/libft.a
 
-SRCS	= main.c parse.c input.c output.c utils.c split_utils.c
+SRCS	= main.c parse.c input.c output.c utils.c tokenize.c tokenize_utils.c tokenize_utils2.c
 
 OBJS	= $(SRCS:.c=.o)
 

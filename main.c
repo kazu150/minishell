@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/23 13:12:24 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/23 13:58:00 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	execute(char *str, char **envp)
 	extern char	**environ;
 	char		**args;
 
-	args = ft_split(str, ' ');
+	args = tokenize(str);
 	if (!args)
 		error_exit(MALLOC);
 	if (args[0] == NULL)
@@ -60,13 +60,14 @@ int	is_redir(char *arg)
 // gcc main.c -lreadline -o main
 int	main(int argc, char **argv, char **envp)
 {
-	pid_t pid;
+	pid_t	pid;
+	char	*line;
+	int		status;
+	t_cmd	*cmds;
+
 	(void)argc;
 	(void)argv;
-	char *line = NULL;
-	int status;
-	t_cmd *cmds;
-
+	line = NULL;
 	while (1)
 	{
 		line = readline("> ");
