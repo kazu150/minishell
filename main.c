@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/23 17:19:08 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/23 17:23:48 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,11 @@ void	execve_error_exit(char *cmd)
 char	*expand(char *str)
 {
 	// TODO
+	// 例
+	// "foo" → foo
+	// $FOO → bar
+	// '$FOO' → $FOO
+	// "$FOO" → bar
 	return (str);
 }
 
