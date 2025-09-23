@@ -6,17 +6,11 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/14 18:16:17 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/23 13:12:24 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	error_exit(char *error_target)
-{
-	perror(error_target);
-	exit(EXIT_FAILURE);
-}
 
 void	execve_error_exit(char *cmd)
 {

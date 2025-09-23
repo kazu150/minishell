@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:35:42 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/23 13:08:23 by cyang            ###   ########.fr       */
+/*   Updated: 2025/09/23 13:12:53 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,29 +217,29 @@ t_cmd	*parse_input(char *input)
 	return (head_cmd);
 }
 
-int	main(void)
-{
-	t_cmd	*output;
-	int		i;
-	char	*str;
+// int	main(void)
+// {
+// 	t_cmd	*output;
+// 	int		i;
+// 	char	*str;
 
-	str = "ls >> <";
-	output = parse_input(str);
-	i = 0;
-	if (output == NULL)
-		return (1);
-	while (output && output->args[i])
-	{
-		printf("%s\n", output->args[i]);
-		i++;
-	}
-	if (output->redirs)
-	{
-		printf("%u\n", output->redirs->type);
-		if (output->redirs->target)
-			printf("%s\n", output->redirs->target);
-		else if (output->redirs->target == NULL)
-			printf("target is NULL\n");
-	}
-	return (0);
-}
+// 	str = "ls >> <";
+// 	output = parse_input(str);
+// 	i = 0;
+// 	if (output == NULL)
+// 		return (1);
+// 	while (output && output->args[i])
+// 	{
+// 		printf("%s\n", output->args[i]);
+// 		i++;
+// 	}
+// 	if (output->redirs)
+// 	{
+// 		printf("%u\n", output->redirs->type);
+// 		if (output->redirs->target)
+// 			printf("%s\n", output->redirs->target);
+// 		else if (output->redirs->target == NULL)
+// 			printf("target is NULL\n");
+// 	}
+// 	return (0);
+// }
