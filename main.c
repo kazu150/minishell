@@ -6,17 +6,11 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/23 11:15:36 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/23 13:37:11 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	error_exit(char *error_target)
-{
-	perror(error_target);
-	exit(EXIT_FAILURE);
-}
 
 void	execve_error_exit(char *cmd)
 {
@@ -39,7 +33,7 @@ int	execute(char *str, char **envp)
 	extern char	**environ;
 	char		**args;
 
-	args = ft_split(str);
+	args = tokenize(str);
 	if (!args)
 		error_exit(MALLOC);
 	if (args[0] == NULL)
@@ -66,13 +60,14 @@ int	is_redir(char *arg)
 // gcc main.c -lreadline -o main
 int	main(int argc, char **argv, char **envp)
 {
-	pid_t pid;
+	pid_t	pid;
+	char	*line;
+	int		status;
+	t_cmd	*cmds;
+
 	(void)argc;
 	(void)argv;
-	char *line = NULL;
-	int status;
-	t_cmd *cmds;
-
+	line = NULL;
 	while (1)
 	{
 		line = readline("> ");

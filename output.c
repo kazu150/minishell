@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 15:18:32 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/14 15:15:50 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/23 13:38:23 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	output_child_process(char **argv, int pipe_in, char **envp)
 	char		**args;
 	char		*output_filename;
 
-	args = ft_split(argv[3], ' ');
+	args = tokenize(argv[3]);
 	if (!args)
 		error_exit(MALLOC);
 	output_filename = argv[4];

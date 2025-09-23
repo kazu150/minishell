@@ -13,6 +13,7 @@
 #ifndef PIPEX_H
 # define PIPEX_H
 
+# include "libft/libft.h"
 # include <errno.h>
 # include <fcntl.h>
 # include <readline/history.h>
@@ -77,18 +78,11 @@ int					input_child_process(char **argv, int d_pipe[2],
 						char **envp);
 int					output_child_process(char **argv, int pipe_in, char **envp);
 void				error_exit(char *error_target);
-char				**ft_split(const char *str);
+char				**tokenize(const char *str);
 void				free_split(char **args);
-char				*ft_strjoin(const char *str1, const char *str2);
 void				handle_command_path_error(char **args,
 						int has_permission_error, char **paths);
 char				*build_command_path(char **args, char **envp);
-int					ft_strncmp(const char *s1, const char *s2, size_t n);
-size_t				ft_strlen(const char *s);
-void				ft_putendl_fd(char *s, int fd);
-void				*ft_memcpy(void *dest, const void *src, size_t n);
-char				*ft_strdup(const char *s);
-size_t				ft_strlcpy(char *dest, const char *src, size_t size);
 void				execve_error_exit(char *cmd);
 int					is_quote(char c);
 int					free_strs(char **strs, int count);

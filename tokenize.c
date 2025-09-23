@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_split.c                                         :+:      :+:    :+:   */
+/*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 14:45:29 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/23 11:57:23 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/23 13:36:20 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ static void	split_tokens(char **strs, const char *str, int str_length)
 	strs[s.j] = 0;
 }
 
-char	**ft_split(const char *str)
+char	**tokenize(const char *str)
 {
 	int		tokens_count;
 	char	**dest;
