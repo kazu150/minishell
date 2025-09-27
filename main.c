@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/23 17:23:48 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/27 10:27:39 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,22 +56,29 @@ int	execute(char **args, t_redir *redirs, char **envp)
 	char		*cmd;
 	extern char	**environ;
 	int			fd;
+	char		*target;
 
-	// redirs対応
 	while (redirs)
 	{
-		if (redirs->type == R_IN)
+		if (redirs->type == R_IN || redirs->type == R_HDOC)
 		{
-			fd = open(expand(redirs->target), O_RDONLY);
-			// TODO: free something
+			target = expand(redirs->target);
+			fd = open(target, O_RDONLY);
+			if (fd == -1)
+				(free_split(args), error_exit(target));
 			dup2(fd, STDIN_FILENO);
 			close(fd);
 		}
-		else if (redirs->type == R_OUT)
+		else if (redirs->type == R_OUT || redirs->type == R_APP)
 		{
-			fd = open(expand(redirs->target), O_WRONLY | O_CREAT | O_TRUNC,
-					0644);
-			// TODO: free something
+			if (redirs->type == R_OUT)
+				fd = open(expand(redirs->target), O_WRONLY | O_CREAT | O_TRUNC,
+						0644);
+			else if (redirs->type == R_APP)
+				fd = open(expand(redirs->target), O_WRONLY | O_CREAT | O_APPEND,
+						0644);
+			if (fd == -1)
+				(free_split(args), error_exit(target));
 			dup2(fd, STDOUT_FILENO);
 			close(fd);
 		}
