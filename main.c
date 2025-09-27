@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/27 12:22:46 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/27 12:25:56 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ int	execute(char **args, t_redir *redirs, char **envp)
 		handle_command_path_error(args, 1, 0);
 	if (ft_strncmp(args[0], "echo", 4))
 		return (ft_echo());
-	// /bin/echo
 	cmd = build_command_path(args, envp);
 	if (execve(cmd, args, environ) == -1)
 		(free(args), execve_error_exit(cmd));
