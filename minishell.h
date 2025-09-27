@@ -92,4 +92,8 @@ int					is_shift_operator(const char *str);
 void				copy_strs(int word_length, char *strs, const char *str);
 int					create_new_token(char **strs, const char *str, t_split s);
 
+char				*expand(char *str);
+char				**expand_all(char **strs);
+int					ft_echo(void);
+
 #endif
