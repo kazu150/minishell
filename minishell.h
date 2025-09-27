@@ -95,5 +95,6 @@ int					create_new_token(char **strs, const char *str, t_split s);
 char				*expand(char *str);
 char				**expand_all(char **strs);
 int					ft_echo(void);
+int					setup_heredoc(char *target);
 
 #endif
