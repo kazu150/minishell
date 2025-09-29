@@ -43,23 +43,26 @@ static char	*expand_and_add_var(char *result, char *str, int var_start, int var_
 	}
 	return (result);
 }
+
 static char	*add_after_var(char *result, char *str, int var_end)
 {
 	char	*rest;
+	char	*rest_expanded;
 	char	*tmp;
 
 	if (str[var_end])
 	{
 		rest = ft_substr(str, var_end, ft_strlen(str) - var_end);
-		tmp = ft_strjoin(result, rest);
+		rest_expanded = expand_with_var(rest);
+		tmp = ft_strjoin(result, rest_expanded);
 		free(result);
-		free(rest);
+		free(rest_expanded);
 		return (tmp);
 	}
 	return (result);
 }
 
-static char	*expand_with_var(char *str)
+char	*expand_with_var(char *str)
 {
 	char	*result;
 	int		i;
