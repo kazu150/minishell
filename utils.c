@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 19:12:11 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/23 13:50:13 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/29 17:31:39 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,4 +102,18 @@ char	*build_command_path(char **args, char **envp)
 	if (!paths || !paths[i] || !command_path)
 		handle_command_path_error(args, has_permission_error, paths);
 	return (command_path);
+}
+
+int	ft_strcmp(char *s1, char *s2)
+{
+	int	i;
+	
+	i = 0;
+	while (s1[i] && s2[i])
+	{
+		if (s1[i] - s2[i] != 0)
+			return (s1[i] - s2[i]);
+		i++;
+	}
+	return (s1[i] - s2[i]);
 }

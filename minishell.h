@@ -92,9 +92,11 @@ int					is_shift_operator(const char *str);
 void				copy_strs(int word_length, char *strs, const char *str);
 int					create_new_token(char **strs, const char *str, t_split s);
 
+int					ft_strcmp(char *s1, char *s2);
 char				*expand(char *str);
+char				*expand_with_var(char *str);
 char				**expand_all(char **strs);
-int					ft_echo(void);
 int					setup_heredoc(char *target);
+void				ft_echo(char **args);
 
-#endif
+# endif
