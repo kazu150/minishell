@@ -65,6 +65,7 @@ static char	*add_after_var(char *result, char *str, int var_end)
 char	*expand_with_var(char *str)
 {
 	char	*result;
+	char	*tmp;
 	int		i;
 	int		var_start;
 	int		var_end;
@@ -87,6 +88,12 @@ char	*expand_with_var(char *str)
 			break ;
 		}
 		i++;
+	}
+	if (i == (int)ft_strlen(str))
+	{
+		tmp = ft_strjoin(result, str);
+		free(result);
+		result = tmp;
 	}
 	free(str);
 	return (result);
