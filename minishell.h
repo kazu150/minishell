@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/30 15:05:49 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/30 15:47:49 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <fcntl.h>
 # include <readline/history.h>
 # include <readline/readline.h>
+# include <signal.h>
 # include <stdarg.h>
 # include <stdio.h>
 # include <stdlib.h>

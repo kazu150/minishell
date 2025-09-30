@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/29 17:28:52 by cyang            ###   ########.fr       */
+/*   Updated: 2025/09/30 15:56:07 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,20 @@ int	is_redir(char *arg)
 	return (0);
 }
 
+void	sigIntHandler(int signo)
+{
+	// シグナル番号とシグナルの説明を表示
+	printf("sigint %d\n", signo);
+	fflush(stdout); // 標準出力のバッファを即時反映
+}
+
+void	sigQuitHandler(int signo)
+{
+	// シグナル番号とシグナルの説明を表示
+	printf("sigquit %d", signo);
+	fflush(stdout); // 標準出力のバッファを即時反映
+}
+
 // gcc main.c -lreadline -o main
 int	main(int argc, char **argv, char **envp)
 {
@@ -104,6 +118,8 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	line = NULL;
+	signal(SIGINT, sigIntHandler);
+	signal(SIGQUIT, sigQuitHandler);
 	while (1)
 	{
 		line = readline("> ");
@@ -131,6 +147,5 @@ int	main(int argc, char **argv, char **envp)
 			cmds = cmds->next;
 		}
 	}
-	printf("exit\n");
 	return (0);
 }
