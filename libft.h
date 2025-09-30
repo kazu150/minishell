@@ -6,17 +6,17 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 16:25:02 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/05/07 21:53:15 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/30 15:07:01 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
 
-# include <stdlib.h>
-# include <unistd.h>
 # include <stdarg.h>
+# include <stdlib.h>
 # include <string.h>
+# include <unistd.h>
 
 typedef struct s_list
 {
@@ -80,7 +80,7 @@ void				ft_putnbr_base(unsigned long nbr, char *base);
 size_t				ft_strlen(const char *s);
 int					print_number(va_list ap);
 int					print_unsigned_number(va_list ap);
-int					print_any_based_number(va_list ap, char *base, int base_count);
+int					print_any_based_number(va_list ap, char *base, int base_c);
 int					print_pointer(va_list ap, char *base);
 int					print_string(va_list ap);
 int					print_char(va_list ap);
