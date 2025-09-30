@@ -96,6 +96,7 @@ int					ft_strcmp(char *s1, char *s2);
 char				*expand(char *str);
 char				*expand_with_var(char *str);
 char				**expand_all(char **strs);
+int					setup_heredoc(char *target);
 void				ft_echo(char **args);
 
 # endif
