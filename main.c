@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/27 18:03:39 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/09/29 17:28:52 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,12 @@ int	execute(char **args, t_redir *redirs, char **envp)
 		error_exit(MALLOC);
 	if (args[0] == NULL)
 		handle_command_path_error(args, 1, 0);
-	if (ft_strncmp(args[0], "echo", 4) == 0)
-		return (ft_echo());
+	// build-in commands
+	if (!ft_strcmp(args[0], "echo"))
+	{
+		ft_echo(args);
+		exit(0);
+	}
 	cmd = build_command_path(args, envp);
 	if (execve(cmd, args, environ) == -1)
 		(free(args), execve_error_exit(cmd));

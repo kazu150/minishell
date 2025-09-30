@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/30 13:53:03 by cyang             #+#    #+#             */
+/*   Updated: 2025/09/30 13:53:05 by cyang            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "minishell.h"
 
@@ -43,25 +54,29 @@ static char	*expand_and_add_var(char *result, char *str, int var_start, int var_
 	}
 	return (result);
 }
+
 static char	*add_after_var(char *result, char *str, int var_end)
 {
 	char	*rest;
+	char	*rest_expanded;
 	char	*tmp;
 
 	if (str[var_end])
 	{
 		rest = ft_substr(str, var_end, ft_strlen(str) - var_end);
-		tmp = ft_strjoin(result, rest);
+		rest_expanded = expand_with_var(rest);
+		tmp = ft_strjoin(result, rest_expanded);
 		free(result);
-		free(rest);
+		free(rest_expanded);
 		return (tmp);
 	}
 	return (result);
 }
 
-static char	*expand_with_var(char *str)
+char	*expand_with_var(char *str)
 {
 	char	*result;
+	char	*tmp;
 	int		i;
 	int		var_start;
 	int		var_end;
@@ -84,6 +99,12 @@ static char	*expand_with_var(char *str)
 			break ;
 		}
 		i++;
+	}
+	if (i == (int)ft_strlen(str))
+	{
+		tmp = ft_strjoin(result, str);
+		free(result);
+		result = tmp;
 	}
 	free(str);
 	return (result);
