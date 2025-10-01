@@ -124,11 +124,13 @@ int	main(int argc, char **argv, char **envp)
 	{
 		line = readline("> ");
 		add_history(line);
-		if (line == NULL || strlen(line) == 0)
+		if (line == NULL)
 		{
 			free(line);
 			break ;
 		}
+		if (strlen(line) == 0)
+			continue;
 		pid = fork();
 		if (pid == -1)
 			error_exit(FORK);
