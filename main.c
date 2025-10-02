@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/30 15:56:07 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/10/02 17:57:34 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,12 +107,39 @@ void	sigQuitHandler(int signo)
 	fflush(stdout); // 標準出力のバッファを即時反映
 }
 
+int handle_parent_builtin(char **args)
+{
+	if (!args)
+		return 0;
+	if (!ft_strcmp(args[0], "cd"))
+	{
+		ft_cd(args[1]);
+		return 1;
+	}
+	return 0;
+}
+
+void handle_on_child(t_cmd *cmds, char *line, char **envp)
+{
+	pid_t	pid;
+	int		status;
+
+	pid = fork();
+	if (pid == -1)
+		error_exit(FORK);
+	if (pid == 0)
+		(execute(cmds->args, cmds->redirs, envp));
+	else
+	{
+		waitpid(pid, &status, 0);
+		free(line);
+	}
+}
+
 // gcc main.c -lreadline -o main
 int	main(int argc, char **argv, char **envp)
 {
-	pid_t	pid;
 	char	*line;
-	int		status;
 	t_cmd	*cmds;
 
 	(void)argc;
@@ -131,21 +158,13 @@ int	main(int argc, char **argv, char **envp)
 		}
 		if (strlen(line) == 0)
 			continue;
-		pid = fork();
-		if (pid == -1)
-			error_exit(FORK);
 		cmds = parse_input(line);
 		// TODO
 		// - PIPEで次のコマンドに実行結果を渡す(nextがあったら)
 		while (cmds)
 		{
-			if (pid == 0)
-				return (execute(cmds->args, cmds->redirs, envp));
-			else
-			{
-				waitpid(pid, &status, 0);
-				free(line);
-			}
+			if (handle_parent_builtin(cmds->args) == 0)
+				handle_on_child(cmds, line, envp);
 			cmds = cmds->next;
 		}
 	}

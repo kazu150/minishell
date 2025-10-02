@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/30 15:47:49 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/10/02 10:55:55 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,5 +99,6 @@ char				*expand_with_var(char *str);
 char				**expand_all(char **strs);
 int					setup_heredoc(char *target);
 void				ft_echo(char **args);
+void				ft_cd(char *path);
 
 #endif

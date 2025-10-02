@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+         #
+#    By: kaisogai <kaisogai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/03 16:26:12 by kaisogai          #+#    #+#              #
-#    Updated: 2025/09/27 14:52:39 by kaisogai         ###   ########.fr        #
+#    Updated: 2025/10/01 21:00:58 by kaisogai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ INCLUDE	= -I./ -I./libft
 
 LIBFT	= libft/libft.a
 
-SRCS	= main.c parse.c input.c output.c utils.c tokenize.c tokenize_utils.c tokenize_utils2.c expand.c ft_echo.c heredoc.c
+SRCS	= main.c parse.c input.c output.c utils.c tokenize.c tokenize_utils.c tokenize_utils2.c expand.c ft_echo.c heredoc.c ft_cd.c
 
 OBJS	= $(SRCS:.c=.o)
 
