@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/01 15:43:24 by cyang            ###   ########.fr       */
+/*   Updated: 2025/10/02 14:27:07 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,4 @@ char				**expand_all(char **strs);
 int					setup_heredoc(char *target);
 void				ft_echo(char **args);
 
-extern void	rl_replace_line(const char *text, int clear_undo);
-extern void	rl_redisplay(void);
 #endif
