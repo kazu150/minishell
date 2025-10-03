@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kaisogai <kaisogai@student.42.fr>          +#+  +:+       +#+         #
+#    By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/03 16:26:12 by kaisogai          #+#    #+#              #
-#    Updated: 2025/10/01 21:00:58 by kaisogai         ###   ########.fr        #
+#    Updated: 2025/10/04 08:47:01 by kaisogai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
