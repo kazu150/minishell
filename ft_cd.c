@@ -3,57 +3,56 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 20:59:29 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/02 18:09:53 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/10/05 19:43:02 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-extern char **environ;
+extern char	**environ;
 
-int my_setenv(const char *name, const char *value) {
-    size_t nlen = strlen(name);
-    // 置換パス
-    for (size_t i = 0; environ[i]; i++) {
-        if (strncmp(environ[i], name, nlen) == 0 && environ[i][nlen] == '=') {
-            char *new_entry = malloc(nlen + 1 + strlen(value) + 1);
-            if (!new_entry) return -1;
-            sprintf(new_entry, "%s=%s", name, value);
-            // 古いエントリは putenv/setenv 由来なら free しない方が安全なこともある
-            environ[i] = new_entry;
-            return 0;
-        }
-    }
-    // 追加パス：配列を作り直す
-    size_t cnt = 0;
-    while (environ[cnt]) cnt++;
+void	ft_setenv(char *target, char *value)
+{
+	int		i;
+	char	**current_arg;
+	char	*new_arg;
+	int		key_len;
+	int		value_len;
 
-    char **new_env = malloc(sizeof(char*) * (cnt + 2));
-    if (!new_env) return -1;
-
-    for (size_t i = 0; i < cnt; i++) new_env[i] = environ[i];
-
-    char *new_entry = malloc(nlen + 1 + strlen(value) + 1);
-    if (!new_entry) { free(new_env); return -1; }
-    sprintf(new_entry, "%s=%s", name, value);
-
-    new_env[cnt]   = new_entry;
-    new_env[cnt+1] = NULL;
-
-    environ = new_env;  // ★ 配列ごと差し替える
-    return 0;
+	i = 0;
+	while (environ[i])
+	{
+		current_arg = ft_split(environ[i], '=');
+		if (ft_strcmp(current_arg[0], target) == 0)
+		{
+			key_len = ft_strlen(current_arg[0]);
+			value_len = ft_strlen(value);
+			new_arg = malloc(sizeof(char) * (key_len + value_len + 2));
+			ft_bzero(new_arg, key_len + value_len + 2);
+			ft_strlcat(new_arg, current_arg[0], key_len + value_len + 2);
+			new_arg[key_len] = '=';
+			ft_strlcat(&(new_arg[key_len + 1]), value, key_len + value_len + 2);
+			environ[i] = new_arg;
+		}
+		i++;
+	}
+	error_exit("ft_setenv");
 }
 
 void	ft_cd(char *path)
 {
-	char *old_pwd  = getcwd(NULL, 0);
-	int res = chdir(path);
+	char	*old_pwd;
+	int		res;
+	char	*pwd;
+
+	old_pwd = getcwd(NULL, 0);
+	res = chdir(path);
 	if (res < 0)
 		perror(ft_strjoin("cd: ", path));
-	char *pwd  = getcwd(NULL, 0);
-	my_setenv("OLDPWD", old_pwd);
-	my_setenv("PWD", pwd);
+	pwd = getcwd(NULL, 0);
+	ft_setenv("OLDPWD", old_pwd);
+	ft_setenv("PWD", pwd);
 }
