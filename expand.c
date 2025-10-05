@@ -6,72 +6,11 @@
 /*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 13:53:03 by cyang             #+#    #+#             */
-/*   Updated: 2025/09/30 13:53:05 by cyang            ###   ########.fr       */
+/*   Updated: 2025/10/06 07:47:24 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static char	*store_before_dollor(char *result, char *str, int dollar_pos)
-{
-	char	*tmp;
-	char	*new_result;
-
-	if (dollar_pos > 0)
-	{
-		tmp = ft_substr(str, 0, dollar_pos);
-		new_result = ft_strjoin(result, tmp);
-		free(result);
-		free(tmp);
-		return (new_result);
-	}
-	return (result);
-}
-
-static char	*expand_and_add_var(char *result, char *str, int var_start, int var_end)
-{
-	char	*var_name;
-	char	*var_value;
-	char	*tmp;
-
-	if (var_end > var_start)
-	{
-		var_name = ft_substr(str, var_start, var_end - var_start);
-		var_value = getenv(var_name);
-		if (var_value)
-		{
-			tmp = ft_strjoin(result, var_value);
-			free(result);
-			result = tmp;
-		}
-		free(var_name);
-	}
-	else
-	{
-		tmp = ft_strjoin(result, "$");
-		free(result);
-		result = tmp;
-	}
-	return (result);
-}
-
-static char	*add_after_var(char *result, char *str, int var_end)
-{
-	char	*rest;
-	char	*rest_expanded;
-	char	*tmp;
-
-	if (str[var_end])
-	{
-		rest = ft_substr(str, var_end, ft_strlen(str) - var_end);
-		rest_expanded = expand_with_var(rest);
-		tmp = ft_strjoin(result, rest_expanded);
-		free(result);
-		free(rest_expanded);
-		return (tmp);
-	}
-	return (result);
-}
 
 char	*expand_with_var(char *str)
 {
@@ -116,7 +55,7 @@ char	*expand_with_var(char *str)
 // $FOO → bar
 // '$FOO' → $FOO
 // "$FOO" → bar
-char	*expand(char *str)
+char	*expand_token(char *str)
 {
 	int		len;
 	char	*transform;
@@ -158,8 +97,47 @@ char	**expand_all(char **strs)
 	i = 0;
 	while (strs[i])
 	{
-		strs[i] = expand(strs[i]);
+		strs[i] = expand_token(strs[i]);
 		i++;
 	}
 	return (strs);
+}
+
+char	**expand(char **args, t_redir *redirs)
+{
+	// char		*cmd;
+	int			fd;
+	char		*target;
+
+	while (redirs)
+	{
+		if (redirs->type == R_IN || redirs->type == R_HDOC)
+		{
+			target = expand_token(redirs->target);
+			if (redirs->type == R_IN)
+				fd = open(target, O_RDONLY);
+			else if (redirs->type == R_HDOC)
+				fd = setup_heredoc(redirs->target);
+			if (fd == -1)
+				(free_split(args), error_exit(target));
+			dup2(fd, STDIN_FILENO);
+			close(fd);
+		}
+		else if (redirs->type == R_OUT || redirs->type == R_APP)
+		{
+			if (redirs->type == R_OUT)
+				fd = open(expand_token(redirs->target), O_WRONLY | O_CREAT | O_TRUNC,
+						0644);
+			else if (redirs->type == R_APP)
+				fd = open(expand_token(redirs->target), O_WRONLY | O_CREAT | O_APPEND,
+						0644);
+			if (fd == -1)
+				(free_split(args), error_exit(target));
+			dup2(fd, STDOUT_FILENO);
+			close(fd);
+		}
+		redirs = redirs->next;
+	}
+	args = expand_all(args);
+	return (args);
 }
