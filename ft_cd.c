@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 20:59:29 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/05 19:43:02 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/10/07 19:02:34 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	ft_setenv(char *target, char *value)
 			new_arg[key_len] = '=';
 			ft_strlcat(&(new_arg[key_len + 1]), value, key_len + value_len + 2);
 			environ[i] = new_arg;
+			return ;
 		}
 		i++;
 	}

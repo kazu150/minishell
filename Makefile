@@ -6,18 +6,18 @@
 #    By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/03 16:26:12 by kaisogai          #+#    #+#              #
-#    Updated: 2025/10/04 08:47:01 by kaisogai         ###   ########.fr        #
+#    Updated: 2025/10/07 18:54:07 by kaisogai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	= minishell
 CC		= cc
 CFLAGS	= -Wall -Wextra -Werror
-INCLUDE	= -I./ -I./libft
-
+INCLUDE	= -I./ -I./libft -I/usr/local/opt/readline/include
+READLINE = -L/usr/local/opt/readline/lib -lreadline
 LIBFT	= libft/libft.a
 
-SRCS	= main.c parse.c input.c output.c utils.c tokenize.c tokenize_utils.c tokenize_utils2.c expand.c ft_echo.c heredoc.c ft_cd.c
+SRCS	= main.c parse.c input.c output.c utils.c tokenize.c tokenize_utils.c tokenize_utils2.c expand.c expand_utils.c ft_echo.c heredoc.c ft_pwd.c ft_cd.c
 
 OBJS	= $(SRCS:.c=.o)
 
@@ -27,7 +27,7 @@ $(LIBFT):
 	make -s -C libft
 
 $(NAME): $(LIBFT) $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME) -lreadline
+		$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(READLINE) -o $(NAME)
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
