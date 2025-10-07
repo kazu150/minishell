@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+         #
+#    By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/03 16:26:12 by kaisogai          #+#    #+#              #
-#    Updated: 2025/10/06 07:50:38 by cyang            ###   ########.fr        #
+#    Updated: 2025/10/07 18:54:07 by kaisogai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ INCLUDE	= -I./ -I./libft -I/usr/local/opt/readline/include
 READLINE = -L/usr/local/opt/readline/lib -lreadline
 LIBFT	= libft/libft.a
 
-SRCS	= main.c parse.c input.c output.c utils.c tokenize.c tokenize_utils.c tokenize_utils2.c expand.c expand_utils.c ft_echo.c heredoc.c ft_pwd.c
+SRCS	= main.c parse.c input.c output.c utils.c tokenize.c tokenize_utils.c tokenize_utils2.c expand.c expand_utils.c ft_echo.c heredoc.c ft_pwd.c ft_cd.c
 
 OBJS	= $(SRCS:.c=.o)
 

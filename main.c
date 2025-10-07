@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/06 07:36:41 by cyang            ###   ########.fr       */
+/*   Updated: 2025/10/07 18:59:44 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ int	execute(char **args, char **envp)
 
 	// int			fd;
 	// char		*target;
-
 	// while (redirs)
 	// {
 	// 	if (redirs->type == R_IN || redirs->type == R_HDOC)
@@ -98,9 +97,9 @@ void	sigIntHandler(int signo)
 {
 	(void)signo;
 	write(1, "\n", 1);
-	rl_on_new_line(); //　readlineに改行を伝える
+	rl_on_new_line();       //　readlineに改行を伝える
 	rl_replace_line("", 0); //　USERが入力したバッファーをクリーン
-	rl_redisplay(); //　promptを表示しなおす
+	rl_redisplay();         //　promptを表示しなおす
 }
 
 // void	sigQuitHandler(int signo)
@@ -110,12 +109,24 @@ void	sigIntHandler(int signo)
 // 	fflush(stdout); // 標準出力のバッファを即時反映
 // }
 
+int	handle_parent_builtin(char **args)
+{
+	if (!args)
+		return (0);
+	if (!ft_strcmp(args[0], "cd"))
+	{
+		ft_cd(args[1]);
+		return (1);
+	}
+	return (0);
+}
+
 // gcc main.c -lreadline -o main
 int	main(int argc, char **argv, char **envp)
 {
 	pid_t	pid;
-	char	*line;
 	int		status;
+	char	*line;
 	t_cmd	*cmds;
 
 	(void)argc;
@@ -126,29 +137,33 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		line = readline("> ");
-	
-		if (line == NULL)  // Ctrl + D 
+		if (line == NULL) // Ctrl + D
 		{
 			free(line);
-			break;
+			break ;
 		}
 		if (ft_strlen(line) == 0)
 		{
 			free(line);
 			continue ;
 		}
-		add_history(line);		
+		add_history(line);
 		cmds = parse_input(line);
 		expand(cmds->args, cmds->redirs);
 		if (!ft_strcmp(cmds->args[0], "echo"))
 		{
 			ft_echo(cmds->args);
-			continue;
+			continue ;
 		}
 		if (!ft_strcmp(cmds->args[0], "pwd"))
 		{
 			ft_pwd();
-			continue;
+			continue ;
+		}
+		if (!ft_strcmp(cmds->args[0], "cd"))
+		{
+			ft_cd(cmds->args[1]);
+			continue ;
 		}
 		pid = fork();
 		if (pid == -1)
