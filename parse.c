@@ -6,11 +6,17 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:35:42 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/04 08:47:20 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/10/12 15:33:30 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	message_exit(char *message, int exit_type)
+{
+	printf("%s\n", message);
+	exit(exit_type);
+}
 
 void	error_exit(char *error_target)
 {

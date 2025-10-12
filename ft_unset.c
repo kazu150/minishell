@@ -1,27 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/04 19:38:46 by cyang             #+#    #+#             */
-/*   Updated: 2025/10/12 15:27:09 by kaisogai         ###   ########.fr       */
+/*   Created: 2025/10/12 15:13:01 by kaisogai          #+#    #+#             */
+/*   Updated: 2025/10/12 16:32:09 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_pwd(void)
+extern char	**environ;
+
+void	ft_unset(char *arg)
 {
-	char	*cwd;
-	cwd = getcwd(NULL, 0);
-	if (!cwd)
+	int		i;
+	char	**current_arg;
+
+	if (arg == NULL)
+		message_exit("unset: not enough arguments", EXIT_FAILURE);
+	i = 0;
+	while (environ[i])
 	{
-		perror("getcwd");
-		return (1);
+		current_arg = ft_split(environ[i], '=');
+		if (ft_strcmp(current_arg[0], arg) == 0)
+		{
+			while (environ[i])
+			{
+				environ[i] = environ[i + 1];
+				i++;
+			}
+			environ[i] = 0;
+			return ;
+		}
+		i++;
 	}
-	printf("%s\n", cwd);
-	free(cwd);
-	return (0);
+	error_exit("ft_unset");
 }

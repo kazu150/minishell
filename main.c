@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/07 18:59:44 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/10/12 15:20:40 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,6 +163,11 @@ int	main(int argc, char **argv, char **envp)
 		if (!ft_strcmp(cmds->args[0], "cd"))
 		{
 			ft_cd(cmds->args[1]);
+			continue ;
+		}
+		if (!ft_strcmp(cmds->args[0], "unset"))
+		{
+			ft_unset(cmds->args[1]);
 			continue ;
 		}
 		pid = fork();
