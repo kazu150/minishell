@@ -6,13 +6,13 @@
 /*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 13:53:03 by cyang             #+#    #+#             */
-/*   Updated: 2025/10/06 07:47:24 by cyang            ###   ########.fr       */
+/*   Updated: 2025/10/12 11:18:08 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*expand_with_var(char *str)
+char	*expand_with_var(char *str, t_env *env_list)
 {
 	char	*result;
 	char	*tmp;
@@ -33,8 +33,8 @@ char	*expand_with_var(char *str)
 			var_end = var_start;
 			while (str[var_end] && (ft_isalnum(str[var_end]) || str[var_end] == '_'))
 				var_end++;
-			result = expand_and_add_var(result, str, var_start, var_end);
-			result = add_after_var(result, str, var_end);
+			result = expand_and_add_var(result, str, var_start, var_end, env_list);
+			result = add_after_var(result, str, var_end, env_list);
 			break ;
 		}
 		i++;
@@ -55,7 +55,7 @@ char	*expand_with_var(char *str)
 // $FOO → bar
 // '$FOO' → $FOO
 // "$FOO" → bar
-char	*expand_token(char *str)
+char	*expand_token(char *str, t_env *env_list)
 {
 	int		len;
 	char	*transform;
@@ -77,33 +77,33 @@ char	*expand_token(char *str)
 	{
 		without_quote = ft_substr(str, 1, len - 2);
 		free(str);
-		transform = expand_with_var(without_quote);
+		transform = expand_with_var(without_quote, env_list);
 		return (transform);
 	}
 	// "$FOO" → bar
 	else if (!ft_strchr(str, '\'') && !ft_strchr(str, '\"') && ft_strchr(str,
 			'$'))
 	{
-		transform = expand_with_var(str);
+		transform = expand_with_var(str, env_list);
 		return (transform);
 	}
 	return (str);
 }
 
-char	**expand_all(char **strs)
+char	**expand_all(char **strs, t_env *env_list)
 {
 	int	i;
 
 	i = 0;
 	while (strs[i])
 	{
-		strs[i] = expand_token(strs[i]);
+		strs[i] = expand_token(strs[i], env_list);
 		i++;
 	}
 	return (strs);
 }
 
-char	**expand(char **args, t_redir *redirs)
+char	**expand(char **args, t_redir *redirs, t_env *env_list)
 {
 	// char		*cmd;
 	int			fd;
@@ -113,7 +113,7 @@ char	**expand(char **args, t_redir *redirs)
 	{
 		if (redirs->type == R_IN || redirs->type == R_HDOC)
 		{
-			target = expand_token(redirs->target);
+			target = expand_token(redirs->target, env_list);
 			if (redirs->type == R_IN)
 				fd = open(target, O_RDONLY);
 			else if (redirs->type == R_HDOC)
@@ -126,10 +126,10 @@ char	**expand(char **args, t_redir *redirs)
 		else if (redirs->type == R_OUT || redirs->type == R_APP)
 		{
 			if (redirs->type == R_OUT)
-				fd = open(expand_token(redirs->target), O_WRONLY | O_CREAT | O_TRUNC,
+				fd = open(expand_token(redirs->target, env_list), O_WRONLY | O_CREAT | O_TRUNC,
 						0644);
 			else if (redirs->type == R_APP)
-				fd = open(expand_token(redirs->target), O_WRONLY | O_CREAT | O_APPEND,
+				fd = open(expand_token(redirs->target, env_list), O_WRONLY | O_CREAT | O_APPEND,
 						0644);
 			if (fd == -1)
 				(free_split(args), error_exit(target));
@@ -138,6 +138,6 @@ char	**expand(char **args, t_redir *redirs)
 		}
 		redirs = redirs->next;
 	}
-	args = expand_all(args);
+	args = expand_all(args, env_list);
 	return (args);
 }

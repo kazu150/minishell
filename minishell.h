@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/07 18:54:49 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/10/12 11:15:54 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,13 @@ typedef struct s_cmd
 	struct s_cmd	*next;
 }					t_cmd;
 
+typedef struct s_env
+{
+	char			*key;
+	char			*value;
+	struct s_env	*next;
+}					t_env;
+
 t_cmd				*parse_input(char *input);
 int					output(pid_t pid, char **argv, int d_pipe[2], char **envp);
 int					input_child_process(char **argv, int d_pipe[2],
@@ -96,16 +103,22 @@ int					create_new_token(char **strs, const char *str, t_split s);
 
 int					ft_strcmp(char *s1, char *s2);
 char				*store_before_dollor(char *result, char *str, int dollar_pos);
-char				*expand_and_add_var(char *result, char *str, int var_start, int var_end);
-char				*add_after_var(char *result, char *str, int var_end);
-char				*expand_with_var(char *str);
-char				*expand_token(char *str);
-char				**expand_all(char **strs);
-char				**expand(char **args, t_redir *redirs);
+char				*ft_getenv(t_env *env_list, char *key);
+char				*expand_and_add_var(char *result, char *str, int var_start, int var_end, t_env *env_list);
+char				*add_after_var(char *result, char *str, int var_end, t_env *env_list);
+char				*expand_with_var(char *str, t_env *env_list);
+char				*expand_token(char *str, t_env *env_list);
+char				**expand_all(char **strs, t_env *env_list);
+char				**expand(char **args, t_redir *redirs, t_env *env_list);
 
 int					setup_heredoc(char *target);
 void				ft_echo(char **args);
 void				ft_cd(char *path);
 int					ft_pwd(void);
 
+t_env				*new_env(char *key, char *value);
+void				add_env_back(t_env **lst, t_env *new);
+t_env				*init_env(char **envp);
+void				ft_env(t_env *env_list);
+void				ft_export(char **args, t_env **env_list);
 #endif
