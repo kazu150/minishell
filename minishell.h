@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/12 11:15:54 by cyang            ###   ########.fr       */
+/*   Updated: 2025/10/13 17:00:54 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,8 @@ char				*add_after_var(char *result, char *str, int var_end, t_env *env_list);
 char				*expand_with_var(char *str, t_env *env_list);
 char				*expand_token(char *str, t_env *env_list);
 char				**expand_all(char **strs, t_env *env_list);
-char				**expand(char **args, t_redir *redirs, t_env *env_list);
+char				**expand_args(char **args, t_env *env_list);
+void				expand_redirs(t_redir *redirs, t_env *env_list);
 
 int					setup_heredoc(char *target);
 void				ft_echo(char **args);

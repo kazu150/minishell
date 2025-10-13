@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 13:53:03 by cyang             #+#    #+#             */
-/*   Updated: 2025/10/12 11:18:08 by cyang            ###   ########.fr       */
+/*   Updated: 2025/10/13 17:00:42 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,13 @@ char	**expand_all(char **strs, t_env *env_list)
 	return (strs);
 }
 
-char	**expand(char **args, t_redir *redirs, t_env *env_list)
+char	**expand_args(char **args, t_env *env_list)
+{
+	args = expand_all(args, env_list);
+	return (args);
+}
+
+void	expand_redirs(t_redir *redirs, t_env *env_list)
 {
 	// char		*cmd;
 	int			fd;
@@ -119,7 +125,7 @@ char	**expand(char **args, t_redir *redirs, t_env *env_list)
 			else if (redirs->type == R_HDOC)
 				fd = setup_heredoc(redirs->target);
 			if (fd == -1)
-				(free_split(args), error_exit(target));
+				error_exit(target);
 			dup2(fd, STDIN_FILENO);
 			close(fd);
 		}
@@ -132,12 +138,10 @@ char	**expand(char **args, t_redir *redirs, t_env *env_list)
 				fd = open(expand_token(redirs->target, env_list), O_WRONLY | O_CREAT | O_APPEND,
 						0644);
 			if (fd == -1)
-				(free_split(args), error_exit(target));
+				error_exit(target);
 			dup2(fd, STDOUT_FILENO);
 			close(fd);
 		}
 		redirs = redirs->next;
 	}
-	args = expand_all(args, env_list);
-	return (args);
 }
