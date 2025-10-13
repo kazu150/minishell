@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/12 15:13:01 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/12 16:32:09 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/10/13 14:46:30 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,5 +37,4 @@ void	ft_unset(char *arg)
 		}
 		i++;
 	}
-	error_exit("ft_unset");
 }
