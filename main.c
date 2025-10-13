@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/07 18:59:44 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/10/12 11:18:06 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,12 +128,14 @@ int	main(int argc, char **argv, char **envp)
 	int		status;
 	char	*line;
 	t_cmd	*cmds;
+	t_env	*env_list;
 
 	(void)argc;
 	(void)argv;
 	line = NULL;
 	signal(SIGINT, sigIntHandler);
 	signal(SIGQUIT, SIG_IGN); // SIG_IGNはhandlerのコンスト。意味：Ignore Signal
+	env_list = init_env(envp);
 	while (1)
 	{
 		line = readline("> ");
@@ -149,7 +151,7 @@ int	main(int argc, char **argv, char **envp)
 		}
 		add_history(line);
 		cmds = parse_input(line);
-		expand(cmds->args, cmds->redirs);
+		expand(cmds->args, cmds->redirs, env_list);
 		if (!ft_strcmp(cmds->args[0], "echo"))
 		{
 			ft_echo(cmds->args);
@@ -163,6 +165,16 @@ int	main(int argc, char **argv, char **envp)
 		if (!ft_strcmp(cmds->args[0], "cd"))
 		{
 			ft_cd(cmds->args[1]);
+			continue ;
+		}
+		if (!ft_strcmp(cmds->args[0], "env"))
+		{
+			ft_env(env_list);
+			continue ;
+		}
+		if (!ft_strcmp(cmds->args[0], "export"))
+		{
+			ft_export(cmds->args, &env_list);
 			continue ;
 		}
 		pid = fork();
