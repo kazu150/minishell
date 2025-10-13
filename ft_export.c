@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 18:39:47 by cyang             #+#    #+#             */
-/*   Updated: 2025/10/11 19:36:13 by cyang            ###   ########.fr       */
+/*   Updated: 2025/10/13 15:29:48 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,11 @@ void	ft_export(char **args, t_env **env_list)
 	exist = 0;
 	while (args[i])
 	{
+		if (ft_strchr(args[i], '=') == 0)
+		{
+			i++;
+			continue ;
+		}
 		env_split = ft_split(args[i], '=');
 		if (env_split && env_split[0])
 		{
