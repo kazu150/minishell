@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/13 14:45:59 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/10/16 18:08:25 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,48 +32,8 @@ int	execute(char **args, char **envp)
 	char		*cmd;
 	extern char	**environ;
 
-	// int			fd;
-	// char		*target;
-	// while (redirs)
-	// {
-	// 	if (redirs->type == R_IN || redirs->type == R_HDOC)
-	// 	{
-	// 		target = expand(redirs->target);
-	// 		if (redirs->type == R_IN)
-	// 			fd = open(target, O_RDONLY);
-	// 		else if (redirs->type == R_HDOC)
-	// 			fd = setup_heredoc(redirs->target);
-	// 		if (fd == -1)
-	// 			(free_split(args), error_exit(target));
-	// 		dup2(fd, STDIN_FILENO);
-	// 		close(fd);
-	// 	}
-	// 	else if (redirs->type == R_OUT || redirs->type == R_APP)
-	// 	{
-	// 		if (redirs->type == R_OUT)
-	// 			fd = open(expand(redirs->target), O_WRONLY | O_CREAT | O_TRUNC,
-	// 					0644);
-	// 		else if (redirs->type == R_APP)
-	// 			fd = open(expand(redirs->target), O_WRONLY | O_CREAT | O_APPEND,
-	// 					0644);
-	// 		if (fd == -1)
-	// 			(free_split(args), error_exit(target));
-	// 		dup2(fd, STDOUT_FILENO);
-	// 		close(fd);
-	// 	}
-	// 	redirs = redirs->next;
-	// }
-	// args = expand_all(args);
-	// if (!args)
-	// 	error_exit(MALLOC);
 	if (args[0] == NULL)
 		handle_command_path_error(args, 1, 0);
-	// // build-in commands
-	// if (!ft_strcmp(args[0], "echo"))
-	// {
-	// 	ft_echo(args);
-	// 	exit(0);
-	// }
 	cmd = build_command_path(args, envp);
 	if (execve(cmd, args, environ) == -1)
 		(free(args), execve_error_exit(cmd));
@@ -102,13 +62,6 @@ void	sigIntHandler(int signo)
 	rl_redisplay();         //　promptを表示しなおす
 }
 
-// void	sigQuitHandler(int signo)
-// {
-// 	// シグナル番号とシグナルの説明を表示
-// 	printf("sigquit %d", signo);
-// 	fflush(stdout); // 標準出力のバッファを即時反映
-// }
-
 int	handle_parent_builtin(char **args)
 {
 	if (!args)
@@ -121,6 +74,37 @@ int	handle_parent_builtin(char **args)
 	return (0);
 }
 
+int	execute_builtin(char **args, t_redir *redirs, t_env *env_list)
+{
+	if (!ft_strcmp(args[0], "echo"))
+	{
+		expand_redirs(redirs, env_list);
+		ft_echo(args);
+		return (1);
+	}
+	if (!ft_strcmp(args[0], "pwd"))
+	{
+		ft_pwd();
+		return (1);
+	}
+	if (!ft_strcmp(args[0], "cd"))
+	{
+		ft_cd(args[1]);
+		return (1);
+	}
+	if (!ft_strcmp(args[0], "env"))
+	{
+		ft_env(env_list);
+		return (1);
+	}
+	if (!ft_strcmp(args[0], "export"))
+	{
+		ft_export(args, &env_list);
+		return (1);
+	}
+	return (0);
+}
+
 // gcc main.c -lreadline -o main
 int	main(int argc, char **argv, char **envp)
 {
@@ -128,12 +112,14 @@ int	main(int argc, char **argv, char **envp)
 	int		status;
 	char	*line;
 	t_cmd	*cmds;
+	t_env	*env_list;
 
 	(void)argc;
 	(void)argv;
 	line = NULL;
 	signal(SIGINT, sigIntHandler);
 	signal(SIGQUIT, SIG_IGN); // SIG_IGNはhandlerのコンスト。意味：Ignore Signal
+	env_list = init_env(envp);
 	while (1)
 	{
 		line = readline("> ");
@@ -149,12 +135,9 @@ int	main(int argc, char **argv, char **envp)
 		}
 		add_history(line);
 		cmds = parse_input(line);
-		expand(cmds->args, cmds->redirs);
-		if (!ft_strcmp(cmds->args[0], "echo"))
-		{
-			ft_echo(cmds->args);
+		expand_args(cmds->args, env_list);
+		if (execute_builtin(cmds->args, cmds->redirs, env_list) > 0)
 			continue ;
-		}
 		if (!ft_strcmp(cmds->args[0], "pwd"))
 		{
 			ft_pwd();
@@ -167,7 +150,7 @@ int	main(int argc, char **argv, char **envp)
 		}
 		if (!ft_strcmp(cmds->args[0], "unset"))
 		{
-			ft_unset(cmds->args[1]);
+			ft_unset(cmds->args[1], &env_list);
 			continue ;
 		}
 		pid = fork();
@@ -179,6 +162,7 @@ int	main(int argc, char **argv, char **envp)
 		{
 			if (pid == 0)
 			{
+				expand_redirs(cmds->redirs, env_list);
 				// signal(SIGINT, SIG_DFL);
 				// signal(SIGQUIT, SIG_DFL);
 				return (execute(cmds->args, envp));

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 07:39:06 by cyang             #+#    #+#             */
-/*   Updated: 2025/10/06 07:40:36 by cyang            ###   ########.fr       */
+/*   Updated: 2025/10/16 18:13:11 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,23 +28,35 @@ char	*store_before_dollor(char *result, char *str, int dollar_pos)
 	return (result);
 }
 
-char	*expand_and_add_var(char *result, char *str, int var_start, int var_end)
+char	*ft_getenv(t_env *env_list, char *key)
 {
-	char	*var_name;
-	char	*var_value;
+	t_env	*current = env_list;
+	while (current)
+	{
+		if (!ft_strcmp(current->key, key))
+			return (current->value);
+		current = current->next;
+	}
+	return (NULL);
+}
+
+char	*expand_and_add_var(char *result, char *str, int var_start, int var_end, t_env *env_list)
+{
+	char	*key_name;
+	char	*key_value;
 	char	*tmp;
 
 	if (var_end > var_start)
 	{
-		var_name = ft_substr(str, var_start, var_end - var_start);
-		var_value = getenv(var_name);
-		if (var_value)
+		key_name = ft_substr(str, var_start, var_end - var_start);
+		key_value = ft_getenv(env_list, key_name);
+		if (key_value)
 		{
-			tmp = ft_strjoin(result, var_value);
+			tmp = ft_strjoin(result, key_value);
 			free(result);
 			result = tmp;
 		}
-		free(var_name);
+		free(key_name);
 	}
 	else
 	{
@@ -55,7 +67,7 @@ char	*expand_and_add_var(char *result, char *str, int var_start, int var_end)
 	return (result);
 }
 
-char	*add_after_var(char *result, char *str, int var_end)
+char	*add_after_var(char *result, char *str, int var_end, t_env *env_list)
 {
 	char	*rest;
 	char	*rest_expanded;
@@ -64,7 +76,7 @@ char	*add_after_var(char *result, char *str, int var_end)
 	if (str[var_end])
 	{
 		rest = ft_substr(str, var_end, ft_strlen(str) - var_end);
-		rest_expanded = expand_with_var(rest);
+		rest_expanded = expand_with_var(rest, env_list);
 		tmp = ft_strjoin(result, rest_expanded);
 		free(result);
 		free(rest_expanded);

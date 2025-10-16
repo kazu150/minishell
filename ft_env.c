@@ -1,38 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_unset.c                                         :+:      :+:    :+:   */
+/*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/12 15:13:01 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/16 18:42:34 by kaisogai         ###   ########.fr       */
+/*   Created: 2025/10/10 21:07:16 by cyang             #+#    #+#             */
+/*   Updated: 2025/10/13 15:17:36 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_unset(char *arg, t_env **env_list)
+void	ft_env(t_env *env_list)
 {
 	t_env	*current;
-	t_env	*prev;
 
-	current = *env_list;
-	prev = NULL;
-	if (arg == NULL)
-		printf("unset: not enough arguments", EXIT_FAILURE);
+	current = env_list;
 	while (current)
 	{
-		if (ft_strcmp(current->key, arg) == 0)
-		{
-			if (prev)
-				prev->next = current->next;
-			else
-				*env_list = (*env_list)->next;
-			free(current);
-			return ;
-		}
-		prev = current;
+		printf("%s=%s\n", current->key, current->value);
 		current = current->next;
 	}
 }
