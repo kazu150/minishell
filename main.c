@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/13 17:13:45 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/10/16 17:54:49 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,34 +74,20 @@ int	handle_parent_builtin(char **args)
 	return (0);
 }
 
-int	execute_builtin(char **args, t_redir *redirs, t_env *env_list)
+int	is_builtin_fn(char **args, t_redir *redirs, t_env *env_list)
 {
 	if (!ft_strcmp(args[0], "echo"))
-	{
-		expand_redirs(redirs, env_list);
-		ft_echo(args);
-		return (1);
-	}
+		return (expand_redirs(redirs, env_list), ft_echo(args), 1);
 	if (!ft_strcmp(args[0], "pwd"))
-	{
-		ft_pwd();
-		return (1);
-	}
+		return (expand_redirs(redirs, env_list), ft_pwd(), 1);
 	if (!ft_strcmp(args[0], "cd"))
-	{
-		ft_cd(args[1]);
-		return (1);
-	}
+		return (expand_redirs(redirs, env_list), ft_cd(args[1]), 1);
 	if (!ft_strcmp(args[0], "env"))
-	{
-		ft_env(env_list);
-		return (1);
-	}
+		return (expand_redirs(redirs, env_list), ft_env(env_list), 1);
 	if (!ft_strcmp(args[0], "export"))
-	{
-		ft_export(args, &env_list);
-		return (1);
-	}
+		return (expand_redirs(redirs, env_list), ft_export(args, &env_list), 1);
+	if (!ft_strcmp(args[0], "exit"))
+		return (expand_redirs(redirs, env_list), ft_exit(), 1);
 	return (0);
 }
 
@@ -123,11 +109,8 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		line = readline("> ");
-		if (line == NULL) // Ctrl + D
-		{
-			free(line);
-			break ;
-		}
+		if (line == NULL)
+			free_exit(line);
 		if (ft_strlen(line) == 0)
 		{
 			free(line);
@@ -136,7 +119,7 @@ int	main(int argc, char **argv, char **envp)
 		add_history(line);
 		cmds = parse_input(line);
 		expand_args(cmds->args, env_list);
-		if (execute_builtin(cmds->args, cmds->redirs, env_list) > 0)
+		if (is_builtin_fn(cmds->args, cmds->redirs, env_list))
 			continue ;
 		pid = fork();
 		if (pid == -1)
