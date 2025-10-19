@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 20:59:29 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/07 19:02:34 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/10/19 15:56:13 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	ft_setenv(char *target, char *value)
 	error_exit("ft_setenv");
 }
 
-void	ft_cd(char *path)
+int 	ft_cd(char *path)
 {
 	char	*old_pwd;
 	int		res;
@@ -52,8 +52,9 @@ void	ft_cd(char *path)
 	old_pwd = getcwd(NULL, 0);
 	res = chdir(path);
 	if (res < 0)
-		perror(ft_strjoin("cd: ", path));
+		return (perror(ft_strjoin("cd: ", path)), 1);
 	pwd = getcwd(NULL, 0);
 	ft_setenv("OLDPWD", old_pwd);
 	ft_setenv("PWD", pwd);
+	return 0;
 }

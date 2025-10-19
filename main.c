@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/19 11:56:38 by cyang            ###   ########.fr       */
+/*   Updated: 2025/10/19 16:02:39 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,25 +74,21 @@ int	handle_parent_builtin(char **args)
 	return (0);
 }
 
-int	execute_builtin(char **args, t_redir *redirs, t_env *env_list, int exit_status)
+int	is_builtin_fn(char **args, t_redir *redirs, t_env *env_list, int exit_status)
 {
 	if (!ft_strcmp(args[0], "echo"))
-	{
-		expand_redirs(redirs, env_list, exit_status);
-		return (ft_echo(args));
-	}
+		return (expand_redirs(redirs, env_list, exit_status), ft_echo(args));
 	if (!ft_strcmp(args[0], "pwd"))
-		return (ft_pwd(args));
+		return (expand_redirs(redirs, env_list, exit_status), ft_pwd(args));
 	if (!ft_strcmp(args[0], "cd"))
-	{
-		ft_cd(args[1]);
-		return (1);
-	}
+		return (expand_redirs(redirs, env_list, exit_status), ft_cd(args[1]));
 	if (!ft_strcmp(args[0], "env"))
-		return (ft_env(args, env_list));
+		return (expand_redirs(redirs, env_list, exit_status), ft_env(args, env_list));
 	if (!ft_strcmp(args[0], "export"))
-		return (ft_export(args, &env_list));
-	return (-1);
+		return (expand_redirs(redirs, env_list, exit_status), ft_export(args, &env_list));
+	if (!ft_strcmp(args[0], "exit"))
+		return (expand_redirs(redirs, env_list, exit_status), ft_exit());
+	return (0);
 }
 
 // gcc main.c -lreadline -o main
@@ -116,11 +112,8 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		line = readline("> ");
-		if (line == NULL) // Ctrl + D
-		{
-			free(line);
-			break ;
-		}
+		if (line == NULL)
+			free_exit(line);
 		if (ft_strlen(line) == 0)
 		{
 			free(line);
@@ -129,7 +122,12 @@ int	main(int argc, char **argv, char **envp)
 		add_history(line);
 		cmds = parse_input(line);
 		expand_args(cmds->args, env_list, exit_status);
-		builtin_return = execute_builtin(cmds->args, cmds->redirs, env_list, exit_status);
+		builtin_return = is_builtin_fn(cmds->args, cmds->redirs, env_list, exit_status);
+		if (!ft_strcmp(cmds->args[0], "unset"))
+		{
+			builtin_return = ft_unset(cmds->args[1], &env_list);
+			continue ;
+		}
 		if (builtin_return != -1)
 		{
 			exit_status = builtin_return;
