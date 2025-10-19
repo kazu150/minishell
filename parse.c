@@ -24,6 +24,12 @@ void	error_exit(char *error_target)
 	exit(EXIT_FAILURE);
 }
 
+void	free_exit(void *target)
+{
+	free(target);
+	exit(EXIT_SUCCESS);
+}
+
 static void	free_all(char **array)
 {
 	int	i;

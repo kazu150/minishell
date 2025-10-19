@@ -14,19 +14,19 @@
 # define MINISHELL_H
 
 # include "libft/libft.h"
-# include <unistd.h>
-# include <stdio.h>
-# include <stdlib.h>
 # include <errno.h>
 # include <fcntl.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
 # include <stdarg.h>
+# include <stdio.h>
+# include <stdlib.h>
 # include <string.h>
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <termios.h>
+# include <unistd.h>
 
 # define DUP2 "dup2"
 # define PIPE "pipe"
@@ -102,10 +102,13 @@ void				copy_strs(int word_length, char *strs, const char *str);
 int					create_new_token(char **strs, const char *str, t_split s);
 
 int					ft_strcmp(char *s1, char *s2);
-char				*store_before_dollor(char *result, char *str, int dollar_pos);
+char				*store_before_dollor(char *result, char *str,
+						int dollar_pos);
 char				*ft_getenv(t_env *env_list, char *key);
-char				*expand_and_add_var(char *result, char *str, int var_start, int var_end, t_env *env_list);
-char				*add_after_var(char *result, char *str, int var_end, t_env *env_list);
+char				*expand_and_add_var(char *result, char *str, int var_start,
+						int var_end, t_env *env_list);
+char				*add_after_var(char *result, char *str, int var_end,
+						t_env *env_list);
 char				*expand_with_var(char *str, t_env *env_list);
 char				*expand_token(char *str, t_env *env_list);
 char				**expand_all(char **strs, t_env *env_list);
@@ -124,4 +127,6 @@ void				add_env_back(t_env **lst, t_env *new);
 t_env				*init_env(char **envp);
 void				ft_env(t_env *env_list);
 void				ft_export(char **args, t_env **env_list);
+void				ft_exit(void);
+void				free_exit(void *target);
 #endif

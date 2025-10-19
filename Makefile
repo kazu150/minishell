@@ -16,8 +16,7 @@ CFLAGS	= -Wall -Wextra -Werror
 INCLUDE	= -I./ -I./libft -I/usr/local/opt/readline/include
 READLINE = -L/usr/local/opt/readline/lib -lreadline
 LIBFT	= libft/libft.a
-
-SRCS	= main.c parse.c input.c output.c utils.c tokenize.c tokenize_utils.c tokenize_utils2.c expand.c expand_utils.c ft_echo.c heredoc.c ft_pwd.c ft_cd.c init_env.c ft_env.c ft_export.c ft_unset.c
+SRCS	= main.c parse.c input.c output.c utils.c tokenize.c tokenize_utils.c tokenize_utils2.c expand.c expand_utils.c ft_echo.c heredoc.c ft_pwd.c ft_cd.c init_env.c ft_env.c ft_export.c ft_exit.c ft_unset.c
 
 OBJS	= $(SRCS:.c=.o)
 
