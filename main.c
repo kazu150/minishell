@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/16 17:54:49 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/10/19 15:43:49 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,11 @@ int	main(int argc, char **argv, char **envp)
 		expand_args(cmds->args, env_list);
 		if (is_builtin_fn(cmds->args, cmds->redirs, env_list))
 			continue ;
+		if (!ft_strcmp(cmds->args[0], "unset"))
+		{
+			ft_unset(cmds->args[1], &env_list);
+			continue ;
+		}
 		pid = fork();
 		if (pid == -1)
 			error_exit(FORK);

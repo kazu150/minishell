@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/16 17:55:15 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/10/16 18:09:26 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,8 @@ int					setup_heredoc(char *target);
 void				ft_echo(char **args);
 void				ft_cd(char *path);
 int					ft_pwd(void);
+void				ft_unset(char *arg, t_env **env_list);
+void				message_exit(char *message, int exit_type);
 
 t_env				*new_env(char *key, char *value);
 void				add_env_back(t_env **lst, t_env *new);
