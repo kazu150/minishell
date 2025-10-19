@@ -6,7 +6,7 @@
 /*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 07:39:06 by cyang             #+#    #+#             */
-/*   Updated: 2025/10/12 11:17:52 by cyang            ###   ########.fr       */
+/*   Updated: 2025/10/19 11:32:31 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ char	*expand_and_add_var(char *result, char *str, int var_start, int var_end, t_
 	return (result);
 }
 
-char	*add_after_var(char *result, char *str, int var_end, t_env *env_list)
+char	*add_after_var(char *result, char *str, int var_end, t_env *env_list, int exit_status)
 {
 	char	*rest;
 	char	*rest_expanded;
@@ -76,7 +76,7 @@ char	*add_after_var(char *result, char *str, int var_end, t_env *env_list)
 	if (str[var_end])
 	{
 		rest = ft_substr(str, var_end, ft_strlen(str) - var_end);
-		rest_expanded = expand_with_var(rest, env_list);
+		rest_expanded = expand_with_var(rest, env_list, exit_status);
 		tmp = ft_strjoin(result, rest_expanded);
 		free(result);
 		free(rest_expanded);

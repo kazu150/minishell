@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/13 17:13:45 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/10/19 11:56:38 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,35 +74,25 @@ int	handle_parent_builtin(char **args)
 	return (0);
 }
 
-int	execute_builtin(char **args, t_redir *redirs, t_env *env_list)
+int	execute_builtin(char **args, t_redir *redirs, t_env *env_list, int exit_status)
 {
 	if (!ft_strcmp(args[0], "echo"))
 	{
-		expand_redirs(redirs, env_list);
-		ft_echo(args);
-		return (1);
+		expand_redirs(redirs, env_list, exit_status);
+		return (ft_echo(args));
 	}
 	if (!ft_strcmp(args[0], "pwd"))
-	{
-		ft_pwd();
-		return (1);
-	}
+		return (ft_pwd(args));
 	if (!ft_strcmp(args[0], "cd"))
 	{
 		ft_cd(args[1]);
 		return (1);
 	}
 	if (!ft_strcmp(args[0], "env"))
-	{
-		ft_env(env_list);
-		return (1);
-	}
+		return (ft_env(args, env_list));
 	if (!ft_strcmp(args[0], "export"))
-	{
-		ft_export(args, &env_list);
-		return (1);
-	}
-	return (0);
+		return (ft_export(args, &env_list));
+	return (-1);
 }
 
 // gcc main.c -lreadline -o main
@@ -113,9 +103,12 @@ int	main(int argc, char **argv, char **envp)
 	char	*line;
 	t_cmd	*cmds;
 	t_env	*env_list;
+	int		exit_status;
+	int		builtin_return;
 
 	(void)argc;
 	(void)argv;
+	exit_status = 0;
 	line = NULL;
 	signal(SIGINT, sigIntHandler);
 	signal(SIGQUIT, SIG_IGN); // SIG_IGNはhandlerのコンスト。意味：Ignore Signal
@@ -135,9 +128,14 @@ int	main(int argc, char **argv, char **envp)
 		}
 		add_history(line);
 		cmds = parse_input(line);
-		expand_args(cmds->args, env_list);
-		if (execute_builtin(cmds->args, cmds->redirs, env_list) > 0)
-			continue ;
+		expand_args(cmds->args, env_list, exit_status);
+		builtin_return = execute_builtin(cmds->args, cmds->redirs, env_list, exit_status);
+		if (builtin_return != -1)
+		{
+			exit_status = builtin_return;
+			free(line);
+			continue;
+		}
 		pid = fork();
 		if (pid == -1)
 			error_exit(FORK);
@@ -147,7 +145,7 @@ int	main(int argc, char **argv, char **envp)
 		{
 			if (pid == 0)
 			{
-				expand_redirs(cmds->redirs, env_list);
+				expand_redirs(cmds->redirs, env_list, exit_status);
 				// signal(SIGINT, SIG_DFL);
 				// signal(SIGQUIT, SIG_DFL);
 				return (execute(cmds->args, envp));
