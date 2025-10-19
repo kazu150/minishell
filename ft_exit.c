@@ -6,13 +6,14 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 17:15:12 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/16 17:56:15 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/10/19 15:59:42 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_exit(void)
+int	ft_exit(void)
 {
 	free_exit(NULL);
+	return (1);
 }

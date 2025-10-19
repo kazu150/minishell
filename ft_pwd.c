@@ -6,16 +6,22 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 19:38:46 by cyang             #+#    #+#             */
-/*   Updated: 2025/10/12 15:27:09 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/10/19 15:46:16 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_pwd(void)
+int	ft_pwd(char **args)
 {
 	char	*cwd;
 	cwd = getcwd(NULL, 0);
+
+	if (args && args[1] != NULL)
+	{
+		ft_putendl_fd("pwd: too many arguments", 2);
+		return (1);
+	}
 	if (!cwd)
 	{
 		perror("getcwd");

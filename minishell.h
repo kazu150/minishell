@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/16 18:09:26 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/10/19 16:03:44 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,28 +105,26 @@ int					ft_strcmp(char *s1, char *s2);
 char				*store_before_dollor(char *result, char *str,
 						int dollar_pos);
 char				*ft_getenv(t_env *env_list, char *key);
-char				*expand_and_add_var(char *result, char *str, int var_start,
-						int var_end, t_env *env_list);
-char				*add_after_var(char *result, char *str, int var_end,
-						t_env *env_list);
-char				*expand_with_var(char *str, t_env *env_list);
-char				*expand_token(char *str, t_env *env_list);
-char				**expand_all(char **strs, t_env *env_list);
-char				**expand_args(char **args, t_env *env_list);
-void				expand_redirs(t_redir *redirs, t_env *env_list);
+char				*expand_and_add_var(char *result, char *str, int var_start, int var_end, t_env *env_list);
+char				*add_after_var(char *result, char *str, int var_end, t_env *env_list, int exit_status);
+char				*expand_with_var(char *str, t_env *env_list, int exit_status);
+char				*expand_token(char *str, t_env *env_list, int exit_status);
+char				**expand_all(char **strs, t_env *env_list, int exit_status);
+char				**expand_args(char **args, t_env *env_list, int	exit_status);
+void				expand_redirs(t_redir *redirs, t_env *env_list, int exit_status);
 
 int					setup_heredoc(char *target);
-void				ft_echo(char **args);
-void				ft_cd(char *path);
-int					ft_pwd(void);
-void				ft_unset(char *arg, t_env **env_list);
+int					ft_echo(char **args);
+int					ft_cd(char *path);
+int					ft_pwd(char **args);
+int					ft_unset(char *arg, t_env **env_list);
 void				message_exit(char *message, int exit_type);
 
 t_env				*new_env(char *key, char *value);
 void				add_env_back(t_env **lst, t_env *new);
 t_env				*init_env(char **envp);
-void				ft_env(t_env *env_list);
-void				ft_export(char **args, t_env **env_list);
-void				ft_exit(void);
+int					ft_env(char **args, t_env *env_list);
+int					ft_export(char **args, t_env **env_list);
+int 				ft_exit(void);
 void				free_exit(void *target);
 #endif

@@ -3,16 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 13:53:03 by cyang             #+#    #+#             */
-/*   Updated: 2025/10/13 17:00:42 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/10/19 11:32:58 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*expand_with_var(char *str, t_env *env_list)
+static char *handle_dolloar_question(char *result, int exit_status)
+{
+	char	*num;
+	char	*joined;
+
+	num = ft_itoa(exit_status);
+	if (!num)
+		error_exit(MALLOC);
+	joined = ft_strjoin(result, num);
+	free(result);
+	free(num);
+	if(!joined)
+		error_exit(MALLOC);
+	return (joined);
+}
+
+char	*expand_with_var(char *str, t_env *env_list,int	exit_status)
 {
 	char	*result;
 	char	*tmp;
@@ -30,11 +46,19 @@ char	*expand_with_var(char *str, t_env *env_list)
 		{
 			result = store_before_dollor(result, str, i);
 			var_start = i + 1;
+			if (str[var_start] == '?')
+			{
+				var_end = var_start + 1;
+				result = handle_dolloar_question(result, exit_status);
+				result = add_after_var(result, str, var_end, env_list, exit_status);
+				break ;
+
+			}
 			var_end = var_start;
 			while (str[var_end] && (ft_isalnum(str[var_end]) || str[var_end] == '_'))
 				var_end++;
 			result = expand_and_add_var(result, str, var_start, var_end, env_list);
-			result = add_after_var(result, str, var_end, env_list);
+			result = add_after_var(result, str, var_end, env_list, exit_status);
 			break ;
 		}
 		i++;
@@ -55,7 +79,7 @@ char	*expand_with_var(char *str, t_env *env_list)
 // $FOO → bar
 // '$FOO' → $FOO
 // "$FOO" → bar
-char	*expand_token(char *str, t_env *env_list)
+char	*expand_token(char *str, t_env *env_list, int exit_status)
 {
 	int		len;
 	char	*transform;
@@ -77,39 +101,39 @@ char	*expand_token(char *str, t_env *env_list)
 	{
 		without_quote = ft_substr(str, 1, len - 2);
 		free(str);
-		transform = expand_with_var(without_quote, env_list);
+		transform = expand_with_var(without_quote, env_list, exit_status);
 		return (transform);
 	}
 	// "$FOO" → bar
 	else if (!ft_strchr(str, '\'') && !ft_strchr(str, '\"') && ft_strchr(str,
 			'$'))
 	{
-		transform = expand_with_var(str, env_list);
+		transform = expand_with_var(str, env_list, exit_status);
 		return (transform);
 	}
 	return (str);
 }
 
-char	**expand_all(char **strs, t_env *env_list)
+char	**expand_all(char **strs, t_env *env_list, int exit_status)
 {
 	int	i;
 
 	i = 0;
 	while (strs[i])
 	{
-		strs[i] = expand_token(strs[i], env_list);
+		strs[i] = expand_token(strs[i], env_list, exit_status);
 		i++;
 	}
 	return (strs);
 }
 
-char	**expand_args(char **args, t_env *env_list)
+char	**expand_args(char **args, t_env *env_list, int exit_status)
 {
-	args = expand_all(args, env_list);
+	args = expand_all(args, env_list, exit_status);
 	return (args);
 }
 
-void	expand_redirs(t_redir *redirs, t_env *env_list)
+void	expand_redirs(t_redir *redirs, t_env *env_list, int exit_status)
 {
 	// char		*cmd;
 	int			fd;
@@ -119,7 +143,7 @@ void	expand_redirs(t_redir *redirs, t_env *env_list)
 	{
 		if (redirs->type == R_IN || redirs->type == R_HDOC)
 		{
-			target = expand_token(redirs->target, env_list);
+			target = expand_token(redirs->target, env_list, exit_status);
 			if (redirs->type == R_IN)
 				fd = open(target, O_RDONLY);
 			else if (redirs->type == R_HDOC)
@@ -132,10 +156,10 @@ void	expand_redirs(t_redir *redirs, t_env *env_list)
 		else if (redirs->type == R_OUT || redirs->type == R_APP)
 		{
 			if (redirs->type == R_OUT)
-				fd = open(expand_token(redirs->target, env_list), O_WRONLY | O_CREAT | O_TRUNC,
+				fd = open(expand_token(redirs->target, env_list, exit_status), O_WRONLY | O_CREAT | O_TRUNC,
 						0644);
 			else if (redirs->type == R_APP)
-				fd = open(expand_token(redirs->target, env_list), O_WRONLY | O_CREAT | O_APPEND,
+				fd = open(expand_token(redirs->target, env_list, exit_status), O_WRONLY | O_CREAT | O_APPEND,
 						0644);
 			if (fd == -1)
 				error_exit(target);

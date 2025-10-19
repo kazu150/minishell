@@ -6,13 +6,13 @@
 /*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 15:59:02 by cyang             #+#    #+#             */
-/*   Updated: 2025/09/29 17:30:26 by cyang            ###   ########.fr       */
+/*   Updated: 2025/10/19 11:34:15 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_echo(char **args)
+int	ft_echo(char **args)
 {
 	int	i;
 	int	newline;
@@ -33,4 +33,5 @@ void	ft_echo(char **args)
 	}
 	if (newline == 1)
 		printf("\n");
+	return (0);
 }
