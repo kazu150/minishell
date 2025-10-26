@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 13:53:03 by cyang             #+#    #+#             */
-/*   Updated: 2025/10/19 11:32:58 by cyang            ###   ########.fr       */
+/*   Updated: 2025/10/26 15:51:05 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char *handle_dolloar_question(char *result, int exit_status)
+static char	*handle_dolloar_question(char *result, int exit_status)
 {
 	char	*num;
 	char	*joined;
@@ -23,12 +23,12 @@ static char *handle_dolloar_question(char *result, int exit_status)
 	joined = ft_strjoin(result, num);
 	free(result);
 	free(num);
-	if(!joined)
+	if (!joined)
 		error_exit(MALLOC);
 	return (joined);
 }
 
-char	*expand_with_var(char *str, t_env *env_list,int	exit_status)
+char	*expand_with_var(char *str, t_env *env_list, int exit_status)
 {
 	char	*result;
 	char	*tmp;
@@ -50,14 +50,16 @@ char	*expand_with_var(char *str, t_env *env_list,int	exit_status)
 			{
 				var_end = var_start + 1;
 				result = handle_dolloar_question(result, exit_status);
-				result = add_after_var(result, str, var_end, env_list, exit_status);
+				result = add_after_var(result, str, var_end, env_list,
+						exit_status);
 				break ;
-
 			}
 			var_end = var_start;
-			while (str[var_end] && (ft_isalnum(str[var_end]) || str[var_end] == '_'))
+			while (str[var_end] && (ft_isalnum(str[var_end])
+					|| str[var_end] == '_'))
 				var_end++;
-			result = expand_and_add_var(result, str, var_start, var_end, env_list);
+			result = expand_and_add_var(result, str, var_start, var_end,
+					env_list);
 			result = add_after_var(result, str, var_end, env_list, exit_status);
 			break ;
 		}
@@ -133,12 +135,25 @@ char	**expand_args(char **args, t_env *env_list, int exit_status)
 	return (args);
 }
 
-void	expand_redirs(t_redir *redirs, t_env *env_list, int exit_status)
+int find_unused_fd(int fd, t_fds fds)
 {
-	// char		*cmd;
-	int			fd;
-	char		*target;
+	int new_fd;
+	new_fd = fd + 1;
 
+	if (fds.read_fd == new_fd)
+		new_fd++;
+	if (fds.write_fd == new_fd)
+		new_fd++;
+	return new_fd;
+}
+
+t_fds	expand_redirs(t_redir *redirs, t_env *env_list, int exit_status)
+{
+	int		fd;
+	char	*target;
+	t_fds	fds;
+
+	// char		*cmd;
 	while (redirs)
 	{
 		if (redirs->type == R_IN || redirs->type == R_HDOC)
@@ -150,22 +165,27 @@ void	expand_redirs(t_redir *redirs, t_env *env_list, int exit_status)
 				fd = setup_heredoc(redirs->target);
 			if (fd == -1)
 				error_exit(target);
+			dup2(STDIN_FILENO, fd + 1);
+			fds.read_fd = find_unused_fd(fd, fds);
 			dup2(fd, STDIN_FILENO);
 			close(fd);
 		}
 		else if (redirs->type == R_OUT || redirs->type == R_APP)
 		{
 			if (redirs->type == R_OUT)
-				fd = open(expand_token(redirs->target, env_list, exit_status), O_WRONLY | O_CREAT | O_TRUNC,
-						0644);
+				fd = open(expand_token(redirs->target, env_list, exit_status),
+						O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			else if (redirs->type == R_APP)
-				fd = open(expand_token(redirs->target, env_list, exit_status), O_WRONLY | O_CREAT | O_APPEND,
-						0644);
+				fd = open(expand_token(redirs->target, env_list, exit_status),
+						O_WRONLY | O_CREAT | O_APPEND, 0644);
 			if (fd == -1)
 				error_exit(target);
+			dup2(STDOUT_FILENO, fd + 1);
+			fds.write_fd = find_unused_fd(fd, fds);
 			dup2(fd, STDOUT_FILENO);
 			close(fd);
 		}
 		redirs = redirs->next;
 	}
+	return fds;
 }
