@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/26 17:32:53 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/10/19 16:03:44 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,11 +81,6 @@ typedef struct s_env
 	struct s_env	*next;
 }					t_env;
 
-typedef struct s_fds {
-	int read_fd;
-	int write_fd;
-} t_fds;
-
 t_cmd				*parse_input(char *input);
 int					output(pid_t pid, char **argv, int d_pipe[2], char **envp);
 int					input_child_process(char **argv, int d_pipe[2],
@@ -116,7 +111,7 @@ char				*expand_with_var(char *str, t_env *env_list, int exit_status);
 char				*expand_token(char *str, t_env *env_list, int exit_status);
 char				**expand_all(char **strs, t_env *env_list, int exit_status);
 char				**expand_args(char **args, t_env *env_list, int	exit_status);
-t_fds				expand_redirs(t_redir *redirs, t_env *env_list, int exit_status);
+void				expand_redirs(t_redir *redirs, t_env *env_list, int exit_status);
 
 int					setup_heredoc(char *target);
 int					ft_echo(char **args);
@@ -132,7 +127,4 @@ int					ft_env(char **args, t_env *env_list);
 int					ft_export(char **args, t_env **env_list);
 int 				ft_exit(void);
 void				free_exit(void *target);
-
-int					exec_builtin_fn(t_cmd *cmds, t_env **env_list, int exit_status);
-
 #endif
