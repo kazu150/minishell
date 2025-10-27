@@ -6,7 +6,7 @@
 /*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 18:39:47 by cyang             #+#    #+#             */
-/*   Updated: 2025/10/27 10:42:46 by cyang            ###   ########.fr       */
+/*   Updated: 2025/10/27 13:55:50 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int is_valid_export_key(const char *key)
 
 static int	handle_export_error(char *invalid_key)
 {
-	ft_putstr_fd("bash: export: `", 2);
+	ft_putstr_fd("export: `", 2);
 	ft_putstr_fd(invalid_key, 2);
 	ft_putendl_fd("': not a valid identifier", 2);
 	return (1);
@@ -57,15 +57,13 @@ int	ft_export(char **args, t_env **env_list)
 		if (!equal_pos)
 		{
 			if (!is_valid_export_key(args[i]))
-			{
 				exit_code = handle_export_error(args[i]);
-				i++;
-				continue ;
-			}
+			i++;
+			continue ;
 		}
 		if (equal_pos == args[i])
 		{
-			ft_putendl_fd("bash: =: command not found", 2);
+			ft_putendl_fd("export: =: not a valid identifier", 2);
 			return(127);
 		}
 		key = ft_substr(args[i], 0, equal_pos - args[i]);
