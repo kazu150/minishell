@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/27 14:00:38 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/10/27 15:32:45 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,21 @@ void	sigIntHandler(int signo)
 	rl_redisplay();         //　promptを表示しなおす
 }
 
+int	without_fork(char *line, t_cmd *cmds, t_env **env_list, int exit_status, char **envp)
+{
+	int		builtin_status;
+
+	expand_args(cmds->args, *env_list, exit_status);
+	builtin_status = exec_builtin_fn(cmds, env_list, exit_status);
+	if (builtin_status != -1)
+	{
+		exit_status = builtin_status;
+		free(line);
+		return (0);
+	}
+	return (execute(cmds->args, envp));
+}
+
 // gcc main.c -lreadline -o main
 int	main(int argc, char **argv, char **envp)
 {
@@ -92,7 +107,15 @@ int	main(int argc, char **argv, char **envp)
 		}
 		add_history(line);
 		cmds = parse_input(line);
+		if (!cmds->next)
+		{
+			without_fork(line, cmds, &env_list, exit_status, envp);
+			continue ;
+		}
+		cmds = parse_input(line);
 		expand_args(cmds->args, env_list, exit_status);
+		if (cmds->next)
+			pid = fork();
 		builtin_status = exec_builtin_fn(cmds, &env_list, exit_status);
 		if (builtin_status != -1)
 		{
@@ -100,7 +123,6 @@ int	main(int argc, char **argv, char **envp)
 			free(line);
 			continue ;
 		}
-		pid = fork();
 		if (pid == -1)
 			error_exit(FORK);
 		// TODO
