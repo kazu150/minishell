@@ -3,28 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 19:38:46 by cyang             #+#    #+#             */
-/*   Updated: 2025/10/19 15:46:16 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/10/27 13:40:24 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_pwd(char **args)
+int	ft_pwd(void)
 {
 	char	*cwd;
 	cwd = getcwd(NULL, 0);
 
-	if (args && args[1] != NULL)
-	{
-		ft_putendl_fd("pwd: too many arguments", 2);
-		return (1);
-	}
 	if (!cwd)
 	{
-		perror("getcwd");
+		perror("pwd");
 		return (1);
 	}
 	printf("%s\n", cwd);

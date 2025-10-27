@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/19 16:03:44 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/10/27 13:40:35 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 # define MINISHELL_H
 
 # include "libft/libft.h"
+# include <stdio.h>
 # include <errno.h>
 # include <fcntl.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
 # include <stdarg.h>
-# include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
 # include <sys/types.h>
@@ -116,7 +116,7 @@ void				expand_redirs(t_redir *redirs, t_env *env_list, int exit_status);
 int					setup_heredoc(char *target);
 int					ft_echo(char **args);
 int					ft_cd(char *path);
-int					ft_pwd(char **args);
+int					ft_pwd(void);
 int					ft_unset(char *arg, t_env **env_list);
 void				message_exit(char *message, int exit_type);
 
