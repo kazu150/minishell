@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/27 13:40:59 by cyang            ###   ########.fr       */
+/*   Updated: 2025/10/27 14:00:38 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,35 +62,6 @@ void	sigIntHandler(int signo)
 	rl_redisplay();         //　promptを表示しなおす
 }
 
-int	handle_parent_builtin(char **args)
-{
-	if (!args)
-		return (0);
-	if (!ft_strcmp(args[0], "cd"))
-	{
-		ft_cd(args[1]);
-		return (1);
-	}
-	return (0);
-}
-
-int	is_builtin_fn(char **args, t_redir *redirs, t_env *env_list, int exit_status)
-{
-	if (!ft_strcmp(args[0], "echo"))
-		return (expand_redirs(redirs, env_list, exit_status), ft_echo(args));
-	if (!ft_strcmp(args[0], "pwd"))
-		return (expand_redirs(redirs, env_list, exit_status), ft_pwd());
-	if (!ft_strcmp(args[0], "cd"))
-		return (expand_redirs(redirs, env_list, exit_status), ft_cd(args[1]));
-	if (!ft_strcmp(args[0], "env"))
-		return (expand_redirs(redirs, env_list, exit_status), ft_env(args, env_list));
-	if (!ft_strcmp(args[0], "export"))
-		return (expand_redirs(redirs, env_list, exit_status), ft_export(args, &env_list));
-	if (!ft_strcmp(args[0], "exit"))
-		return (expand_redirs(redirs, env_list, exit_status), ft_exit());
-	return (-1);
-}
-
 // gcc main.c -lreadline -o main
 int	main(int argc, char **argv, char **envp)
 {
@@ -100,7 +71,7 @@ int	main(int argc, char **argv, char **envp)
 	t_cmd	*cmds;
 	t_env	*env_list;
 	int		exit_status;
-	int		builtin_return;
+	int		builtin_status;
 
 	(void)argc;
 	(void)argv;
@@ -122,17 +93,12 @@ int	main(int argc, char **argv, char **envp)
 		add_history(line);
 		cmds = parse_input(line);
 		expand_args(cmds->args, env_list, exit_status);
-		builtin_return = is_builtin_fn(cmds->args, cmds->redirs, env_list, exit_status);
-		if (!ft_strcmp(cmds->args[0], "unset"))
+		builtin_status = exec_builtin_fn(cmds, &env_list, exit_status);
+		if (builtin_status != -1)
 		{
-			builtin_return = ft_unset(cmds->args[1], &env_list);
-			continue ;
-		}
-		if (builtin_return != -1)
-		{
-			exit_status = builtin_return;
+			exit_status = builtin_status;
 			free(line);
-			continue;
+			continue ;
 		}
 		pid = fork();
 		if (pid == -1)

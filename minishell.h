@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/27 13:40:35 by cyang            ###   ########.fr       */
+/*   Updated: 2025/10/27 14:13:41 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,11 @@ typedef struct s_env
 	struct s_env	*next;
 }					t_env;
 
+typedef struct s_fds {
+	int read_fd;
+	int write_fd;
+} t_fds;
+
 t_cmd				*parse_input(char *input);
 int					output(pid_t pid, char **argv, int d_pipe[2], char **envp);
 int					input_child_process(char **argv, int d_pipe[2],
@@ -111,11 +116,11 @@ char				*expand_with_var(char *str, t_env *env_list, int exit_status);
 char				*expand_token(char *str, t_env *env_list, int exit_status);
 char				**expand_all(char **strs, t_env *env_list, int exit_status);
 char				**expand_args(char **args, t_env *env_list, int	exit_status);
-void				expand_redirs(t_redir *redirs, t_env *env_list, int exit_status);
+t_fds				expand_redirs(t_redir *redirs, t_env *env_list, int exit_status);
 
 int					setup_heredoc(char *target);
 int					ft_echo(char **args);
-int					ft_cd(char *path);
+int					ft_cd(char *path, t_env** env_list);
 int					ft_pwd(void);
 int					ft_unset(char *arg, t_env **env_list);
 void				message_exit(char *message, int exit_type);
@@ -127,4 +132,7 @@ int					ft_env(char **args, t_env *env_list);
 int					ft_export(char **args, t_env **env_list);
 int 				ft_exit(void);
 void				free_exit(void *target);
+
+int					exec_builtin_fn(t_cmd *cmds, t_env **env_list, int exit_status);
+
 #endif
