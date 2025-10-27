@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 13:53:03 by cyang             #+#    #+#             */
-/*   Updated: 2025/10/26 15:51:05 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/10/27 14:35:20 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,8 +165,8 @@ t_fds	expand_redirs(t_redir *redirs, t_env *env_list, int exit_status)
 				fd = setup_heredoc(redirs->target);
 			if (fd == -1)
 				error_exit(target);
-			dup2(STDIN_FILENO, fd + 1);
 			fds.read_fd = find_unused_fd(fd, fds);
+			dup2(STDIN_FILENO, fds.read_fd);
 			dup2(fd, STDIN_FILENO);
 			close(fd);
 		}
@@ -180,8 +180,8 @@ t_fds	expand_redirs(t_redir *redirs, t_env *env_list, int exit_status)
 						O_WRONLY | O_CREAT | O_APPEND, 0644);
 			if (fd == -1)
 				error_exit(target);
-			dup2(STDOUT_FILENO, fd + 1);
 			fds.write_fd = find_unused_fd(fd, fds);
+			dup2(STDOUT_FILENO, fds.write_fd);
 			dup2(fd, STDOUT_FILENO);
 			close(fd);
 		}

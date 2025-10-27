@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/26 17:22:51 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/26 17:33:21 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/10/27 14:12:59 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,14 @@ int	exec_builtin_fn(t_cmd *cmds, t_env **env_list, int exit_status)
 	t_fds	fds;
 
 	if (!is_builtin_fn(cmds->args[0]))
-		return (0);
+		return (-1);
 	fds = expand_redirs(cmds->redirs, *env_list, exit_status);
 	if (!ft_strcmp(cmds->args[0], "echo"))
 		ft_echo(cmds->args);
 	if (!ft_strcmp(cmds->args[0], "pwd"))
-		ft_pwd(cmds->args);
+		ft_pwd();
 	if (!ft_strcmp(cmds->args[0], "cd"))
-		ft_cd(cmds->args[1]);
+		ft_cd(cmds->args[1], env_list);
 	if (!ft_strcmp(cmds->args[0], "env"))
 		ft_env(cmds->args, *env_list);
 	if (!ft_strcmp(cmds->args[0], "export"))
