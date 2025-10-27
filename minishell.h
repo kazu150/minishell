@@ -6,7 +6,7 @@
 /*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/26 23:36:17 by cyang            ###   ########.fr       */
+/*   Updated: 2025/10/27 13:40:35 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ void				expand_redirs(t_redir *redirs, t_env *env_list, int exit_status);
 int					setup_heredoc(char *target);
 int					ft_echo(char **args);
 int					ft_cd(char *path);
-int					ft_pwd(char **args);
+int					ft_pwd(void);
 int					ft_unset(char *arg, t_env **env_list);
 void				message_exit(char *message, int exit_type);
 

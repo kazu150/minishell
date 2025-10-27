@@ -6,7 +6,7 @@
 /*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/27 09:29:54 by cyang            ###   ########.fr       */
+/*   Updated: 2025/10/27 13:40:59 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	is_builtin_fn(char **args, t_redir *redirs, t_env *env_list, int exit_status
 	if (!ft_strcmp(args[0], "echo"))
 		return (expand_redirs(redirs, env_list, exit_status), ft_echo(args));
 	if (!ft_strcmp(args[0], "pwd"))
-		return (expand_redirs(redirs, env_list, exit_status), ft_pwd(args));
+		return (expand_redirs(redirs, env_list, exit_status), ft_pwd());
 	if (!ft_strcmp(args[0], "cd"))
 		return (expand_redirs(redirs, env_list, exit_status), ft_cd(args[1]));
 	if (!ft_strcmp(args[0], "env"))
