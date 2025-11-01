@@ -6,13 +6,13 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 19:12:11 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/01 20:34:27 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/01 21:43:53 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	handle_command_path_error(t_cmd	*cmds, int has_permission_error,
+void	handle_command_path_error(t_cmd *cmds, int has_permission_error,
 		char **paths)
 {
 	char	*str;
@@ -28,16 +28,15 @@ void	handle_command_path_error(t_cmd	*cmds, int has_permission_error,
 		error_exit(MALLOC);
 	len = ft_strlen(str);
 	write(2, str, len);
-	free(str);
 	if (paths)
 		free_split(paths);
-	
-	// if (cmds)
-	// {
-	// 	free_all(cmds->args);
-	// 	free(cmds->redirs);
-	// 	free(cmds);
-	// }
+	free(str);
+	if (cmds)
+	{
+		free_all(cmds->args);
+		free(cmds->redirs);
+		free(cmds);
+	}
 	if (has_permission_error)
 		exit(126);
 	else
@@ -80,7 +79,7 @@ char	*pathjoin(const char *path1, const char *path2)
 	return (full_path);
 }
 
-char	*build_command_path(t_cmd	*cmds, t_env **env_list)
+char	*build_command_path(t_cmd *cmds, t_env **env_list)
 {
 	char	*command_path;
 	int		i;
@@ -104,10 +103,8 @@ char	*build_command_path(t_cmd	*cmds, t_env **env_list)
 			has_permission_error = 1;
 		free(command_path);
 	}
-	printf("1");
 	if (!paths || !paths[i] || !command_path)
 		handle_command_path_error(cmds, has_permission_error, paths);
-	printf("2");
 	return (command_path);
 }
 

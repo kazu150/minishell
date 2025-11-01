@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/01 20:32:34 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/01 21:40:31 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ int	main(void)
 	int		status;
 	char	*line;
 	t_cmd	*cmds;
+	t_cmd	*cmds_first;
 	t_env	*env_list;
 	int		exit_status;
 	int		builtin_status;
@@ -98,6 +99,7 @@ int	main(void)
 		}
 		add_history(line);
 		cmds = parse_input(line);
+		cmds_first = cmds;
 		free(line);
 		if (!cmds)
 			continue;
@@ -125,11 +127,11 @@ int	main(void)
 			}
 			cmds = cmds->next;
 		}
-		if (cmds)
+		if (cmds_first)
 		{
-			free_all(cmds->args);
-			free(cmds->redirs);
-			free(cmds);
+			free_all(cmds_first->args);
+			free(cmds_first->redirs);
+			free(cmds_first);
 		}
 	}
 	return (0);
