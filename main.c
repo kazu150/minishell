@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/01 18:12:43 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/01 20:32:34 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,23 @@ void	execve_error_exit(char *cmd)
 	exit(127);
 }
 
-int	execute(char **args, t_env *env_list)
+// TODO: env_listをenvironの形式に変換するコードが必要
+// char *env_list_to_environ(t_env *env_list)
+// {
+// 	return "";
+// }
+
+int	execute(t_cmd *cmds, t_env *env_list)
 {
 	char		*cmd;
-	extern char	**environ;
 
-	if (args[0] == NULL)
-		handle_command_path_error(args, 1, 0);
-	cmd = build_command_path(args, &env_list);
-	if (execve(cmd, args, environ) == -1)
-		(free(args), execve_error_exit(cmd));
+	if (cmds->args[0] == NULL)
+		handle_command_path_error(cmds, 1, 0);
+	cmd = build_command_path(cmds, &env_list);
+	if (execve(cmd, cmds->args, environ) == -1)
+	{
+		(free(cmds->args), execve_error_exit(cmd));
+	}
 	return (0);
 }
 
@@ -82,9 +89,8 @@ int	main(void)
 	while (1)
 	{
 		line = readline("> ");
-		if (line == NULL){
-			if (cmds) free(cmds);
-			free_exit(line);}
+		if (line == NULL)
+			ft_exit(cmds, line);
 		if (ft_strlen(line) == 0)
 		{
 			free(line);
@@ -92,16 +98,13 @@ int	main(void)
 		}
 		add_history(line);
 		cmds = parse_input(line);
+		free(line);
 		if (!cmds)
-		{
-			free(line);
 			continue;
-		}
 		builtin_status = exec_builtin_fn(cmds, &env_list, exit_status, line);
 		if (builtin_status != -1)
 		{
 			exit_status = builtin_status;
-			free(line);
 			continue ;
 		}
 		pid = fork();
@@ -114,13 +117,19 @@ int	main(void)
 			if (pid == 0)
 			{
 				expand_redirs(cmds->redirs, env_list, exit_status);
-				return (execute(cmds->args, env_list));
+				return (execute(cmds, env_list));
 			}
 			else
 			{
 				waitpid(pid, &status, 0);
 			}
 			cmds = cmds->next;
+		}
+		if (cmds)
+		{
+			free_all(cmds->args);
+			free(cmds->redirs);
+			free(cmds);
 		}
 	}
 	return (0);

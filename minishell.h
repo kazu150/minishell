@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/01 18:06:43 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/01 20:32:53 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,9 +91,9 @@ t_cmd				*parse_input(char *input);
 void				error_exit(char *error_target);
 char				**tokenize(const char *str);
 void				free_split(char **args);
-void				handle_command_path_error(char **args,
+void				handle_command_path_error(t_cmd	*cmds,
 						int has_permission_error, char **paths);
-char				*build_command_path(char **args, t_env **env_list);
+char				*build_command_path(t_cmd	*cmds, t_env **env_list);
 void				execve_error_exit(char *cmd);
 int					is_quote(char c);
 int					free_strs(char **strs, int count);
@@ -131,5 +131,6 @@ int 				ft_exit(t_cmd *cmds, char *line);
 void				free_exit(void *target);
 
 int					exec_builtin_fn(t_cmd *cmds, t_env **env_list, int exit_status, char *line);
+void				free_all(char **array);
 
 #endif

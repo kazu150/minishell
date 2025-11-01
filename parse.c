@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:35:42 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/01 16:31:12 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/01 18:49:18 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	free_exit(void *target)
 	exit(EXIT_SUCCESS);
 }
 
-static void	free_all(char **array)
+void	free_all(char **array)
 {
 	int	i;
 
