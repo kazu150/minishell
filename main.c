@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/01 16:32:13 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/01 18:12:43 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,11 +78,13 @@ int	main(void)
 	signal(SIGINT, sigIntHandler);
 	signal(SIGQUIT, SIG_IGN); // SIG_IGNはhandlerのコンスト。意味：Ignore Signal
 	env_list = init_env();
+	cmds = NULL;
 	while (1)
 	{
 		line = readline("> ");
-		if (line == NULL)
-			free_exit(line);
+		if (line == NULL){
+			if (cmds) free(cmds);
+			free_exit(line);}
 		if (ft_strlen(line) == 0)
 		{
 			free(line);
@@ -95,7 +97,7 @@ int	main(void)
 			free(line);
 			continue;
 		}
-		builtin_status = exec_builtin_fn(cmds, &env_list, exit_status);
+		builtin_status = exec_builtin_fn(cmds, &env_list, exit_status, line);
 		if (builtin_status != -1)
 		{
 			exit_status = builtin_status;
@@ -112,8 +114,6 @@ int	main(void)
 			if (pid == 0)
 			{
 				expand_redirs(cmds->redirs, env_list, exit_status);
-				// signal(SIGINT, SIG_DFL);
-				// signal(SIGQUIT, SIG_DFL);
 				return (execute(cmds->args, env_list));
 			}
 			else

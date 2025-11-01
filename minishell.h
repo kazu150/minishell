@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/01 15:05:04 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/01 18:06:43 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,9 +127,9 @@ void				add_env_back(t_env **lst, t_env *new);
 t_env				*init_env();
 int					ft_env(char **args, t_env *env_list);
 int					ft_export(char **args, t_env **env_list);
-int 				ft_exit(void);
+int 				ft_exit(t_cmd *cmds, char *line);
 void				free_exit(void *target);
 
-int					exec_builtin_fn(t_cmd *cmds, t_env **env_list, int exit_status);
+int					exec_builtin_fn(t_cmd *cmds, t_env **env_list, int exit_status, char *line);
 
 #endif
