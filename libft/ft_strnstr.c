@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 16:26:04 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/05/07 21:34:30 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/01 15:34:54 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ char	*ft_strnstr(const char *haystack, const char *needle, size_t len)
 	size_t	j;
 
 	i = 0;
-	j = 0;
 	if (*needle == 0)
 		return ((char *)haystack);
 	while (haystack[i] && i < len)

@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:35:42 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/12 15:33:30 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/01 16:31:12 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,7 +198,9 @@ t_cmd	*parse_input(char *input)
 			{
 				ft_putendl_fd("minishell: syntax error", 2);
 				free_all(tokens);
-				return (NULL);
+				if (head_cmd)
+					free(head_cmd);
+				return NULL;
 			}
 			redir = new_redir(get_redir_type(tokens[i]), tokens[i + 1]);
 			redir_add_back(&current->redirs, redir);
@@ -225,6 +227,10 @@ t_cmd	*parse_input(char *input)
 			i++;
 		}
 	}
+	if (!head_cmd || !head_cmd->args){
+		if (head_cmd)
+			free(head_cmd);	
+		return (ft_putendl_fd("minishell: syntax error", 2), free_all(tokens), NULL);}
 	free_all(tokens);
 	return (head_cmd);
 }

@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 16:27:22 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/05/06 17:11:08 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/01 15:58:15 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	unsigned char	*bytes2;
 	size_t			i;
 
-	if (!src && !dest)
+	if (!src || !dest)
 		return (dest);
 	bytes1 = (unsigned char *)dest;
 	bytes2 = (unsigned char *)src;

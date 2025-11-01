@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 19:12:11 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/30 15:06:21 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/01 14:59:13 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,26 +38,25 @@ void	handle_command_path_error(char **args, int has_permission_error,
 		exit(127);
 }
 
-char	**get_default_paths(char **envp)
+char	**get_default_paths(t_env **env_list)
 {
-	int		i;
 	char	**paths;
+	t_env *list;
 
-	i = 0;
 	paths = NULL;
-	while (envp[i])
+	list = *env_list;
+	while (list)
 	{
-		if (!ft_strncmp(envp[i], "PATH=", 5))
+		if (!ft_strcmp(list->key, "PATH"))
 		{
-			envp[i] = envp[i] + 5;
-			paths = ft_split(envp[i], ':');
+			paths = ft_split(list->value, ':');
 			if (!paths)
 				error_exit(MALLOC);
 			return (paths);
 		}
-		i++;
+		list = list->next;
 	}
-	return (paths);
+	return (NULL);
 }
 
 char	*pathjoin(const char *path1, const char *path2)
@@ -75,7 +74,7 @@ char	*pathjoin(const char *path1, const char *path2)
 	return (full_path);
 }
 
-char	*build_command_path(char **args, char **envp)
+char	*build_command_path(char **args, t_env **env_list)
 {
 	char	*command_path;
 	int		i;
@@ -85,7 +84,7 @@ char	*build_command_path(char **args, char **envp)
 	if (args[0][0] == '/' || args[0][0] == '.')
 		return (args[0]);
 	has_permission_error = 0;
-	paths = get_default_paths(envp);
+	paths = get_default_paths(env_list);
 	i = 0;
 	command_path = NULL;
 	while (paths && paths[i])
