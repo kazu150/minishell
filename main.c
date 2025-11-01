@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/01 14:20:26 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/01 16:32:13 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,11 @@ int	main(void)
 		}
 		add_history(line);
 		cmds = parse_input(line);
+		if (!cmds)
+		{
+			free(line);
+			continue;
+		}
 		builtin_status = exec_builtin_fn(cmds, &env_list, exit_status);
 		if (builtin_status != -1)
 		{
@@ -114,7 +119,6 @@ int	main(void)
 			else
 			{
 				waitpid(pid, &status, 0);
-				free(line);
 			}
 			cmds = cmds->next;
 		}

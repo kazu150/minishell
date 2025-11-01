@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 13:53:03 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/01 13:55:38 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/01 17:39:41 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ char	*expand_with_var(char *str, t_env *env_list, int exit_status)
 		free(result);
 		result = tmp;
 	}
-	free(str);
 	return (result);
 }
 
@@ -95,14 +94,12 @@ char	*expand_token(char *str, t_env *env_list, int exit_status)
 			- 1] == '\"' && !ft_strchr(str, '$')))
 	{
 		transform = ft_substr(str, 1, len - 2);
-		free(str);
 		return (transform);
 	}
 	//"$FOO" → bar && $FOO → bar  home=3 skdjkf$home → skdjkf3
 	if (str[0] == '\"' && str[len - 1] == '\"' && ft_strchr(str, '$'))
 	{
 		without_quote = ft_substr(str, 1, len - 2);
-		free(str);
 		transform = expand_with_var(without_quote, env_list, exit_status);
 		return (transform);
 	}
@@ -153,7 +150,10 @@ t_fds	expand_redirs(t_redir *redirs, t_env *env_list, int exit_status)
 	char	*target;
 	t_fds	fds;
 
-	// char		*cmd;
+	target = NULL;
+	fd = 0;
+	fds.read_fd = -1;
+	fds.write_fd = -1;
 	while (redirs)
 	{
 		if (redirs->type == R_IN || redirs->type == R_HDOC)

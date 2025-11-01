@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 14:45:29 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/23 13:45:14 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/01 15:39:47 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,6 @@ char	**ft_split(const char *str, char c)
 	int		i;
 	int		has_no_error;
 
-	strs_count = 1;
 	i = 0;
 	while (str[i] != 0)
 		i++;
