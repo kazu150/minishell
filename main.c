@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/27 14:00:38 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/01 14:20:26 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,14 @@ void	execve_error_exit(char *cmd)
 	exit(127);
 }
 
-int	execute(char **args, char **envp)
+int	execute(char **args, t_env *env_list)
 {
 	char		*cmd;
 	extern char	**environ;
 
 	if (args[0] == NULL)
 		handle_command_path_error(args, 1, 0);
-	cmd = build_command_path(args, envp);
+	cmd = build_command_path(args, &env_list);
 	if (execve(cmd, args, environ) == -1)
 		(free(args), execve_error_exit(cmd));
 	return (0);
@@ -63,7 +63,7 @@ void	sigIntHandler(int signo)
 }
 
 // gcc main.c -lreadline -o main
-int	main(int argc, char **argv, char **envp)
+int	main(void)
 {
 	pid_t	pid;
 	int		status;
@@ -73,13 +73,11 @@ int	main(int argc, char **argv, char **envp)
 	int		exit_status;
 	int		builtin_status;
 
-	(void)argc;
-	(void)argv;
 	exit_status = 0;
 	line = NULL;
 	signal(SIGINT, sigIntHandler);
 	signal(SIGQUIT, SIG_IGN); // SIG_IGNはhandlerのコンスト。意味：Ignore Signal
-	env_list = init_env(envp);
+	env_list = init_env();
 	while (1)
 	{
 		line = readline("> ");
@@ -92,7 +90,6 @@ int	main(int argc, char **argv, char **envp)
 		}
 		add_history(line);
 		cmds = parse_input(line);
-		expand_args(cmds->args, env_list, exit_status);
 		builtin_status = exec_builtin_fn(cmds, &env_list, exit_status);
 		if (builtin_status != -1)
 		{
@@ -112,7 +109,7 @@ int	main(int argc, char **argv, char **envp)
 				expand_redirs(cmds->redirs, env_list, exit_status);
 				// signal(SIGINT, SIG_DFL);
 				// signal(SIGQUIT, SIG_DFL);
-				return (execute(cmds->args, envp));
+				return (execute(cmds->args, env_list));
 			}
 			else
 			{

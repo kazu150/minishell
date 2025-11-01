@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/27 14:13:41 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/01 15:05:04 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@
 # define MALLOC "malloc"
 # define PIPE_SIGN "|"
 
+extern char **environ;
 typedef enum e_node_type
 {
 	NODE_COMMAND,
@@ -87,16 +88,12 @@ typedef struct s_fds {
 } t_fds;
 
 t_cmd				*parse_input(char *input);
-int					output(pid_t pid, char **argv, int d_pipe[2], char **envp);
-int					input_child_process(char **argv, int d_pipe[2],
-						char **envp);
-int					output_child_process(char **argv, int pipe_in, char **envp);
 void				error_exit(char *error_target);
 char				**tokenize(const char *str);
 void				free_split(char **args);
 void				handle_command_path_error(char **args,
 						int has_permission_error, char **paths);
-char				*build_command_path(char **args, char **envp);
+char				*build_command_path(char **args, t_env **env_list);
 void				execve_error_exit(char *cmd);
 int					is_quote(char c);
 int					free_strs(char **strs, int count);
@@ -127,7 +124,7 @@ void				message_exit(char *message, int exit_type);
 
 t_env				*new_env(char *key, char *value);
 void				add_env_back(t_env **lst, t_env *new);
-t_env				*init_env(char **envp);
+t_env				*init_env();
 int					ft_env(char **args, t_env *env_list);
 int					ft_export(char **args, t_env **env_list);
 int 				ft_exit(void);
