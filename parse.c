@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:35:42 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/01 18:49:18 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/02 19:14:40 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,25 +22,6 @@ void	error_exit(char *error_target)
 {
 	perror(error_target);
 	exit(EXIT_FAILURE);
-}
-
-void	free_exit(void *target)
-{
-	free(target);
-	exit(EXIT_SUCCESS);
-}
-
-void	free_all(char **array)
-{
-	int	i;
-
-	i = 0;
-	while (array[i])
-	{
-		free(array[i]);
-		i++;
-	}
-	free(array);
 }
 
 static int	is_redirect(char *s)
@@ -200,7 +181,7 @@ t_cmd	*parse_input(char *input)
 				free_all(tokens);
 				if (head_cmd)
 					free(head_cmd);
-				return NULL;
+				return (NULL);
 			}
 			redir = new_redir(get_redir_type(tokens[i]), tokens[i + 1]);
 			redir_add_back(&current->redirs, redir);
@@ -227,10 +208,13 @@ t_cmd	*parse_input(char *input)
 			i++;
 		}
 	}
-	if (!head_cmd || !head_cmd->args){
+	if (!head_cmd || !head_cmd->args)
+	{
 		if (head_cmd)
-			free(head_cmd);	
-		return (ft_putendl_fd("minishell: syntax error", 2), free_all(tokens), NULL);}
+			free(head_cmd);
+		return (ft_putendl_fd("minishell: syntax error", 2), free_all(tokens),
+			NULL);
+	}
 	free_all(tokens);
 	return (head_cmd);
 }

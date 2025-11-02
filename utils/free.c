@@ -1,37 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_exit.c                                          :+:      :+:    :+:   */
+/*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/16 17:15:12 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/02 18:57:33 by kaisogai         ###   ########.fr       */
+/*   Created: 2025/11/02 18:53:34 by kaisogai          #+#    #+#             */
+/*   Updated: 2025/11/02 19:05:46 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_env_list(t_env **env_list)
+void	free_exit(void *target)
 {
-	t_env	*target;
-
-	target = *env_list;
-	while (target)
-	{
-		free(target->key);
-		free(target->value);
-		target = target->next;
-	}
+	free(target);
+	exit(EXIT_SUCCESS);
 }
 
-int	ft_exit(t_cmd *cmds, t_env **env_list)
+void	free_all(char **array)
 {
-	if (cmds)
+	int	i;
+
+	i = 0;
+	while (array[i])
 	{
-		free_cmds(cmds);
+		free(array[i]);
+		i++;
 	}
-	free_env_list(env_list);
-	free_exit(NULL);
-	return (1);
+	free(array);
+}
+
+void	free_cmds(t_cmd *cmds)
+{
+	free_all(cmds->args);
+	free(cmds->redirs);
+	free(cmds);
 }

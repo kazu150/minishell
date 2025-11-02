@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/02 18:24:13 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/02 18:51:55 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,9 +107,7 @@ int	main(void)
 		if (builtin_status != -1)
 		{
 			exit_status = builtin_status;
-			free_all(cmds->args);
-			free(cmds->redirs);
-			free(cmds);
+			free_cmds(cmds);
 			continue ;
 		}
 		pid = fork();
@@ -132,9 +130,7 @@ int	main(void)
 		}
 		if (cmds_first)
 		{
-			free_all(cmds_first->args);
-			free(cmds_first->redirs);
-			free(cmds_first);
+			free_cmds(cmds_first);
 		}
 	}
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/26 17:22:51 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/02 18:23:00 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/02 19:05:18 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,17 +31,8 @@ int	is_builtin_fn(char *fn_name)
 	return (0);
 }
 
-int	exec_builtin_fn(t_cmd *cmds, t_env **env_list, int exit_status)
+void	exec_fn(t_cmd *cmds, t_env **env_list)
 {
-	t_fds	fds;
-
-	// NOTE: もともとmain側のすぐ上の部分にあったが、その配置だとなぜか"env > out"などの
-	// 引数なし＋リダイレクトで処理終了してしまうので、この位置に移動した
-	expand_args(cmds->args, *env_list, exit_status);
-	if (!is_builtin_fn(cmds->args[0]))
-		return (-1);
-	if (cmds->redirs)
-		fds = expand_redirs(cmds->redirs, *env_list, exit_status);
 	if (!ft_strcmp(cmds->args[0], "echo"))
 		ft_echo(cmds->args);
 	if (!ft_strcmp(cmds->args[0], "pwd"))
@@ -56,6 +47,20 @@ int	exec_builtin_fn(t_cmd *cmds, t_env **env_list, int exit_status)
 		ft_exit(cmds, env_list);
 	if (!ft_strcmp(cmds->args[0], "unset"))
 		ft_unset(cmds->args[1], env_list);
+}
+
+// NOTE: expand_argsに付いて、もともとmain側のすぐ上の部分にあったが、その配置だとなぜか"env > out"などの
+// 引数なし＋リダイレクトで処理終了してしまうので、この位置に移動した
+int	exec_builtin_fn(t_cmd *cmds, t_env **env_list, int exit_status)
+{
+	t_fds	fds;
+
+	expand_args(cmds->args, *env_list, exit_status);
+	if (!is_builtin_fn(cmds->args[0]))
+		return (-1);
+	if (cmds->redirs)
+		fds = expand_redirs(cmds->redirs, *env_list, exit_status);
+	exec_fn(cmds, env_list);
 	if (cmds->redirs)
 	{
 		dup2(fds.read_fd, STDIN_FILENO);

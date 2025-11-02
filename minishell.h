@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/02 18:39:44 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/02 18:50:42 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 # define MINISHELL_H
 
 # include "libft/libft.h"
-# include <stdio.h>
 # include <errno.h>
 # include <fcntl.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
 # include <stdarg.h>
+# include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
 # include <sys/types.h>
@@ -37,7 +37,7 @@
 # define MALLOC "malloc"
 # define PIPE_SIGN "|"
 
-extern char **environ;
+extern char			**environ;
 typedef enum e_node_type
 {
 	NODE_COMMAND,
@@ -82,18 +82,19 @@ typedef struct s_env
 	struct s_env	*next;
 }					t_env;
 
-typedef struct s_fds {
-	int read_fd;
-	int write_fd;
-} t_fds;
+typedef struct s_fds
+{
+	int				read_fd;
+	int				write_fd;
+}					t_fds;
 
 t_cmd				*parse_input(char *input);
 void				error_exit(char *error_target);
 char				**tokenize(const char *str);
 void				free_split(char **args);
-void				handle_command_path_error(t_cmd	*cmds,
+void				handle_command_path_error(t_cmd *cmds,
 						int has_permission_error, char **paths);
-char				*build_command_path(t_cmd	*cmds, t_env **env_list);
+char				*build_command_path(t_cmd *cmds, t_env **env_list);
 void				execve_error_exit(char *cmd);
 int					is_quote(char c);
 int					free_strs(char **strs, int count);
@@ -107,30 +108,36 @@ int					ft_strcmp(char *s1, char *s2);
 char				*store_before_dollor(char *result, char *str,
 						int dollar_pos);
 char				*ft_getenv(t_env *env_list, char *key);
-char				*expand_and_add_var(char *result, char *str, int var_start, int var_end, t_env *env_list);
-char				*add_after_var(char *result, char *str, int var_end, t_env *env_list, int exit_status);
-char				*expand_with_var(char *str, t_env *env_list, int exit_status);
+char				*expand_and_add_var(char *result, char *str, int var_start,
+						int var_end, t_env *env_list);
+char				*add_after_var(char *result, char *str, int var_end,
+						t_env *env_list, int exit_status);
+char				*expand_with_var(char *str, t_env *env_list, int exit_stat);
 char				*expand_token(char *str, t_env *env_list, int exit_status);
 char				**expand_all(char **strs, t_env *env_list, int exit_status);
-char				**expand_args(char **args, t_env *env_list, int	exit_status);
-t_fds				expand_redirs(t_redir *redirs, t_env *env_list, int exit_status);
+char				**expand_args(char **args, t_env *env_list,
+						int exit_status);
+t_fds				expand_redirs(t_redir *redirs, t_env *env_list,
+						int exit_status);
 
 int					setup_heredoc(char *target);
 int					ft_echo(char **args);
-int					ft_cd(char *path, t_env** env_list);
+int					ft_cd(char *path, t_env **env_list);
 int					ft_pwd(void);
 int					ft_unset(char *arg, t_env **env_list);
 void				message_exit(char *message, int exit_type);
 
 t_env				*new_env(char *key, char *value);
 void				add_env_back(t_env **lst, t_env *new);
-t_env				*init_env();
+t_env				*init_env(void);
 int					ft_env(char **args, t_env *env_list);
 int					ft_export(char **args, t_env **env_list);
 int					ft_exit(t_cmd *cmds, t_env **env_list);
 void				free_exit(void *target);
 
-int					exec_builtin_fn(t_cmd *cmds, t_env **env_list, int exit_status);
+int					exec_builtin_fn(t_cmd *cmds, t_env **env_list,
+						int exit_status);
 void				free_all(char **array);
+void				free_cmds(t_cmd *cmds);
 
 #endif

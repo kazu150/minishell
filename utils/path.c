@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 19:12:11 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/01 21:43:53 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/02 19:05:29 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,7 @@ void	handle_command_path_error(t_cmd *cmds, int has_permission_error,
 	free(str);
 	if (cmds)
 	{
-		free_all(cmds->args);
-		free(cmds->redirs);
-		free(cmds);
+		free_cmds(cmds);
 	}
 	if (has_permission_error)
 		exit(126);
@@ -46,7 +44,7 @@ void	handle_command_path_error(t_cmd *cmds, int has_permission_error,
 char	**get_default_paths(t_env **env_list)
 {
 	char	**paths;
-	t_env *list;
+	t_env	*list;
 
 	paths = NULL;
 	list = *env_list;
