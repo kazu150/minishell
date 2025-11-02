@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/02 12:33:31 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/02 18:24:13 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int	main(void)
 	{
 		line = readline("> ");
 		if (line == NULL)
-			ft_exit(cmds, line, &env_list);
+			ft_exit(cmds, &env_list);
 		if (ft_strlen(line) == 0)
 		{
 			free(line);
@@ -103,7 +103,7 @@ int	main(void)
 		free(line);
 		if (!cmds)
 			continue;
-		builtin_status = exec_builtin_fn(cmds, &env_list, exit_status, line);
+		builtin_status = exec_builtin_fn(cmds, &env_list, exit_status);
 		if (builtin_status != -1)
 		{
 			exit_status = builtin_status;

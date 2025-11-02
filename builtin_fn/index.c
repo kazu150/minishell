@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/26 17:22:51 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/02 12:30:30 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/02 18:23:00 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	is_builtin_fn(char *fn_name)
 	return (0);
 }
 
-int	exec_builtin_fn(t_cmd *cmds, t_env **env_list, int exit_status, char *line)
+int	exec_builtin_fn(t_cmd *cmds, t_env **env_list, int exit_status)
 {
 	t_fds	fds;
 
@@ -53,7 +53,7 @@ int	exec_builtin_fn(t_cmd *cmds, t_env **env_list, int exit_status, char *line)
 	if (!ft_strcmp(cmds->args[0], "export"))
 		ft_export(cmds->args, env_list);
 	if (!ft_strcmp(cmds->args[0], "exit"))
-		ft_exit(cmds, line, env_list);
+		ft_exit(cmds, env_list);
 	if (!ft_strcmp(cmds->args[0], "unset"))
 		ft_unset(cmds->args[1], env_list);
 	if (cmds->redirs)

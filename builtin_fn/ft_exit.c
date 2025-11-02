@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 17:15:12 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/02 12:35:04 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/02 18:23:08 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,9 @@ void	free_env_list(t_env **env_list)
 		free(target->value);
 		target = target->next;
 	}
-	free(env_list);
 }
 
-int	ft_exit(t_cmd *cmds, char *line, t_env **env_list)
+int	ft_exit(t_cmd *cmds, t_env **env_list)
 {
 	if (cmds)
 	{
@@ -35,6 +34,6 @@ int	ft_exit(t_cmd *cmds, char *line, t_env **env_list)
 		free(cmds);
 	}
 	free_env_list(env_list);
-	free_exit(line);
+	free_exit(NULL);
 	return (1);
 }

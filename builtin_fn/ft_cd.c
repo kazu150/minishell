@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 20:59:29 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/30 22:54:51 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/02 18:38:58 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,16 @@
 void	ft_setenv(char *target, char *value, t_env **env_list)
 {
 	t_env	*current;
+	char	*free_target;
 
 	current = *env_list;
 	while (current)
 	{
 		if (ft_strcmp(current->key, target) == 0)
 		{
+			free_target = current->value;
 			current->value = value;
+			free(free_target);
 			return ;
 		}
 		current = current->next;
