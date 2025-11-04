@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/27 14:13:41 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/03 23:21:50 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,16 @@ typedef struct s_fds {
 } t_fds;
 
 t_cmd				*parse_input(char *input);
+void				free_all(char **array);
+t_cmd				*new_cmd(void);
+void				cmd_add_back(t_cmd **lst, t_cmd *new);
+t_redir				*new_redir(t_redir_type type, char *target);
+t_redir_type		get_redir_type(char *token);
+int					is_redirect(char *s);
+int					is_valid_target(char *s);
+void				redir_add_back(t_redir **lst, t_redir *new);
+t_cmd				*check_current_cmd(t_cmd **head_cmd, t_cmd **current);
+
 int					output(pid_t pid, char **argv, int d_pipe[2], char **envp);
 int					input_child_process(char **argv, int d_pipe[2],
 						char **envp);

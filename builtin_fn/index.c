@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   index.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/26 17:22:51 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/27 14:12:59 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/01 13:58:55 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,25 +34,27 @@ int	is_builtin_fn(char *fn_name)
 int	exec_builtin_fn(t_cmd *cmds, t_env **env_list, int exit_status)
 {
 	t_fds	fds;
+	int		result;
 
 	if (!is_builtin_fn(cmds->args[0]))
 		return (-1);
 	fds = expand_redirs(cmds->redirs, *env_list, exit_status);
+	result = 0;
 	if (!ft_strcmp(cmds->args[0], "echo"))
-		ft_echo(cmds->args);
+		result = ft_echo(cmds->args);
 	if (!ft_strcmp(cmds->args[0], "pwd"))
-		ft_pwd();
+		result = ft_pwd();
 	if (!ft_strcmp(cmds->args[0], "cd"))
-		ft_cd(cmds->args[1], env_list);
+		result = ft_cd(cmds->args[1], env_list);
 	if (!ft_strcmp(cmds->args[0], "env"))
-		ft_env(cmds->args, *env_list);
+		result = ft_env(cmds->args, *env_list);
 	if (!ft_strcmp(cmds->args[0], "export"))
-		ft_export(cmds->args, env_list);
+		result = ft_export(cmds->args, env_list);
 	if (!ft_strcmp(cmds->args[0], "exit"))
-		ft_exit();
+		result = ft_exit();
 	if (!ft_strcmp(cmds->args[0], "unset"))
-		ft_unset(cmds->args[1], env_list);
+		result = ft_unset(cmds->args[1], env_list);
 	dup2(fds.read_fd, STDIN_FILENO);
 	dup2(fds.write_fd, STDOUT_FILENO);
-	return (0);
+	return (result);
 }
