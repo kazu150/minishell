@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 14:55:23 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/30 15:43:28 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/02 19:13:47 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,14 +48,10 @@ int	setup_heredoc(char *target)
 			free(line);
 			break ;
 		}
-		if (write_all(fds[1], line, ft_strlen(line)) < 0 || write_all(fds[1],
-				"\n", 1) < 0)
-		{
-			free(line);
-			close(fds[0]);
-			close(fds[1]);
+		if (write_all(fds[1], line, ft_strlen(line)) < 0)
 			return (-1);
-		}
+		if (write_all(fds[1], "\n", ft_strlen("\n")) < 0)
+			return (-1);
 		free(line);
 	}
 	close(fds[1]);

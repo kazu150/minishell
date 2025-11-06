@@ -1,28 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/04 19:38:46 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/01 14:07:48 by kaisogai         ###   ########.fr       */
+/*   Created: 2025/11/02 18:53:34 by kaisogai          #+#    #+#             */
+/*   Updated: 2025/11/06 17:21:55 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_pwd(void)
+void	free_all(char **array)
 {
-	char	*cwd;
+	int	i;
 
-	cwd = getcwd(NULL, 0);
-	if (!cwd)
+	i = 0;
+	while (array[i])
 	{
-		perror("pwd");
-		return (1);
+		free(array[i]);
+		i++;
 	}
-	printf("%s\n", cwd);
-	free(cwd);
-	return (0);
+	free(array);
+}
+
+void	free_cmds(t_cmd *cmds)
+{
+	free_all(cmds->args);
+	free(cmds->redirs);
+	free(cmds);
 }

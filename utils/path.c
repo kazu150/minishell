@@ -1,29 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 19:12:11 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/03 23:20:26 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/06 17:23:24 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	handle_command_path_error(char **args, int has_permission_error,
+void	handle_command_path_error(t_cmd *cmds, int has_permission_error,
 		char **paths)
 {
 	char	*str;
 	int		len;
 
-	if (args[0] == NULL)
+	if (cmds->args[0] == NULL)
 		str = ft_strjoin("", ": Permission denied\n");
 	else if (has_permission_error)
-		str = ft_strjoin(args[0], ": Permission denied\n");
+		str = ft_strjoin(cmds->args[0], ": Permission denied\n");
 	else
-		str = ft_strjoin(args[0], ": command not found\n");
+		str = ft_strjoin(cmds->args[0], ": command not found\n");
 	if (!str)
 		error_exit(MALLOC);
 	len = ft_strlen(str);
@@ -31,33 +31,35 @@ void	handle_command_path_error(char **args, int has_permission_error,
 	if (paths)
 		free_split(paths);
 	free(str);
-	free_split(args);
+	if (cmds)
+	{
+		free_cmds(cmds);
+	}
 	if (has_permission_error)
 		exit(126);
 	else
 		exit(127);
 }
 
-char	**get_default_paths(char **envp)
+char	**get_default_paths(t_env **env_list)
 {
-	int		i;
 	char	**paths;
+	t_env	*list;
 
-	i = 0;
 	paths = NULL;
-	while (envp[i])
+	list = *env_list;
+	while (list)
 	{
-		if (!ft_strncmp(envp[i], "PATH=", 5))
+		if (!ft_strcmp(list->key, "PATH"))
 		{
-			envp[i] = envp[i] + 5;
-			paths = ft_split(envp[i], ':');
+			paths = ft_split(list->value, ':');
 			if (!paths)
 				error_exit(MALLOC);
 			return (paths);
 		}
-		i++;
+		list = list->next;
 	}
-	return (paths);
+	return (NULL);
 }
 
 char	*pathjoin(const char *path1, const char *path2)
@@ -75,22 +77,22 @@ char	*pathjoin(const char *path1, const char *path2)
 	return (full_path);
 }
 
-char	*build_command_path(char **args, char **envp)
+char	*build_command_path(t_cmd *cmds, t_env **env_list)
 {
 	char	*command_path;
 	int		i;
 	char	**paths;
 	int		has_permission_error;
 
-	if (args[0][0] == '/' || args[0][0] == '.')
-		return (args[0]);
+	if (cmds->args[0][0] == '/' || cmds->args[0][0] == '.')
+		return (cmds->args[0]);
 	has_permission_error = 0;
-	paths = get_default_paths(envp);
+	paths = get_default_paths(env_list);
 	i = 0;
 	command_path = NULL;
 	while (paths && paths[i])
 	{
-		command_path = pathjoin(paths[i++], args[0]);
+		command_path = pathjoin(paths[i++], cmds->args[0]);
 		if (!command_path)
 			error_exit(MALLOC);
 		if (access(command_path, X_OK) == 0)
@@ -100,7 +102,7 @@ char	*build_command_path(char **args, char **envp)
 		free(command_path);
 	}
 	if (!paths || !paths[i] || !command_path)
-		handle_command_path_error(args, has_permission_error, paths);
+		handle_command_path_error(cmds, has_permission_error, paths);
 	return (command_path);
 }
 
@@ -116,19 +118,6 @@ int	ft_strcmp(char *s1, char *s2)
 		i++;
 	}
 	return (s1[i] - s2[i]);
-}
-
-void	free_all(char **array)
-{
-	int	i;
-
-	i = 0;
-	while (array[i])
-	{
-		free(array[i]);
-		i++;
-	}
-	free(array);
 }
 
 void	error_exit(char *error_target)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:35:42 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/03 23:22:02 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/06 17:21:15 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,8 @@ t_cmd	*parse_input(char *input)
 			if (handle_redirect(tokens, &i, &head_cmd, &current) == -1)
 			{
 				free_all(tokens);
+				if (head_cmd)
+					free(head_cmd);
 				return (NULL);
 			}
 		}
@@ -93,6 +95,13 @@ t_cmd	*parse_input(char *input)
 			handle_pipe(&head_cmd, &current, &i);
 		else
 			handle_argument(tokens, &i, &head_cmd, &current);
+	}
+	if (!head_cmd || !head_cmd->args)
+	{
+		if (head_cmd)
+			free(head_cmd);
+		return (ft_putendl_fd("minishell: syntax error", 2), free_all(tokens),
+			NULL);
 	}
 	free_all(tokens);
 	return (head_cmd);
