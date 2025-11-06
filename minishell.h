@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/01 20:32:53 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/06 17:10:26 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,20 @@ typedef struct s_fds {
 } t_fds;
 
 t_cmd				*parse_input(char *input);
+void				free_all(char **array);
+t_cmd				*new_cmd(void);
+void				cmd_add_back(t_cmd **lst, t_cmd *new);
+t_redir				*new_redir(t_redir_type type, char *target);
+t_redir_type		get_redir_type(char *token);
+int					is_redirect(char *s);
+int					is_valid_target(char *s);
+void				redir_add_back(t_redir **lst, t_redir *new);
+t_cmd				*check_current_cmd(t_cmd **head_cmd, t_cmd **current);
+
+int					output(pid_t pid, char **argv, int d_pipe[2], char **envp);
+int					input_child_process(char **argv, int d_pipe[2],
+						char **envp);
+int					output_child_process(char **argv, int pipe_in, char **envp);
 void				error_exit(char *error_target);
 char				**tokenize(const char *str);
 void				free_split(char **args);
@@ -127,10 +141,10 @@ void				add_env_back(t_env **lst, t_env *new);
 t_env				*init_env();
 int					ft_env(char **args, t_env *env_list);
 int					ft_export(char **args, t_env **env_list);
-int 				ft_exit(t_cmd *cmds, char *line);
+int 				ft_exit();
 void				free_exit(void *target);
 
-int					exec_builtin_fn(t_cmd *cmds, t_env **env_list, int exit_status, char *line);
+int					exec_builtin_fn(t_cmd *cmds, t_env **env_list, int exit_status);
 void				free_all(char **array);
 
 #endif

@@ -6,7 +6,7 @@
 #    By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/03 16:26:12 by kaisogai          #+#    #+#              #
-#    Updated: 2025/11/01 15:05:13 by kaisogai         ###   ########.fr        #
+#    Updated: 2025/11/06 16:47:58 by kaisogai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ CFLAGS	= -Wall -Wextra -Werror
 INCLUDE	= -I./ -I./libft -I/usr/local/opt/readline/include
 READLINE = -L/usr/local/opt/readline/lib -lreadline
 LIBFT	= libft/libft.a
-SRCS	= main.c parse.c utils.c tokenize.c tokenize_utils.c tokenize_utils2.c expand.c expand_utils.c builtin_fn/ft_echo.c heredoc.c builtin_fn/ft_pwd.c builtin_fn/ft_cd.c init_env.c builtin_fn/ft_env.c builtin_fn/ft_export.c builtin_fn/ft_exit.c builtin_fn/ft_unset.c builtin_fn/index.c
+SRCS	= main.c parse.c utils.c tokenize.c tokenize_utils.c tokenize_utils2.c expand.c expand_utils.c builtin_fn/ft_echo.c heredoc.c builtin_fn/ft_pwd.c builtin_fn/ft_cd.c init_env.c builtin_fn/ft_env.c builtin_fn/ft_export.c builtin_fn/ft_exit.c builtin_fn/ft_unset.c builtin_fn/index.c parse_utils.c parse_utils2.c 
 OBJS	= $(SRCS:.c=.o)
 
 all: $(LIBFT) $(NAME)
