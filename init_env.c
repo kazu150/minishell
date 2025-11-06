@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/10 17:50:57 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/01 14:09:49 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/02 19:06:13 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ t_env	*new_env(char *key, char *value)
 	return (node);
 }
 
-
 void	add_env_back(t_env **env_list, t_env *new)
 {
 	t_env	*tmp;
@@ -46,7 +45,7 @@ void	add_env_back(t_env **env_list, t_env *new)
 	tmp->next = new;
 }
 
-t_env	*init_env()
+t_env	*init_env(void)
 {
 	t_env	*env_list;
 	char	**env_split;

@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 19:12:11 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/06 16:53:31 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/06 17:23:24 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	handle_command_path_error(t_cmd	*cmds, int has_permission_error,
+void	handle_command_path_error(t_cmd *cmds, int has_permission_error,
 		char **paths)
 {
 	char	*str;
@@ -28,16 +28,13 @@ void	handle_command_path_error(t_cmd	*cmds, int has_permission_error,
 		error_exit(MALLOC);
 	len = ft_strlen(str);
 	write(2, str, len);
-	free(str);
 	if (paths)
 		free_split(paths);
-	
-	// if (cmds)
-	// {
-	// 	free_all(cmds->args);
-	// 	free(cmds->redirs);
-	// 	free(cmds);
-	// }
+	free(str);
+	if (cmds)
+	{
+		free_cmds(cmds);
+	}
 	if (has_permission_error)
 		exit(126);
 	else
@@ -47,7 +44,7 @@ void	handle_command_path_error(t_cmd	*cmds, int has_permission_error,
 char	**get_default_paths(t_env **env_list)
 {
 	char	**paths;
-	t_env *list;
+	t_env	*list;
 
 	paths = NULL;
 	list = *env_list;
@@ -80,7 +77,7 @@ char	*pathjoin(const char *path1, const char *path2)
 	return (full_path);
 }
 
-char	*build_command_path(t_cmd	*cmds, t_env **env_list)
+char	*build_command_path(t_cmd *cmds, t_env **env_list)
 {
 	char	*command_path;
 	int		i;
@@ -104,10 +101,8 @@ char	*build_command_path(t_cmd	*cmds, t_env **env_list)
 			has_permission_error = 1;
 		free(command_path);
 	}
-	printf("1");
 	if (!paths || !paths[i] || !command_path)
 		handle_command_path_error(cmds, has_permission_error, paths);
-	printf("2");
 	return (command_path);
 }
 
@@ -123,19 +118,6 @@ int	ft_strcmp(char *s1, char *s2)
 		i++;
 	}
 	return (s1[i] - s2[i]);
-}
-
-void	free_all(char **array)
-{
-	int	i;
-
-	i = 0;
-	while (array[i])
-	{
-		free(array[i]);
-		i++;
-	}
-	free(array);
 }
 
 void	error_exit(char *error_target)

@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/06 17:10:04 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/06 17:18:23 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ int	main(void)
 	int		status;
 	char	*line;
 	t_cmd	*cmds;
+	t_cmd	*cmds_first;
 	t_env	*env_list;
 	int		exit_status;
 	int		builtin_status;
@@ -90,7 +91,7 @@ int	main(void)
 	{
 		line = readline("> ");
 		if (line == NULL)
-			ft_exit();
+			ft_exit(cmds, &env_list);
 		if (ft_strlen(line) == 0)
 		{
 			free(line);
@@ -98,6 +99,7 @@ int	main(void)
 		}
 		add_history(line);
 		cmds = parse_input(line);
+		cmds_first = cmds;
 		free(line);
 		if (!cmds)
 			continue;
@@ -105,6 +107,7 @@ int	main(void)
 		if (builtin_status != -1)
 		{
 			exit_status = builtin_status;
+			free_cmds(cmds);
 			continue ;
 		}
 		pid = fork();
@@ -125,11 +128,9 @@ int	main(void)
 			}
 			cmds = cmds->next;
 		}
-		if (cmds)
+		if (cmds_first)
 		{
-			free_all(cmds->args);
-			free(cmds->redirs);
-			free(cmds);
+			free_cmds(cmds_first);
 		}
 	}
 	return (0);
