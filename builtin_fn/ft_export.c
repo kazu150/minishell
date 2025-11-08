@@ -3,42 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 18:39:47 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/04 14:09:43 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/08 12:52:11 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int is_valid_export_key(const char *key)
-{
-	int	i;
-
-	if (!key || !key[0])
-		return (0);
-	//一つ目の文字は必ずアルファベットか＿
-	if (!(ft_isalpha((unsigned char)key[0]) || key[0] == '_'))
-		return (0);
-	i = 1;
-	//2つ目以降の文字はアルファベット、＿可
-	while (key[i])
-	{
-		if (!(ft_isalnum((unsigned char)key[i]) || key[i] == '_'))
-		return (0);
-		i++;
-	}
-	return (1);
-}
-
-static int	handle_export_error(char *invalid_key)
-{
-	ft_putstr_fd("export: `", 2);
-	ft_putstr_fd(invalid_key, 2);
-	ft_putendl_fd("': not a valid identifier", 2);
-	return (1);
-}
+int	handle_export_error(char *invalid_key);
 
 static int	handle_no_equal_case(char *arg)
 {
@@ -46,6 +20,7 @@ static int	handle_no_equal_case(char *arg)
 		return (handle_export_error(arg));
 	return (0);
 }
+
 static int	update_existing_env(t_env *env_list, char *key, char *value)
 {
 	t_env *current;
@@ -62,12 +37,6 @@ static int	update_existing_env(t_env *env_list, char *key, char *value)
 		current = current->next;
 	}
 	return (0);
-}
-
-static void	free_key_value(char *key, char *value)
-{
-	free(key);
-	free(value);
 }
 
 static int	process_key_value(char *arg, t_env **env_list)
@@ -101,12 +70,57 @@ static int	process_key_value(char *arg, t_env **env_list)
 	return (0);
 }
 
+static t_env	*find_next_min(t_env *env_list, char *last_key)
+{
+	t_env	*current;
+	t_env	*min_env;
+
+	min_env = NULL;
+	current = env_list;
+	while (current)
+	{
+		if (last_key == NULL || ft_strcmp(current->key, last_key) > 0)
+		{
+			if (min_env == NULL || ft_strcmp(current->key, min_env->key) < 0)
+				min_env = current;
+		}
+		current = current->next;
+	}
+	return (min_env);
+}
+
+static void	print_exported_env(t_env *env_list)
+{
+	t_env	*next;
+	char	*last_key;
+
+	if (!env_list)
+		return ;
+	last_key = NULL;
+	while (1)
+	{
+		next = find_next_min(env_list, last_key);
+		if (!next)
+			break;
+		if (next->value && next->value[0] != '\0')
+			printf("declare -x %s=\"%s\"\n", next->key, next->value);
+		else
+			printf("declare -x %s\n", next->key);
+		last_key = next->key;
+	}
+}
+
 int	ft_export(char **args, t_env **env_list)
 {
 	int		i;
 	int		exit_code;
 	int		result;
 
+	if (!args || !args[1])
+	{
+		print_exported_env(*env_list);
+		return (0);
+	}
 	i = 1;
 	exit_code = 0;
 	while (args[i])
