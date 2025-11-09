@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/06 17:18:23 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/09 14:28:29 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,20 +27,44 @@ void	execve_error_exit(char *cmd)
 	exit(127);
 }
 
-// TODO: env_listをenvironの形式に変換するコードが必要
-// char *env_list_to_environ(t_env *env_list)
-// {
-// 	return "";
-// }
+char	**env_list_to_envp(t_env *env_list)
+{
+	t_env	*list_current;
+	int		count;
+	int		i;
+	char	**envp;
+
+	count = 0;
+	i = 0;
+	list_current = env_list;
+	while (env_list)
+	{
+		count++;
+		env_list = env_list->next;
+	}
+	envp = malloc(sizeof(char *) * count);
+	if (!envp)
+		return (NULL);
+	while (list_current)
+	{
+		envp[i] = ft_strjoin(list_current->key, "=");
+		envp[i] = ft_strjoin(envp[i], list_current->value);
+		i++;
+		list_current = list_current->next;
+	}
+	return (envp);
+}
 
 int	execute(t_cmd *cmds, t_env *env_list)
 {
-	char		*cmd;
+	char	*cmd;
+	char	**envp;
 
+	envp = env_list_to_envp(env_list);
 	if (cmds->args[0] == NULL)
 		handle_command_path_error(cmds, 1, 0);
 	cmd = build_command_path(cmds, &env_list);
-	if (execve(cmd, cmds->args, environ) == -1)
+	if (execve(cmd, cmds->args, envp) == -1)
 	{
 		(free(cmds->args), execve_error_exit(cmd));
 	}
@@ -102,7 +126,7 @@ int	main(void)
 		cmds_first = cmds;
 		free(line);
 		if (!cmds)
-			continue;
+			continue ;
 		builtin_status = exec_builtin_fn(cmds, &env_list, exit_status);
 		if (builtin_status != -1)
 		{
