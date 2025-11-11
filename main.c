@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/09 14:28:29 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/11 12:37:10 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,10 @@ int	execute(t_cmd *cmds, t_env *env_list)
 	char	*cmd;
 	char	**envp;
 
-	envp = env_list_to_envp(env_list);
 	if (cmds->args[0] == NULL)
 		handle_command_path_error(cmds, 1, 0);
 	cmd = build_command_path(cmds, &env_list);
+	envp = env_list_to_envp(env_list);
 	if (execve(cmd, cmds->args, envp) == -1)
 	{
 		(free(cmds->args), execve_error_exit(cmd));
