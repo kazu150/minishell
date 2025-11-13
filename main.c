@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/13 18:31:31 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/14 01:32:22 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,9 +113,9 @@ int	main(void)
 	signal(SIGQUIT, SIG_IGN); // SIG_IGNはhandlerのコンスト。意味：Ignore Signal
 	env_list = init_env();
 	cmds = NULL;
-	pipe(fd);
 	while (1)
 	{
+		pipe(fd);
 		line = readline("> ");
 		if (line == NULL)
 			ft_exit(cmds, &env_list);
@@ -154,6 +154,8 @@ int	main(void)
 				{
 					dup2(fd[1], 1);
 					dup2(fd[0], 0);
+					close(fd[1]);
+					close(fd[0]);
 				}
 				if (cmds->next)
 				{
