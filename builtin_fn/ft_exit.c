@@ -15,14 +15,18 @@
 void	free_env_list(t_env **env_list)
 {
 	t_env	*target;
+	t_env	*current;
 
 	target = *env_list;
 	while (target)
 	{
+		current = target->next;
 		free(target->key);
 		free(target->value);
-		target = target->next;
+		free(target);
+		target = current;
 	}
+	*env_list = NULL;
 }
 
 int	ft_exit(t_cmd *cmds, t_env **env_list)

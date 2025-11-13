@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 18:53:34 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/06 17:21:55 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/08 12:51:57 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,4 +30,10 @@ void	free_cmds(t_cmd *cmds)
 	free_all(cmds->args);
 	free(cmds->redirs);
 	free(cmds);
+}
+
+void	free_key_value(char *key, char *value)
+{
+	free(key);
+	free(value);
 }

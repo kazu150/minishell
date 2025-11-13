@@ -29,6 +29,7 @@ int	ft_unset(char *arg, t_env **env_list)
 				prev->next = current->next;
 			else
 				*env_list = (*env_list)->next;
+			free_key_value(current->key, current->value);
 			free(current);
 			return (0);
 		}
