@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/13 17:49:14 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/13 18:31:31 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,15 +136,6 @@ int	main(void)
 			{
 				pid = fork();
 			}
-			if (!cmds->redirs)
-			{
-				if (cmds->next){
-					dup2(fd[1], 1);
-				}
-				dup2(fd[0], 0);
-				close(fd[0]);
-				close(fd[1]);
-			}
 			if (!cmds->next)
 			{
 				builtin_status = exec_builtin_fn(cmds, &env_list, exit_status);
@@ -159,6 +150,11 @@ int	main(void)
 				error_exit(FORK);
 			if (pid == 0)
 			{
+				if (!cmds->redirs)
+				{
+					dup2(fd[1], 1);
+					dup2(fd[0], 0);
+				}
 				if (cmds->next)
 				{
 					builtin_status = exec_builtin_fn(cmds, &env_list,
@@ -175,7 +171,6 @@ int	main(void)
 			}
 			else
 			{
-				close(fd[0]);
 				close(fd[1]);
 				waitpid(pid, &status, 0);
 			}
