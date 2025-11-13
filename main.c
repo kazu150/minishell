@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/13 12:32:18 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/13 15:28:01 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,22 +128,37 @@ int	main(void)
 		free(line);
 		if (!cmds)
 			continue ;
-		builtin_status = exec_builtin_fn(cmds, &env_list, exit_status);
-		if (builtin_status != -1)
-		{
-			exit_status = builtin_status;
-			free_cmds(cmds);
-			continue ;
-		}
-		pid = fork();
-		if (pid == -1)
-			error_exit(FORK);
-		// TODO
-		// - PIPEで次のコマンドに実行結果を渡す(nextがあったら)
 		while (cmds)
 		{
+			if (cmds->next)
+			{
+				pid = fork();
+			}
+			if (!cmds->next)
+			{
+				builtin_status = exec_builtin_fn(cmds, &env_list, exit_status);
+				if (builtin_status != -1)
+				{
+					exit_status = builtin_status;
+					break ;
+				}
+				pid = fork();
+			}
+			if (pid == -1)
+				error_exit(FORK);
 			if (pid == 0)
 			{
+				if (cmds->next)
+				{
+					builtin_status = exec_builtin_fn(cmds, &env_list,
+							exit_status);
+					if (builtin_status != -1)
+					{
+						exit_status = builtin_status;
+						free_cmds(cmds);
+						return (0);
+					}
+				}
 				expand_redirs(cmds->redirs, env_list, exit_status);
 				return (execute(cmds, env_list));
 			}
@@ -160,3 +175,9 @@ int	main(void)
 	}
 	return (0);
 }
+
+// 無視される
+// cd export XXX unset XXX
+
+// 値を渡す
+// export echo pwd
