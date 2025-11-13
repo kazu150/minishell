@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/13 15:28:01 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/13 17:49:14 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ void	sigIntHandler(int signo)
 // gcc main.c -lreadline -o main
 int	main(void)
 {
+	int		fd[2];
 	pid_t	pid;
 	int		status;
 	char	*line;
@@ -112,6 +113,7 @@ int	main(void)
 	signal(SIGQUIT, SIG_IGN); // SIG_IGNはhandlerのコンスト。意味：Ignore Signal
 	env_list = init_env();
 	cmds = NULL;
+	pipe(fd);
 	while (1)
 	{
 		line = readline("> ");
@@ -133,6 +135,15 @@ int	main(void)
 			if (cmds->next)
 			{
 				pid = fork();
+			}
+			if (!cmds->redirs)
+			{
+				if (cmds->next){
+					dup2(fd[1], 1);
+				}
+				dup2(fd[0], 0);
+				close(fd[0]);
+				close(fd[1]);
 			}
 			if (!cmds->next)
 			{
@@ -164,6 +175,8 @@ int	main(void)
 			}
 			else
 			{
+				close(fd[0]);
+				close(fd[1]);
 				waitpid(pid, &status, 0);
 			}
 			cmds = cmds->next;
