@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/11 12:37:10 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/13 12:32:18 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ char	**env_list_to_envp(t_env *env_list)
 		i++;
 		list_current = list_current->next;
 	}
+	envp[i] = 0;
 	return (envp);
 }
 
