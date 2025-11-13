@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:35:42 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/06 17:21:15 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/13 13:58:10 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ static void	append_arg(t_cmd *cmd, char *token)
 	if (old)
 		ft_memcpy(new, old, sizeof(char *) * n);
 	new[n] = ft_strdup(token);
+	fprintf(stderr, "[DEBUG] append_arg strdup %p -> '%s'\n", (void *)new[n], new[n]);
+
 	new[n + 1] = NULL;
 	free(old);
 	cmd->args = new;
@@ -87,7 +89,7 @@ t_cmd	*parse_input(char *input)
 			{
 				free_all(tokens);
 				if (head_cmd)
-					free(head_cmd);
+					free_cmds(head_cmd);
 				return (NULL);
 			}
 		}
@@ -99,7 +101,7 @@ t_cmd	*parse_input(char *input)
 	if (!head_cmd || !head_cmd->args)
 	{
 		if (head_cmd)
-			free(head_cmd);
+			free_cmds(head_cmd);
 		return (ft_putendl_fd("minishell: syntax error", 2), free_all(tokens),
 			NULL);
 	}

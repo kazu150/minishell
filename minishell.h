@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/08 12:52:01 by codespace        ###   ########.fr       */
+/*   Updated: 2025/11/13 14:42:35 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ int					ft_env(char **args, t_env *env_list);
 int					handle_export_error(char *invalid_key);
 int					is_valid_export_key(const char *key);
 int					ft_export(char **args, t_env **env_list);
-int					ft_exit(t_cmd *cmds, t_env **env_list);
+void				ft_exit(t_cmd *cmds, t_env **env_list);
 void				free_exit(void *target);
 int					exec_builtin_fn(t_cmd *cmds, t_env **env_list, int exit_status);
 void				free_all(char **array);

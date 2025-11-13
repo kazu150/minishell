@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/06 17:18:23 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/13 13:17:28 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,22 @@ int	execute(t_cmd *cmds, t_env *env_list)
 		(free(cmds->args), execve_error_exit(cmd));
 	}
 	return (0);
+}
+
+static int	is_all_space(char *line)
+{
+	int	i;
+
+	i = 0;
+	if (!line)
+		return (1);
+	while (line[i])
+	{
+		if (line[i] != ' ' && line[i] != '\t')
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
 int	is_redir(char *arg)
@@ -92,7 +108,7 @@ int	main(void)
 		line = readline("> ");
 		if (line == NULL)
 			ft_exit(cmds, &env_list);
-		if (ft_strlen(line) == 0)
+		if (!ft_strlen(line) || is_all_space(line))
 		{
 			free(line);
 			continue ;

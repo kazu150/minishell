@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 18:53:34 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/08 12:51:57 by codespace        ###   ########.fr       */
+/*   Updated: 2025/11/13 14:12:04 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,46 @@ void	free_all(char **array)
 	int	i;
 
 	i = 0;
+	if (!array)
+		return ;
 	while (array[i])
 	{
+		fprintf(stderr, "[DEBUG] free_all free %p -> '%s'\n", (void *)array[i], array[i]);
 		free(array[i]);
 		i++;
 	}
 	free(array);
 }
 
+static void	free_redirs(t_redir *redirs)
+{
+	t_redir	*current;
+
+	while (redirs)
+	{
+		current = redirs->next;
+		if (redirs->target)
+			free(redirs->target);
+		free(redirs);
+		redirs = current;
+	}
+}
+
 void	free_cmds(t_cmd *cmds)
 {
-	free_all(cmds->args);
-	free(cmds->redirs);
-	free(cmds);
+	t_cmd	*current;
+	t_cmd	*next;
+
+	current = cmds;
+	while (current)
+	{
+		next = current->next;
+		if (current->args)
+			free_all(current->args);
+		free_redirs(current->redirs);
+		free(current);
+		current = next;
+	}
 }
 
 void	free_key_value(char *key, char *value)

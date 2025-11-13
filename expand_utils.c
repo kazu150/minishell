@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 07:39:06 by cyang             #+#    #+#             */
-/*   Updated: 2025/10/19 15:46:03 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/13 14:58:12 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ char	*add_after_var(char *result, char *str, int var_end, t_env *env_list, int e
 		tmp = ft_strjoin(result, rest_expanded);
 		free(result);
 		free(rest_expanded);
+		free(rest);
 		return (tmp);
 	}
 	return (result);

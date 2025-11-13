@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 13:53:03 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/01 17:39:41 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/13 14:57:14 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,11 +116,21 @@ char	*expand_token(char *str, t_env *env_list, int exit_status)
 char	**expand_all(char **strs, t_env *env_list, int exit_status)
 {
 	int	i;
+	char	*old;
+	char	*expanded;
 
 	i = 0;
 	while (strs[i])
 	{
-		strs[i] = expand_token(strs[i], env_list, exit_status);
+		old = strs[i];
+		expanded = expand_token(strs[i], env_list, exit_status);
+		if (expanded != old)
+		{
+			free(old);
+			strs[i] = expanded;
+		}
+		else
+			strs[i] = old;
 		i++;
 	}
 	return (strs);

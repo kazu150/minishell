@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 17:15:12 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/06 17:15:47 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/13 14:42:27 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,13 @@ void	free_env_list(t_env **env_list)
 	*env_list = NULL;
 }
 
-int	ft_exit(t_cmd *cmds, t_env **env_list)
+void	ft_exit(t_cmd *cmds, t_env **env_list)
 {
 	if (cmds)
-	{
 		free_cmds(cmds);
-	}
-	free_env_list(env_list);
+	if (env_list && *env_list)
+		free_env_list(env_list);
 	free_exit(NULL);
-	return (1);
+	rl_clear_history();
+	exit(0);
 }
