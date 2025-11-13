@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/12 15:13:01 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/10/19 16:04:29 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/13 12:44:39 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ int	ft_unset(char *arg, t_env **env_list)
 				prev->next = current->next;
 			else
 				*env_list = (*env_list)->next;
+			free(current->key);
+			free(current->value);
 			free(current);
 			return (0);
 		}
