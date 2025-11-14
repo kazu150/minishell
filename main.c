@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/14 23:32:27 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/15 02:16:18 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,111 +97,130 @@ void	sigIntHandler(int signo)
 void	connect_pipe(t_cmd *cmds, int pipe_fd[2], int prev_read_fd)
 {
 	if (prev_read_fd != -1)
+	{
 		dup2(prev_read_fd, STDIN_FILENO);
+		close(prev_read_fd);
+	}
 	if (cmds->next)
 		dup2(pipe_fd[1], STDOUT_FILENO);
 	close(pipe_fd[1]);
 	close(pipe_fd[0]);
 }
 
-// gcc main.c -lreadline -o main
+int	run_normal_command(t_cmd *cmds, int pipe_fd[2], int *prev_read_fd,
+		t_env *env_list, int *exit_status, int *status)
+{
+	pid_t	pid;
+	int		builtin_status;
+
+	printf("normal");
+	pipe(pipe_fd);
+	pid = fork();
+	if (pid == -1)
+		error_exit(FORK);
+	if (pid == 0)
+	{
+		if (!cmds->redirs)
+			connect_pipe(cmds, pipe_fd, *prev_read_fd);
+		builtin_status = exec_builtin_fn(cmds, &env_list, *exit_status);
+		if (builtin_status != -1)
+		{
+			*exit_status = builtin_status;
+			free_cmds(cmds);
+			return (0);
+		}
+		expand_redirs(cmds->redirs, env_list, *exit_status);
+		return (execute(cmds, env_list));
+	}
+	else
+	{
+		*prev_read_fd = pipe_fd[0];
+		close(pipe_fd[1]);
+		waitpid(pid, status, 0);
+	}
+	return (0);
+}
+
+int	run_last_command(t_cmd *cmds, int pipe_fd[2], int *prev_read_fd,
+		t_env *env_list, int *exit_status, int *status)
+{
+	pid_t	pid;
+	int		builtin_status;
+
+	printf("last");
+	builtin_status = exec_builtin_fn(cmds, &env_list, *exit_status);
+	if (builtin_status != -1)
+	{
+		*exit_status = builtin_status;
+		return (0);
+	}
+	pid = fork();
+	if (pid == -1)
+		error_exit(FORK);
+	if (pid == 0)
+	{
+		if (!cmds->redirs)
+			connect_pipe(cmds, pipe_fd, *prev_read_fd);
+		expand_redirs(cmds->redirs, env_list, *exit_status);
+		return (execute(cmds, env_list));
+	}
+	else
+	{
+		*prev_read_fd = pipe_fd[0];
+		close(pipe_fd[1]);
+		waitpid(pid, status, 0);
+	}
+	return (0);
+}
+
+t_cmd	*get_cmds_from_readline(t_env **env_list, t_cmd **cmds,
+		t_cmd **cmds_first)
+{
+	char	*line;
+
+	*cmds = NULL;
+	line = readline("> ");
+	if (line == NULL)
+		ft_exit(*cmds, env_list);
+	if (ft_strlen(line) == 0)
+	{
+		free(line);
+		return (NULL);
+	}
+	add_history(line);
+	*cmds = parse_input(line);
+	*cmds_first = *cmds;
+	free(line);
+	return (*cmds);
+}
+
 int	main(void)
 {
 	int		prev_read_fd;
 	int		pipe_fd[2];
-	pid_t	pid;
 	int		status;
-	char	*line;
 	t_cmd	*cmds;
 	t_cmd	*cmds_first;
 	t_env	*env_list;
 	int		exit_status;
-	int		builtin_status;
 
 	prev_read_fd = -1;
 	exit_status = 0;
-	line = NULL;
 	signal(SIGINT, sigIntHandler);
-	signal(SIGQUIT, SIG_IGN); // SIG_IGNはhandlerのコンスト。意味：Ignore Signal
+	signal(SIGQUIT, SIG_IGN);
 	env_list = init_env();
-	cmds = NULL;
 	while (1)
 	{
-		line = readline("> ");
-		if (line == NULL)
-			ft_exit(cmds, &env_list);
-		if (ft_strlen(line) == 0)
-		{
-			free(line);
-			continue ;
-		}
-		add_history(line);
-		cmds = parse_input(line);
-		cmds_first = cmds;
-		free(line);
-		if (!cmds)
-			continue ;
+		get_cmds_from_readline(&env_list, &cmds, &cmds_first);
 		while (cmds)
 		{
 			if (cmds->next)
-			{
-				pipe(pipe_fd);
-				pid = fork();
-				if (pid == -1)
-					error_exit(FORK);
-				if (pid == 0)
-				{
-					if (!cmds->redirs)
-						connect_pipe(cmds, pipe_fd, prev_read_fd);
-					builtin_status = exec_builtin_fn(cmds, &env_list,
-							exit_status);
-					if (builtin_status != -1)
-					{
-						exit_status = builtin_status;
-						free_cmds(cmds);
-						return (0);
-					}
-					expand_redirs(cmds->redirs, env_list, exit_status);
-					return (execute(cmds, env_list));
-				}
-				else
-				{
-					close(pipe_fd[1]);
-					prev_read_fd = pipe_fd[0];
-					waitpid(pid, &status, 0);
-				}
-			}
+				run_normal_command(cmds, pipe_fd, &prev_read_fd, env_list, &exit_status, &status);
 			else
-			{
-				builtin_status = exec_builtin_fn(cmds, &env_list, exit_status);
-				if (builtin_status != -1)
-				{
-					exit_status = builtin_status;
-					break ;
-				}
-				pid = fork();
-				if (pid == -1)
-					error_exit(FORK);
-				if (pid == 0)
-				{
-					if (!cmds->redirs)
-						connect_pipe(cmds, pipe_fd, prev_read_fd);
-					expand_redirs(cmds->redirs, env_list, exit_status);
-					return (execute(cmds, env_list));
-				}
-				else
-				{
-					close(pipe_fd[1]);
-					prev_read_fd = pipe_fd[0];
-					waitpid(pid, &status, 0);
-				}
-			}
+				run_last_command(cmds, pipe_fd, &prev_read_fd, env_list, &exit_status, &status);
 			cmds = cmds->next;
 		}
-		if (cmds_first)
-		{
-			free_cmds(cmds_first);
-		}
+		free_cmds(cmds_first);
 	}
 	return (0);
 }
