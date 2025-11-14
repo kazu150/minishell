@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 13:53:03 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/13 14:57:14 by codespace        ###   ########.fr       */
+/*   Updated: 2025/11/14 02:39:58 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,7 +174,12 @@ t_fds	expand_redirs(t_redir *redirs, t_env *env_list, int exit_status)
 			else if (redirs->type == R_HDOC)
 				fd = setup_heredoc(redirs->target);
 			if (fd == -1)
-				error_exit(target);
+			{
+				// error_exit(target);
+				perror(target);
+				exit(1);
+			}
+				
 			fds.read_fd = find_unused_fd(fd, fds);
 			dup2(STDIN_FILENO, fds.read_fd);
 			dup2(fd, STDIN_FILENO);
@@ -189,7 +194,11 @@ t_fds	expand_redirs(t_redir *redirs, t_env *env_list, int exit_status)
 				fd = open(expand_token(redirs->target, env_list, exit_status),
 						O_WRONLY | O_CREAT | O_APPEND, 0644);
 			if (fd == -1)
-				error_exit(target);
+			{
+				// error_exit(target);
+				perror(target);
+				exit(1);
+			}
 			fds.write_fd = find_unused_fd(fd, fds);
 			dup2(STDOUT_FILENO, fds.write_fd);
 			dup2(fd, STDOUT_FILENO);

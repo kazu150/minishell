@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/13 13:17:28 by codespace        ###   ########.fr       */
+/*   Updated: 2025/11/14 03:19:43 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,18 @@ int	execute(t_cmd *cmds, t_env *env_list)
 {
 	char		*cmd;
 
-	if (cmds->args[0] == NULL)
-		handle_command_path_error(cmds, 1, 0);
+	if (!cmds->args || cmds->args[0] == NULL)
+	{
+		if (cmds->redirs)
+			exit(0);
+		else
+			handle_command_path_error(cmds, 1, 0);
+	}
 	cmd = build_command_path(cmds, &env_list);
 	if (execve(cmd, cmds->args, environ) == -1)
 	{
-		(free(cmds->args), execve_error_exit(cmd));
+		// free(cmds->args), 
+		execve_error_exit(cmd);
 	}
 	return (0);
 }
@@ -85,6 +91,24 @@ void	sigIntHandler(int signo)
 	rl_redisplay();         //　promptを表示しなおす
 }
 
+static void	handle_redirect_without_cmd(t_cmd *cmds, t_env *env_list, int *exit_status, pid_t *pid)
+{
+	int	status;
+	*pid = fork();
+	if (*pid == -1)
+		error_exit(FORK);
+	if (*pid == 0)
+	{
+		expand_redirs(cmds->redirs, env_list, *exit_status);
+		exit(0);
+	}
+	else
+	{
+		waitpid(*pid, &status, 0);
+		*exit_status = status >> 8;
+	}
+}
+
 // gcc main.c -lreadline -o main
 int	main(void)
 {
@@ -102,12 +126,12 @@ int	main(void)
 	signal(SIGINT, sigIntHandler);
 	signal(SIGQUIT, SIG_IGN); // SIG_IGNはhandlerのコンスト。意味：Ignore Signal
 	env_list = init_env();
-	cmds = NULL;
 	while (1)
 	{
+		cmds = NULL;
 		line = readline("> ");
 		if (line == NULL)
-			ft_exit(cmds, &env_list);
+			ft_exit(NULL, &env_list);
 		if (!ft_strlen(line) || is_all_space(line))
 		{
 			free(line);
@@ -119,6 +143,14 @@ int	main(void)
 		free(line);
 		if (!cmds)
 			continue;
+		// 空コマンド　> < >> << + targetの対応
+		if (cmds->args && !cmds->args[0])
+		{
+			if (cmds->redirs)
+				handle_redirect_without_cmd(cmds, env_list, &exit_status, &pid);
+			free_cmds(cmds);
+			continue;
+		}
 		builtin_status = exec_builtin_fn(cmds, &env_list, exit_status);
 		if (builtin_status != -1)
 		{
@@ -144,9 +176,12 @@ int	main(void)
 			}
 			cmds = cmds->next;
 		}
+		if (pid != 0)
+			exit_status = status >> 8;
 		if (cmds_first)
 		{
 			free_cmds(cmds_first);
+			cmds_first = NULL;
 		}
 	}
 	return (0);

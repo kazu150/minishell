@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 18:53:34 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/13 14:12:04 by codespace        ###   ########.fr       */
+/*   Updated: 2025/11/14 00:40:32 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ void	free_all(char **array)
 		return ;
 	while (array[i])
 	{
-		fprintf(stderr, "[DEBUG] free_all free %p -> '%s'\n", (void *)array[i], array[i]);
 		free(array[i]);
 		i++;
 	}
