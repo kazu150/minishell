@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/14 01:32:22 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/14 22:33:56 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,8 @@ void	sigIntHandler(int signo)
 // gcc main.c -lreadline -o main
 int	main(void)
 {
-	int		fd[2];
+	int		prev_read_fd;
+	int		pipe_fd[2];
 	pid_t	pid;
 	int		status;
 	char	*line;
@@ -107,6 +108,7 @@ int	main(void)
 	int		exit_status;
 	int		builtin_status;
 
+	prev_read_fd = -1;
 	exit_status = 0;
 	line = NULL;
 	signal(SIGINT, sigIntHandler);
@@ -115,7 +117,6 @@ int	main(void)
 	cmds = NULL;
 	while (1)
 	{
-		pipe(fd);
 		line = readline("> ");
 		if (line == NULL)
 			ft_exit(cmds, &env_list);
@@ -132,6 +133,8 @@ int	main(void)
 			continue ;
 		while (cmds)
 		{
+			if (cmds->next)
+				pipe(pipe_fd);
 			if (cmds->next)
 			{
 				pid = fork();
@@ -152,10 +155,12 @@ int	main(void)
 			{
 				if (!cmds->redirs)
 				{
-					dup2(fd[1], 1);
-					dup2(fd[0], 0);
-					close(fd[1]);
-					close(fd[0]);
+					if (prev_read_fd != -1)
+						dup2(prev_read_fd, STDIN_FILENO);
+					if (cmds->next)
+						dup2(pipe_fd[1], 1);
+					close(pipe_fd[1]);
+					close(pipe_fd[0]);
 				}
 				if (cmds->next)
 				{
@@ -173,7 +178,8 @@ int	main(void)
 			}
 			else
 			{
-				close(fd[1]);
+				close(pipe_fd[1]);
+				prev_read_fd = pipe_fd[0];
 				waitpid(pid, &status, 0);
 			}
 			cmds = cmds->next;

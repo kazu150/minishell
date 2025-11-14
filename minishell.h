@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/13 17:27:41 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/14 22:31:59 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,8 @@ int					is_valid_export_key(const char *key);
 int					ft_export(char **args, t_env **env_list);
 int					ft_exit(t_cmd *cmds, t_env **env_list);
 void				free_exit(void *target);
-int					exec_builtin_fn(t_cmd *cmds, t_env **env_list, int exit_status);
+int					exec_builtin_fn(t_cmd *cmds, t_env **env_list,
+						int exit_status);
 void				free_all(char **array);
 void				free_cmds(t_cmd *cmds);
 void				free_key_value(char *key, char *value);
