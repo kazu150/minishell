@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/15 12:19:20 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/15 12:55:55 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char	**env_list_to_envp(t_env *env_list)
 		count++;
 		env_list = env_list->next;
 	}
-	envp = malloc(sizeof(char *) * count);
+	envp = malloc(sizeof(char *) * (count + 1));
 	if (!envp)
 		return (NULL);
 	while (list_current)
@@ -102,9 +102,13 @@ void	connect_pipe(t_cmd *cmds, int pipe_fd[2], int prev_read_fd)
 		close(prev_read_fd);
 	}
 	if (cmds->next)
+	{
 		dup2(pipe_fd[1], STDOUT_FILENO);
-	close(pipe_fd[1]);
-	close(pipe_fd[0]);
+	}
+	if (pipe_fd[0] != -1)
+		close(pipe_fd[0]);
+	if (pipe_fd[1] != -1)
+		close(pipe_fd[1]);
 }
 
 t_cmd	*get_cmds_from_readline(t_env **env_list, t_cmd **cmds,
@@ -114,7 +118,6 @@ t_cmd	*get_cmds_from_readline(t_env **env_list, t_cmd **cmds,
 
 	*cmds = NULL;
 	*cmds_first = NULL;
-
 	line = NULL;
 	line = readline("> ");
 	if (line == NULL)
@@ -132,7 +135,7 @@ t_cmd	*get_cmds_from_readline(t_env **env_list, t_cmd **cmds,
 }
 
 int	run_normal_command(t_cmd *cmds, int pipe_fd[2], int *prev_read_fd,
-		t_env *env_list, int *exit_status, int *status)
+		t_env **env_list, int *exit_status, int *status)
 {
 	pid_t	pid;
 	int		builtin_status;
@@ -145,32 +148,33 @@ int	run_normal_command(t_cmd *cmds, int pipe_fd[2], int *prev_read_fd,
 	{
 		if (!cmds->redirs)
 			connect_pipe(cmds, pipe_fd, *prev_read_fd);
-		builtin_status = exec_builtin_fn(cmds, &env_list, *exit_status);
+		builtin_status = exec_builtin_fn(cmds, env_list, *exit_status);
 		if (builtin_status != -1)
 		{
 			*exit_status = builtin_status;
 			free_cmds(cmds);
-			ft_exit(cmds, &env_list);
+			ft_exit(cmds, env_list);
 		}
-		expand_redirs(cmds->redirs, env_list, *exit_status);
-		return (execute(cmds, env_list));
+		expand_redirs(cmds->redirs, *env_list, *exit_status);
+		return (execute(cmds, *env_list));
 	}
 	else
 	{
 		*prev_read_fd = pipe_fd[0];
-		close(pipe_fd[1]);
+		if (pipe_fd[1] != -1)
+			close(pipe_fd[1]);
 		waitpid(pid, status, 0);
 	}
 	return (0);
 }
 
 int	run_last_command(t_cmd *cmds, int pipe_fd[2], int *prev_read_fd,
-		t_env *env_list, int *exit_status, int *status)
+		t_env **env_list, int *exit_status, int *status)
 {
 	pid_t	pid;
 	int		builtin_status;
 
-	builtin_status = exec_builtin_fn(cmds, &env_list, *exit_status);
+	builtin_status = exec_builtin_fn(cmds, env_list, *exit_status);
 	if (builtin_status != -1)
 	{
 		*exit_status = builtin_status;
@@ -183,13 +187,14 @@ int	run_last_command(t_cmd *cmds, int pipe_fd[2], int *prev_read_fd,
 	{
 		if (!cmds->redirs)
 			connect_pipe(cmds, pipe_fd, *prev_read_fd);
-		expand_redirs(cmds->redirs, env_list, *exit_status);
-		return (execute(cmds, env_list));
+		expand_redirs(cmds->redirs, *env_list, *exit_status);
+		return (execute(cmds, *env_list));
 	}
 	else
 	{
 		*prev_read_fd = pipe_fd[0];
-		close(pipe_fd[1]);
+		if (pipe_fd[1] != -1)
+			close(pipe_fd[1]);
 		waitpid(pid, status, 0);
 	}
 	return (0);
@@ -205,6 +210,8 @@ int	main(void)
 	t_env	*env_list;
 	int		exit_status;
 
+	pipe_fd[0] = -1;
+	pipe_fd[1] = -1;
 	prev_read_fd = -1;
 	exit_status = 0;
 	signal(SIGINT, sigIntHandler);
@@ -216,9 +223,11 @@ int	main(void)
 		while (cmds)
 		{
 			if (cmds->next)
-				run_normal_command(cmds, pipe_fd, &prev_read_fd, env_list, &exit_status, &status);
+				run_normal_command(cmds, pipe_fd, &prev_read_fd, &env_list,
+					&exit_status, &status);
 			else
-				run_last_command(cmds, pipe_fd, &prev_read_fd, env_list, &exit_status, &status);
+				run_last_command(cmds, pipe_fd, &prev_read_fd, &env_list,
+					&exit_status, &status);
 			cmds = cmds->next;
 		}
 		free_cmds(cmds_first);
