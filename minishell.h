@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/15 12:21:56 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/15 14:02:06 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,13 @@ typedef struct s_fds
 	int				read_fd;
 	int				write_fd;
 }					t_fds;
+
+
+typedef struct s_pipe_fds
+{
+	int		prev_read_fd;
+	int		pipe_fd[2];
+}					t_pipe_fds;
 
 t_cmd				*parse_input(char *input);
 void				free_all(char **array);
