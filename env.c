@@ -1,16 +1,45 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_env.c                                         :+:      :+:    :+:   */
+/*   env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/10 17:50:57 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/02 19:06:13 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/15 15:30:45 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	**env_list_to_envp(t_env *env_list)
+{
+	t_env	*list_current;
+	int		count;
+	int		i;
+	char	**envp;
+
+	count = 0;
+	i = 0;
+	list_current = env_list;
+	while (env_list)
+	{
+		count++;
+		env_list = env_list->next;
+	}
+	envp = malloc(sizeof(char *) * (count + 1));
+	if (!envp)
+		return (NULL);
+	while (list_current)
+	{
+		envp[i] = ft_strjoin(list_current->key, "=");
+		envp[i] = ft_strjoin(envp[i], list_current->value);
+		i++;
+		list_current = list_current->next;
+	}
+	envp[i] = 0;
+	return (envp);
+}
 
 t_env	*new_env(char *key, char *value)
 {

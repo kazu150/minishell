@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: codespace <codespace@student.42.fr>        +#+  +:+       +#+         #
+#    By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/03 16:26:12 by kaisogai          #+#    #+#              #
-#    Updated: 2025/11/08 12:52:06 by codespace        ###   ########.fr        #
+#    Updated: 2025/11/15 15:42:45 by kaisogai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ CFLAGS	= -Wall -Wextra -Werror
 INCLUDE	= -I./ -I./libft -I/usr/local/opt/readline/include
 READLINE = -L/usr/local/opt/readline/lib -lreadline
 LIBFT	= libft/libft.a
-SRCS	= main.c parse.c tokenize.c tokenize_utils.c tokenize_utils2.c expand.c expand_utils.c builtin_fn/ft_echo.c heredoc.c builtin_fn/ft_pwd.c builtin_fn/ft_cd.c init_env.c builtin_fn/ft_env.c builtin_fn/ft_export.c builtin_fn/ft_exit.c builtin_fn/ft_unset.c builtin_fn/index.c utils/free.c utils/path.c parse_utils.c parse_utils2.c builtin_fn/export_utils.c 
+SRCS	= main.c parse.c command.c execute.c tokenize.c tokenize_utils.c tokenize_utils2.c expand.c expand_utils.c builtin_fn/ft_echo.c heredoc.c builtin_fn/ft_pwd.c builtin_fn/ft_cd.c env.c builtin_fn/ft_env.c builtin_fn/ft_export.c builtin_fn/ft_exit.c builtin_fn/ft_unset.c builtin_fn/index.c utils/free.c utils/path.c utils/signal.c utils/error.c parse_utils.c parse_utils2.c builtin_fn/export_utils.c
 OBJS	= $(SRCS:.c=.o)
 
 all: $(LIBFT) $(NAME)
