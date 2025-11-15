@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 18:53:34 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/15 12:17:50 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/15 15:03:28 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,22 @@ void	free_all(char **array)
 	free(array);
 }
 
-void	free_cmds(t_cmd *cmds)
+void	free_cmds(t_cmd **cmds)
 {
-	if (cmds == NULL)
-		return ;
-	free_all(cmds->args);
-	free(cmds->redirs);
-	free(cmds);
-}
+	t_cmd	*target;
+	t_cmd	*current;
 
+	target = *cmds;
+	while (target)
+	{
+		current = target->next;
+		free_all(target->args);
+		free(target->redirs);
+		free(target);
+		target = current;
+	}
+	*cmds = NULL;
+}
 void	free_key_value(char *key, char *value)
 {
 	free(key);

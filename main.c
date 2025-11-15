@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/15 14:08:11 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/15 14:54:54 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,7 @@ int	run_normal_command(t_cmd *cmds, t_pipe_fds *pipe_fds,
 		if (builtin_status != -1)
 		{
 			*exit_status = builtin_status;
-			free_cmds(cmds);
+			free_cmds(&cmds);
 			ft_exit(cmds, env_list);
 		}
 		expand_redirs(cmds->redirs, *env_list, *exit_status);
@@ -230,7 +230,7 @@ void	readline_roop(t_pipe_fds *pipe_fds, int *exit_status,
 					exit_status);
 			cmds = cmds->next;
 		}
-		free_cmds(cmds_first);
+		free_cmds(&cmds_first);
 	}
 }
 

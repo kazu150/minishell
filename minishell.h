@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/15 14:02:06 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/15 14:54:23 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,7 +160,7 @@ void				free_exit(void *target);
 int					exec_builtin_fn(t_cmd *cmds, t_env **env_list,
 						int exit_status);
 void				free_all(char **array);
-void				free_cmds(t_cmd *cmds);
+void				free_cmds(t_cmd **cmds);
 void				free_key_value(char *key, char *value);
 
 #endif
