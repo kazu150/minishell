@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 13:53:03 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/01 17:39:41 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/15 15:15:24 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,12 +74,6 @@ char	*expand_with_var(char *str, t_env *env_list, int exit_status)
 	return (result);
 }
 
-// TODO
-// 例
-// "foo" → foo
-// $FOO → bar
-// '$FOO' → $FOO
-// "$FOO" → bar
 char	*expand_token(char *str, t_env *env_list, int exit_status)
 {
 	int		len;
@@ -89,21 +83,18 @@ char	*expand_token(char *str, t_env *env_list, int exit_status)
 	if (!str)
 		return (NULL);
 	len = ft_strlen(str);
-	// "foo" → foo & '$FOO' → $FOO
 	if ((str[0] == '\'' && str[len - 1] == '\'') || (str[0] == '\"' && str[len
 			- 1] == '\"' && !ft_strchr(str, '$')))
 	{
 		transform = ft_substr(str, 1, len - 2);
 		return (transform);
 	}
-	//"$FOO" → bar && $FOO → bar  home=3 skdjkf$home → skdjkf3
 	if (str[0] == '\"' && str[len - 1] == '\"' && ft_strchr(str, '$'))
 	{
 		without_quote = ft_substr(str, 1, len - 2);
 		transform = expand_with_var(without_quote, env_list, exit_status);
 		return (transform);
 	}
-	// "$FOO" → bar
 	else if (!ft_strchr(str, '\'') && !ft_strchr(str, '\"') && ft_strchr(str,
 			'$'))
 	{
@@ -132,16 +123,16 @@ char	**expand_args(char **args, t_env *env_list, int exit_status)
 	return (args);
 }
 
-int find_unused_fd(int fd, t_fds fds)
+int	find_unused_fd(int fd, t_fds fds)
 {
-	int new_fd;
-	new_fd = fd + 1;
+	int	new_fd;
 
+	new_fd = fd + 1;
 	if (fds.read_fd == new_fd)
 		new_fd++;
 	if (fds.write_fd == new_fd)
 		new_fd++;
-	return new_fd;
+	return (new_fd);
 }
 
 t_fds	expand_redirs(t_redir *redirs, t_env *env_list, int exit_status)
@@ -187,5 +178,5 @@ t_fds	expand_redirs(t_redir *redirs, t_env *env_list, int exit_status)
 		}
 		redirs = redirs->next;
 	}
-	return fds;
+	return (fds);
 }

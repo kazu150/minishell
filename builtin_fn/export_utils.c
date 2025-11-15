@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/08 12:51:38 by codespace         #+#    #+#             */
-/*   Updated: 2025/11/08 12:51:42 by codespace        ###   ########.fr       */
+/*   Updated: 2025/11/15 15:12:02 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

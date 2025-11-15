@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/15 14:54:23 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/15 15:09:13 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ typedef struct s_fds
 	int				read_fd;
 	int				write_fd;
 }					t_fds;
-
 
 typedef struct s_pipe_fds
 {

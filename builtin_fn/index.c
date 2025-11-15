@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   index.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/26 17:22:51 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/13 17:27:15 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/15 15:13:23 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ int	is_builtin_fn(char *fn_name)
 
 int	exec_fn(t_cmd *cmds, t_env **env_list)
 {
-	int result;
+	int	result;
+
 	if (!ft_strcmp(cmds->args[0], "echo"))
 		result = ft_echo(cmds->args);
 	if (!ft_strcmp(cmds->args[0], "pwd"))
@@ -48,15 +49,13 @@ int	exec_fn(t_cmd *cmds, t_env **env_list)
 		result = ft_exit(cmds, env_list);
 	if (!ft_strcmp(cmds->args[0], "unset"))
 		result = ft_unset(cmds->args[1], env_list);
-	return result;
+	return (result);
 }
 
-// NOTE: expand_argsに付いて、もともとmain側のすぐ上の部分にあったが、その配置だとなぜか"env > out"などの
-// 引数なし＋リダイレクトで処理終了してしまうので、この位置に移動した
 int	exec_builtin_fn(t_cmd *cmds, t_env **env_list, int exit_status)
 {
 	t_fds	fds;
-	int result;
+	int		result;
 
 	expand_args(cmds->args, *env_list, exit_status);
 	if (!is_builtin_fn(cmds->args[0]))
