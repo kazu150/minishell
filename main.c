@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/15 02:16:18 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/15 11:08:32 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,13 +107,34 @@ void	connect_pipe(t_cmd *cmds, int pipe_fd[2], int prev_read_fd)
 	close(pipe_fd[0]);
 }
 
+t_cmd	*get_cmds_from_readline(t_env **env_list, t_cmd **cmds,
+		t_cmd **cmds_first)
+{
+	char	*line;
+
+	*cmds = NULL;
+	line = NULL;
+	line = readline("> ");
+	if (line == NULL)
+		ft_exit(*cmds, env_list);
+	if (ft_strlen(line) == 0)
+	{
+		free(line);
+		return (NULL);
+	}
+	add_history(line);
+	*cmds = parse_input(line);
+	*cmds_first = *cmds;
+	free(line);
+	return (*cmds);
+}
+
 int	run_normal_command(t_cmd *cmds, int pipe_fd[2], int *prev_read_fd,
 		t_env *env_list, int *exit_status, int *status)
 {
 	pid_t	pid;
 	int		builtin_status;
 
-	printf("normal");
 	pipe(pipe_fd);
 	pid = fork();
 	if (pid == -1)
@@ -127,7 +148,7 @@ int	run_normal_command(t_cmd *cmds, int pipe_fd[2], int *prev_read_fd,
 		{
 			*exit_status = builtin_status;
 			free_cmds(cmds);
-			return (0);
+			ft_exit(cmds, &env_list);
 		}
 		expand_redirs(cmds->redirs, env_list, *exit_status);
 		return (execute(cmds, env_list));
@@ -147,7 +168,6 @@ int	run_last_command(t_cmd *cmds, int pipe_fd[2], int *prev_read_fd,
 	pid_t	pid;
 	int		builtin_status;
 
-	printf("last");
 	builtin_status = exec_builtin_fn(cmds, &env_list, *exit_status);
 	if (builtin_status != -1)
 	{
@@ -171,27 +191,6 @@ int	run_last_command(t_cmd *cmds, int pipe_fd[2], int *prev_read_fd,
 		waitpid(pid, status, 0);
 	}
 	return (0);
-}
-
-t_cmd	*get_cmds_from_readline(t_env **env_list, t_cmd **cmds,
-		t_cmd **cmds_first)
-{
-	char	*line;
-
-	*cmds = NULL;
-	line = readline("> ");
-	if (line == NULL)
-		ft_exit(*cmds, env_list);
-	if (ft_strlen(line) == 0)
-	{
-		free(line);
-		return (NULL);
-	}
-	add_history(line);
-	*cmds = parse_input(line);
-	*cmds_first = *cmds;
-	free(line);
-	return (*cmds);
 }
 
 int	main(void)
