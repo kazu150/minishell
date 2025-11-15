@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/15 11:08:32 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/15 12:19:20 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,8 @@ t_cmd	*get_cmds_from_readline(t_env **env_list, t_cmd **cmds,
 	char	*line;
 
 	*cmds = NULL;
+	*cmds_first = NULL;
+
 	line = NULL;
 	line = readline("> ");
 	if (line == NULL)
