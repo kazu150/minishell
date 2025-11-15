@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:35:42 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/14 22:32:12 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/15 16:50:20 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,8 @@ t_cmd	*parse_input(char *input)
 	if (!input)
 		return (NULL);
 	tokens = tokenize(input);
+	if (!tokens)
+		return 0;
 	head_cmd = NULL;
 	current = NULL;
 	i = 0;
@@ -100,8 +102,7 @@ t_cmd	*parse_input(char *input)
 	{
 		if (head_cmd)
 			free(head_cmd);
-		return (ft_putendl_fd("minishell: syntax error", 2), free_all(tokens),
-			NULL);
+		return (syntax_error(), free_all(tokens), NULL);
 	}
 	free_all(tokens);
 	return (head_cmd);

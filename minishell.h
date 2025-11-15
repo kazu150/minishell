@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/15 15:44:58 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/15 16:52:24 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ int					is_redirect(char *s);
 int					is_valid_target(char *s);
 void				redir_add_back(t_redir **lst, t_redir *new);
 t_cmd				*check_current_cmd(t_cmd **head_cmd, t_cmd **current);
-
+void 				syntax_error();
 int					output(pid_t pid, char **argv, int d_pipe[2], char **envp);
 int					input_child_process(char **argv, int d_pipe[2],
 						char **envp);
