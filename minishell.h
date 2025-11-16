@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 14:40:06 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/16 14:46:44 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,6 @@ typedef struct s_var
 	int				end;
 }					t_var;
 
-
 typedef struct s_fds
 {
 	int				read_fd;
@@ -118,7 +117,7 @@ int					is_redirect(char *s);
 int					is_valid_target(char *s);
 void				redir_add_back(t_redir **lst, t_redir *new);
 t_cmd				*check_current_cmd(t_cmd **head_cmd, t_cmd **current);
-void 				syntax_error();
+void				syntax_error(void);
 int					output(pid_t pid, char **argv, int d_pipe[2], char **envp);
 int					input_child_process(char **argv, int d_pipe[2],
 						char **envp);
@@ -142,7 +141,8 @@ int					ft_strcmp(char *s1, char *s2);
 char				*store_before_dollor(char *result, char *str,
 						int dollar_pos);
 char				*ft_getenv(t_env *env_list, char *key);
-char				*expand_and_add_var(char *result, char *str, t_var var, t_env *env_list);
+char				*expand_and_add_var(char *result, char *str, t_var var,
+						t_env *env_list);
 char				*add_after_var(char *result, char *str, int var_end,
 						t_env *env_list, int exit_status);
 char				*expand_with_var(char *str, t_env *env_list, int exit_stat);

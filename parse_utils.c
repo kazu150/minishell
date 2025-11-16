@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 22:38:03 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/03 23:20:38 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/16 14:46:54 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ int	is_valid_target(char *s)
 		return (0);
 	else if (is_redirect(s))
 		return (0);
-	//他の状況があるのかな？　テストしながら追加しましょう！
 	else
 		return (1);
 }
