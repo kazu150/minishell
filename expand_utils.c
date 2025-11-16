@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 07:39:06 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/16 14:38:03 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/16 15:10:26 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,8 @@ char	*expand_and_add_var(char *result, char *str, t_var var, t_env *env_list)
 	return (result);
 }
 
-char	*add_after_var(char *result, char *str, int var_end, t_env *env_list, int exit_status)
+char	*add_after_var(char *result, char *str, int var_end, t_env *env_list,
+		int exit_status)
 {
 	char	*rest;
 	char	*rest_expanded;

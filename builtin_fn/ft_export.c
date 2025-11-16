@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 18:39:47 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/08 12:52:11 by codespace        ###   ########.fr       */
+/*   Updated: 2025/11/16 15:10:01 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	handle_export_error(char *invalid_key);
+int				handle_export_error(char *invalid_key);
 
 static int	handle_no_equal_case(char *arg)
 {
@@ -23,7 +23,7 @@ static int	handle_no_equal_case(char *arg)
 
 static int	update_existing_env(t_env *env_list, char *key, char *value)
 {
-	t_env *current;
+	t_env	*current;
 
 	current = env_list;
 	while (current)
@@ -42,7 +42,7 @@ static int	update_existing_env(t_env *env_list, char *key, char *value)
 static int	process_key_value(char *arg, t_env **env_list)
 {
 	char	*equal_pos;
-	char 	*key;
+	char	*key;
 	char	*value;
 	int		exit_code;
 
@@ -101,7 +101,7 @@ static void	print_exported_env(t_env *env_list)
 	{
 		next = find_next_min(env_list, last_key);
 		if (!next)
-			break;
+			break ;
 		if (next->value && next->value[0] != '\0')
 			printf("declare -x %s=\"%s\"\n", next->key, next->value);
 		else
@@ -112,9 +112,9 @@ static void	print_exported_env(t_env *env_list)
 
 int	ft_export(char **args, t_env **env_list)
 {
-	int		i;
-	int		exit_code;
-	int		result;
+	int	i;
+	int	exit_code;
+	int	result;
 
 	if (!args || !args[1])
 	{

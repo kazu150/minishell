@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/12 15:13:01 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 15:06:05 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/16 15:10:27 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	remove_key_value(char *arg, t_env *current, t_env *prev, t_env **env_list)
+static int	remove_key_value(char *arg, t_env *current, t_env *prev,
+		t_env **env_list)
 {
 	if (ft_strcmp(current->key, arg) == 0)
 	{
@@ -40,7 +41,6 @@ int	ft_unset(char **arg, t_env **env_list)
 	{
 		current = *env_list;
 		prev = NULL;
-		
 		while (current)
 		{
 			if (remove_key_value(arg[i], current, prev, env_list) == 1)
