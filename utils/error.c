@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 15:42:13 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/15 16:51:53 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/16 14:48:10 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	error_exit(char *error_target)
 	exit(EXIT_FAILURE);
 }
 
-void syntax_error()
+void	syntax_error(void)
 {
 	ft_putendl_fd("minishell: syntax error", 2);
 }
