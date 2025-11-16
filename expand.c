@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 13:53:03 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/16 13:37:05 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/16 14:42:44 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,7 @@ char	*expand_with_var(char *str, t_env *env_list, int exit_status)
 	char	*result;
 	char	*tmp;
 	int		i;
-	int		var_start;
-	int		var_end;
+	t_var	var;
 
 	result = ft_strdup("");
 	if (!result)
@@ -45,22 +44,22 @@ char	*expand_with_var(char *str, t_env *env_list, int exit_status)
 		if (str[i] == '$' && str[i + 1])
 		{
 			result = store_before_dollor(result, str, i);
-			var_start = i + 1;
-			if (str[var_start] == '?')
+			var.start = i + 1;
+			if (str[var.start] == '?')
 			{
-				var_end = var_start + 1;
+				var.end = var.start + 1;
 				result = handle_dolloar_question(result, exit_status);
-				result = add_after_var(result, str, var_end, env_list,
+				result = add_after_var(result, str, var.end, env_list,
 						exit_status);
 				break ;
 			}
-			var_end = var_start;
-			while (str[var_end] && (ft_isalnum(str[var_end])
-					|| str[var_end] == '_'))
-				var_end++;
-			result = expand_and_add_var(result, str, var_start, var_end,
+			var.end = var.start;
+			while (str[var.end] && (ft_isalnum(str[var.end])
+					|| str[var.end] == '_'))
+				var.end++;
+			result = expand_and_add_var(result, str, var,
 					env_list);
-			result = add_after_var(result, str, var_end, env_list, exit_status);
+			result = add_after_var(result, str, var.end, env_list, exit_status);
 			break ;
 		}
 		i++;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 15:34:41 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 14:09:41 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/16 14:41:57 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ static int	execute(t_cmd *cmds, t_env *env_list)
 	envp = env_list_to_envp(env_list);
 	if (execve(cmd, cmds->args, envp) == -1)
 	{
-		// free(cmds->args),
 		execve_error_exit(cmd);
 	}
 	return (0);
