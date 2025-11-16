@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize_utils2.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:53:20 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/23 13:36:45 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/13 12:59:12 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	is_letter(const char str)
 {
 	if (!str)
 		return (0);
-	if (str == ' ')
+	if (str == ' ' || str == '\t')
 		return (0);
 	if (is_delimiter(str))
 		return (0);

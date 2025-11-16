@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 19:12:11 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/06 17:23:24 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/14 03:13:08 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,17 +92,20 @@ char	*build_command_path(t_cmd *cmds, t_env **env_list)
 	command_path = NULL;
 	while (paths && paths[i])
 	{
-		command_path = pathjoin(paths[i++], cmds->args[0]);
+		command_path = pathjoin(paths[i], cmds->args[0]);
 		if (!command_path)
 			error_exit(MALLOC);
 		if (access(command_path, X_OK) == 0)
-			break ;
+		{
+			free_split(paths);
+			return (command_path);
+		}
 		if (errno == EACCES)
 			has_permission_error = 1;
 		free(command_path);
+		i++;
 	}
-	if (!paths || !paths[i] || !command_path)
-		handle_command_path_error(cmds, has_permission_error, paths);
+	handle_command_path_error(cmds, has_permission_error, paths);
 	return (command_path);
 }
 
