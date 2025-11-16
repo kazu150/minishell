@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 13:53:03 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/16 14:42:44 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/16 14:48:05 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,7 @@ char	*expand_with_var(char *str, t_env *env_list, int exit_status)
 			while (str[var.end] && (ft_isalnum(str[var.end])
 					|| str[var.end] == '_'))
 				var.end++;
-			result = expand_and_add_var(result, str, var,
-					env_list);
+			result = expand_and_add_var(result, str, var, env_list);
 			result = add_after_var(result, str, var.end, env_list, exit_status);
 			break ;
 		}
@@ -106,7 +105,7 @@ char	*expand_token(char *str, t_env *env_list, int exit_status)
 
 char	**expand_all(char **strs, t_env *env_list, int exit_status)
 {
-	int	i;
+	int		i;
 	char	*old;
 	char	*expanded;
 
@@ -168,10 +167,9 @@ t_fds	expand_redirs(t_redir *redirs, t_env *env_list, int exit_status)
 			{
 				// error_exit(target);
 				perror(target);
-					free(target);
+				free(target);
 				exit(1);
 			}
-				
 			fds.read_fd = find_unused_fd(fd, fds);
 			dup2(STDIN_FILENO, fds.read_fd);
 			dup2(fd, STDIN_FILENO);
