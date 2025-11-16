@@ -27,15 +27,39 @@ void	execve_error_exit(char *cmd)
 	exit(127);
 }
 
-// TODO: env_listをenvironの形式に変換するコードが必要
-// char *env_list_to_environ(t_env *env_list)
-// {
-// 	return "";
-// }
+char	**env_list_to_envp(t_env *env_list)
+{
+	t_env	*list_current;
+	int		count;
+	int		i;
+	char	**envp;
+
+	count = 0;
+	i = 0;
+	list_current = env_list;
+	while (env_list)
+	{
+		count++;
+		env_list = env_list->next;
+	}
+	envp = malloc(sizeof(char *) * count);
+	if (!envp)
+		return (NULL);
+	while (list_current)
+	{
+		envp[i] = ft_strjoin(list_current->key, "=");
+		envp[i] = ft_strjoin(envp[i], list_current->value);
+		i++;
+		list_current = list_current->next;
+	}
+	envp[i] = 0;
+	return (envp);
+}
 
 int	execute(t_cmd *cmds, t_env *env_list)
 {
-	char		*cmd;
+	char	*cmd;
+	char	**envp;
 
 	if (!cmds->args || cmds->args[0] == NULL)
 	{
@@ -45,7 +69,8 @@ int	execute(t_cmd *cmds, t_env *env_list)
 			handle_command_path_error(cmds, 1, 0);
 	}
 	cmd = build_command_path(cmds, &env_list);
-	if (execve(cmd, cmds->args, environ) == -1)
+	envp = env_list_to_envp(env_list);
+	if (execve(cmd, cmds->args, envp) == -1)
 	{
 		// free(cmds->args), 
 		execve_error_exit(cmd);
