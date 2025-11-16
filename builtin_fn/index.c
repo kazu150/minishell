@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/26 17:22:51 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/15 15:13:23 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/16 12:46:56 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@ int	exec_fn(t_cmd *cmds, t_env **env_list)
 	if (!ft_strcmp(cmds->args[0], "export"))
 		result = ft_export(cmds->args, env_list);
 	if (!ft_strcmp(cmds->args[0], "exit"))
-		result = ft_exit(cmds, env_list);
+		ft_exit(cmds, env_list);
 	if (!ft_strcmp(cmds->args[0], "unset"))
-		result = ft_unset(cmds->args[1], env_list);
+		result = ft_unset(cmds->args, env_list);
 	return (result);
 }
 

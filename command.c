@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 15:34:41 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/15 15:44:53 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/16 14:09:41 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,19 @@ static int	execute(t_cmd *cmds, t_env *env_list)
 	char	*cmd;
 	char	**envp;
 
-	if (cmds->args[0] == NULL)
-		handle_command_path_error(cmds, 1, 0);
+	if (!cmds->args || cmds->args[0] == NULL)
+	{
+		if (cmds->redirs)
+			exit(0);
+		else
+			handle_command_path_error(cmds, 1, 0);
+	}
 	cmd = build_command_path(cmds, &env_list);
 	envp = env_list_to_envp(env_list);
 	if (execve(cmd, cmds->args, envp) == -1)
 	{
-		(free(cmds->args), execve_error_exit(cmd));
+		// free(cmds->args),
+		execve_error_exit(cmd);
 	}
 	return (0);
 }
@@ -45,12 +51,15 @@ static void	connect_pipe(t_cmd *cmds, t_pipe_fds *pipe_fds)
 		close(pipe_fds->pipe_fd[1]);
 }
 
-void	parent_process(t_pipe_fds *pipe_fds, pid_t pid, int *status)
+void	parent_process(t_pipe_fds *pipe_fds, pid_t pid, int *exit_status)
 {
+	int	status;
+
 	pipe_fds->prev_read_fd = pipe_fds->pipe_fd[0];
 	if (pipe_fds->pipe_fd[1] != -1)
 		close(pipe_fds->pipe_fd[1]);
-	waitpid(pid, status, 0);
+	waitpid(pid, &status, 0);
+	*exit_status = status >> 8;
 }
 
 int	run_normal_command(t_cmd *cmds, t_pipe_fds *pipe_fds, t_env **env_list,
@@ -71,7 +80,7 @@ int	run_normal_command(t_cmd *cmds, t_pipe_fds *pipe_fds, t_env **env_list,
 		if (builtin_status != -1)
 		{
 			*exit_status = builtin_status;
-			free_cmds(&cmds);
+			free_cmds(cmds);
 			ft_exit(cmds, env_list);
 		}
 		expand_redirs(cmds->redirs, *env_list, *exit_status);

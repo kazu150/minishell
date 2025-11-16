@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 18:53:34 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/15 15:11:53 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/16 13:35:00 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ void	free_all(char **array)
 	int	i;
 
 	i = 0;
+	if (!array)
+		return ;
 	while (array[i])
 	{
 		free(array[i]);
@@ -25,21 +27,35 @@ void	free_all(char **array)
 	free(array);
 }
 
-void	free_cmds(t_cmd **cmds)
-{
-	t_cmd	*target;
-	t_cmd	*current;
 
-	target = *cmds;
-	while (target)
+static void	free_redirs(t_redir *redirs)
+{
+	t_redir	*current;
+
+	while (redirs)
 	{
-		current = target->next;
-		free_all(target->args);
-		free(target->redirs);
-		free(target);
-		target = current;
+		current = redirs->next;
+		if (redirs->target)
+			free(redirs->target);
+		free(redirs);
+		redirs = current;
 	}
-	*cmds = NULL;
+}
+void	free_cmds(t_cmd *cmds)
+{
+	t_cmd	*current;
+	t_cmd	*next;
+
+	current = cmds;
+	while (current)
+	{
+		next = current->next;
+		if (current->args)
+			free_all(current->args);
+		free_redirs(current->redirs);
+		free(current);
+		current = next;
+	}
 }
 
 void	free_key_value(char *key, char *value)

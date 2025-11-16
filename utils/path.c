@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 19:12:11 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/15 15:42:17 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/16 13:36:57 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	handle_command_path_error(t_cmd *cmds, int has_permission_error,
 	free(str);
 	if (cmds)
 	{
-		free_cmds(&cmds);
+		free_cmds(cmds);
 	}
 	if (has_permission_error)
 		exit(126);
@@ -92,17 +92,20 @@ char	*build_command_path(t_cmd *cmds, t_env **env_list)
 	command_path = NULL;
 	while (paths && paths[i])
 	{
-		command_path = pathjoin(paths[i++], cmds->args[0]);
+		command_path = pathjoin(paths[i], cmds->args[0]);
 		if (!command_path)
 			error_exit(MALLOC);
 		if (access(command_path, X_OK) == 0)
-			break ;
+		{
+			free_split(paths);
+			return (command_path);
+		}
 		if (errno == EACCES)
 			has_permission_error = 1;
 		free(command_path);
+		i++;
 	}
-	if (!paths || !paths[i] || !command_path)
-		handle_command_path_error(cmds, has_permission_error, paths);
+	handle_command_path_error(cmds, has_permission_error, paths);
 	return (command_path);
 }
 
