@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 18:53:34 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 14:46:42 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/16 22:30:44 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,12 @@ static void	free_redirs(t_redir *redirs)
 	}
 }
 
-void	free_cmds(t_cmd *cmds)
+void	free_cmds(t_cmd **cmds)
 {
 	t_cmd	*current;
 	t_cmd	*next;
 
-	current = cmds;
+	current = *cmds;
 	while (current)
 	{
 		next = current->next;
@@ -56,6 +56,7 @@ void	free_cmds(t_cmd *cmds)
 		free(current);
 		current = next;
 	}
+	*cmds = NULL;
 }
 
 void	free_key_value(char *key, char *value)

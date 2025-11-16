@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 17:15:12 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 13:35:31 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/16 22:25:45 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,9 @@ void	free_env_list(t_env **env_list)
 	*env_list = NULL;
 }
 
-void	ft_exit(t_cmd *cmds, t_env **env_list)
+void	ft_exit(t_cmd **cmds, t_env **env_list)
 {
-	if (cmds)
-	{
-		free_cmds(cmds);
-	}
+	free_cmds(cmds);
 	if (env_list && *env_list)
 		free_env_list(env_list);
 	free_exit(NULL);

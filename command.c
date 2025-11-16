@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 15:34:41 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 14:41:57 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/16 22:25:21 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,8 @@ int	run_normal_command(t_cmd *cmds, t_pipe_fds *pipe_fds, t_env **env_list,
 		if (builtin_status != -1)
 		{
 			*exit_status = builtin_status;
-			free_cmds(cmds);
-			ft_exit(cmds, env_list);
+			free_cmds(&cmds);
+			ft_exit(&cmds, env_list);
 		}
 		expand_redirs(cmds->redirs, *env_list, *exit_status);
 		return (execute(cmds, *env_list));

@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 14:46:44 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/16 22:27:36 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,12 +166,12 @@ int					ft_env(char **args, t_env *env_list);
 int					handle_export_error(char *invalid_key);
 int					is_valid_export_key(const char *key);
 int					ft_export(char **args, t_env **env_list);
-void				ft_exit(t_cmd *cmds, t_env **env_list);
+void				ft_exit(t_cmd **cmds, t_env **env_list);
 void				free_exit(void *target);
 int					exec_builtin_fn(t_cmd *cmds, t_env **env_list,
 						int exit_status);
 void				free_all(char **array);
-void				free_cmds(t_cmd *cmds);
+void				free_cmds(t_cmd **cmds);
 void				free_key_value(char *key, char *value);
 char				**env_list_to_envp(t_env *env_list);
 void				sig_int_handler(int signo);

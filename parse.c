@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:35:42 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 14:29:31 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/16 22:26:22 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,7 @@ t_cmd	*parse_input(char *input)
 			if (handle_redirect(tokens, &i, &head_cmd, &current) == -1)
 			{
 				free_all(tokens);
-				if (head_cmd)
-					free_cmds(head_cmd);
+				free_cmds(&head_cmd);
 				return (NULL);
 			}
 		}

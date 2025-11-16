@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 14:47:13 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/16 22:27:56 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ t_cmd	*get_cmds_from_readline(t_env **env_list, t_cmd **cmds,
 	line = NULL;
 	line = readline("minishell> ");
 	if (line == NULL)
-		ft_exit(*cmds, env_list);
+		ft_exit(cmds, env_list);
 	if (!ft_strlen(line) || is_all_space(line))
 	{
 		free(line);
@@ -95,7 +95,7 @@ void	readline_roop(t_pipe_fds *pipe_fds, int *exit_status, t_env **env_list)
 		{
 			if (cmds->redirs)
 				handle_redirect_without_cmd(cmds, env_list, exit_status);
-			free_cmds(cmds);
+			free_cmds(&cmds);
 			continue ;
 		}
 		while (cmds)
@@ -106,11 +106,7 @@ void	readline_roop(t_pipe_fds *pipe_fds, int *exit_status, t_env **env_list)
 				run_last_command(cmds, pipe_fds, env_list, exit_status);
 			cmds = cmds->next;
 		}
-		if (cmds_first)
-		{
-			free_cmds(cmds_first);
-			cmds_first = NULL;
-		}
+		free_cmds(&cmds_first);
 	}
 }
 

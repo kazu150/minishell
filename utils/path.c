@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 19:12:11 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 13:36:57 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/16 22:25:05 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,7 @@ void	handle_command_path_error(t_cmd *cmds, int has_permission_error,
 	if (paths)
 		free_split(paths);
 	free(str);
-	if (cmds)
-	{
-		free_cmds(cmds);
-	}
+	free_cmds(&cmds);
 	if (has_permission_error)
 		exit(126);
 	else
