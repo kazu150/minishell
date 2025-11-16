@@ -6,27 +6,11 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 14:47:13 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/16 16:58:08 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	is_all_space(char *line)
-{
-	int	i;
-
-	i = 0;
-	if (!line)
-		return (1);
-	while (line[i])
-	{
-		if (line[i] != ' ' && line[i] != '\t')
-			return (0);
-		i++;
-	}
-	return (1);
-}
 
 t_cmd	*get_cmds_from_readline(t_env **env_list, t_cmd **cmds,
 		t_cmd **cmds_first)
@@ -106,11 +90,7 @@ void	readline_roop(t_pipe_fds *pipe_fds, int *exit_status, t_env **env_list)
 				run_last_command(cmds, pipe_fds, env_list, exit_status);
 			cmds = cmds->next;
 		}
-		if (cmds_first)
-		{
-			free_cmds(cmds_first);
-			cmds_first = NULL;
-		}
+		free_cmds(cmds_first);
 	}
 }
 

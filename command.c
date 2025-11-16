@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 15:34:41 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 14:41:57 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/16 17:25:23 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static int	execute(t_cmd *cmds, t_env *env_list)
 		else
 			handle_command_path_error(cmds, 1, 0);
 	}
-	cmd = build_command_path(cmds, &env_list);
+	cmd = build_command_path(cmds, &env_list, 0, 0);
 	envp = env_list_to_envp(env_list);
 	if (execve(cmd, cmds->args, envp) == -1)
 	{

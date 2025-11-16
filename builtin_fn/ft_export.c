@@ -6,36 +6,16 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 18:39:47 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/16 15:10:01 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/16 17:17:32 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int				handle_export_error(char *invalid_key);
-
 static int	handle_no_equal_case(char *arg)
 {
 	if (!is_valid_export_key(arg))
 		return (handle_export_error(arg));
-	return (0);
-}
-
-static int	update_existing_env(t_env *env_list, char *key, char *value)
-{
-	t_env	*current;
-
-	current = env_list;
-	while (current)
-	{
-		if (!(ft_strcmp(current->key, key)))
-		{
-			free(current->value);
-			current->value = ft_strdup(value);
-			return (1);
-		}
-		current = current->next;
-	}
 	return (0);
 }
 
@@ -54,10 +34,7 @@ static int	process_key_value(char *arg, t_env **env_list)
 	key = ft_substr(arg, 0, equal_pos - arg);
 	value = ft_strdup(equal_pos + 1);
 	if (!key || !value)
-	{
-		free_key_value(key, value);
-		return (1);
-	}
+		return (free_key_value(key, value), 1);
 	if (!is_valid_export_key(key))
 	{
 		exit_code = handle_export_error(arg);
@@ -66,8 +43,7 @@ static int	process_key_value(char *arg, t_env **env_list)
 	}
 	if (!update_existing_env(*env_list, key, value))
 		add_env_back(env_list, new_env(key, value));
-	free_key_value(key, value);
-	return (0);
+	return (free_key_value(key, value), 0);
 }
 
 static t_env	*find_next_min(t_env *env_list, char *last_key)

@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 15:55:32 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/16 17:25:42 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,8 @@ char				**tokenize(const char *str);
 void				free_split(char **args);
 void				handle_command_path_error(t_cmd *cmds,
 						int has_permission_error, char **paths);
-char				*build_command_path(t_cmd *cmds, t_env **env_list);
+char				*build_command_path(t_cmd *cmds, t_env **env_list, int i,
+						int has_permission_error);
 void				execve_error_exit(char *cmd);
 int					is_quote(char c);
 int					free_strs(char **strs, int count);
@@ -179,4 +180,7 @@ void				handle_argument(char **tokens, int *i, t_cmd **head_cmd,
 						t_cmd **current);
 void				handle_pipe(t_cmd **head_cmd, t_cmd **current, int *i);
 void				handle_redirect_only(t_cmd *head_cmd);
+int					is_all_space(char *line);
+int					update_existing_env(t_env *env_list, char *key,
+						char *value);
 #endif
