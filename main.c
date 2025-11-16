@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 14:10:26 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/16 14:18:53 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ t_cmd	*get_cmds_from_readline(t_env **env_list, t_cmd **cmds,
 	line = readline("minishell> ");
 	if (line == NULL)
 		ft_exit(*cmds, env_list);
-	if (ft_strlen(line) == 0 || is_all_space(line))
+	if (!ft_strlen(line) || is_all_space(line))
 	{
 		free(line);
 		return (NULL);
@@ -92,7 +92,7 @@ void	readline_roop(t_pipe_fds *pipe_fds, int *exit_status, t_env **env_list)
 	{
 		get_cmds_from_readline(env_list, &cmds, &cmds_first);
 		// 空コマンド　> < >> << + targetの対応
-		if (cmds->args && !cmds->args[0])
+		if (cmds && cmds->args && !cmds->args[0])
 		{
 			if (cmds->redirs)
 				handle_redirect_without_cmd(cmds, env_list, exit_status);
