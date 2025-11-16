@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/13 14:42:35 by codespace        ###   ########.fr       */
+/*   Updated: 2025/11/16 03:25:07 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,7 @@ int					setup_heredoc(char *target);
 int					ft_echo(char **args);
 int					ft_cd(char *path, t_env **env_list);
 int					ft_pwd(void);
-int					ft_unset(char *arg, t_env **env_list);
+int					ft_unset(char **arg, t_env **env_list);
 void				message_exit(char *message, int exit_type);
 
 t_env				*new_env(char *key, char *value);

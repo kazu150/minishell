@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 13:53:03 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/14 02:39:58 by codespace        ###   ########.fr       */
+/*   Updated: 2025/11/16 03:11:34 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ char	*expand_token(char *str, t_env *env_list, int exit_status)
 	{
 		without_quote = ft_substr(str, 1, len - 2);
 		transform = expand_with_var(without_quote, env_list, exit_status);
+		free(without_quote);
 		return (transform);
 	}
 	// "$FOO" → bar
@@ -177,6 +178,7 @@ t_fds	expand_redirs(t_redir *redirs, t_env *env_list, int exit_status)
 			{
 				// error_exit(target);
 				perror(target);
+					free(target);
 				exit(1);
 			}
 				
@@ -184,6 +186,8 @@ t_fds	expand_redirs(t_redir *redirs, t_env *env_list, int exit_status)
 			dup2(STDIN_FILENO, fds.read_fd);
 			dup2(fd, STDIN_FILENO);
 			close(fd);
+			if (target != redirs->target)
+				free(target);
 		}
 		else if (redirs->type == R_OUT || redirs->type == R_APP)
 		{
@@ -195,14 +199,17 @@ t_fds	expand_redirs(t_redir *redirs, t_env *env_list, int exit_status)
 						O_WRONLY | O_CREAT | O_APPEND, 0644);
 			if (fd == -1)
 			{
-				// error_exit(target);
 				perror(target);
+				if (target != redirs->target)
+					free(target);
 				exit(1);
 			}
 			fds.write_fd = find_unused_fd(fd, fds);
 			dup2(STDOUT_FILENO, fds.write_fd);
 			dup2(fd, STDOUT_FILENO);
 			close(fd);
+			if (target != redirs->target)
+				free(target);
 		}
 		redirs = redirs->next;
 	}
