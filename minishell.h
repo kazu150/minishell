@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 14:46:44 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/16 15:55:32 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,5 +175,8 @@ void				free_cmds(t_cmd *cmds);
 void				free_key_value(char *key, char *value);
 char				**env_list_to_envp(t_env *env_list);
 void				sig_int_handler(int signo);
-
+void				handle_argument(char **tokens, int *i, t_cmd **head_cmd,
+						t_cmd **current);
+void				handle_pipe(t_cmd **head_cmd, t_cmd **current, int *i);
+void				handle_redirect_only(t_cmd *head_cmd);
 #endif
