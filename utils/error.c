@@ -1,43 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_exit.c                                          :+:      :+:    :+:   */
+/*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/16 17:15:12 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 13:35:31 by kaisogai         ###   ########.fr       */
+/*   Created: 2025/11/15 15:42:13 by kaisogai          #+#    #+#             */
+/*   Updated: 2025/11/15 16:51:53 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_env_list(t_env **env_list)
+void	error_exit(char *error_target)
 {
-	t_env	*target;
-	t_env	*current;
-
-	target = *env_list;
-	while (target)
-	{
-		current = target->next;
-		free(target->key);
-		free(target->value);
-		free(target);
-		target = current;
-	}
-	*env_list = NULL;
+	perror(error_target);
+	exit(EXIT_FAILURE);
 }
 
-void	ft_exit(t_cmd *cmds, t_env **env_list)
+void syntax_error()
 {
-	if (cmds)
-	{
-		free_cmds(cmds);
-	}
-	if (env_list && *env_list)
-		free_env_list(env_list);
-	free_exit(NULL);
-	rl_clear_history();
-	exit(0);
+	ft_putendl_fd("minishell: syntax error", 2);
+}
+
+void	execve_error_exit(char *cmd)
+{
+	char	*str;
+	int		len;
+
+	str = ft_strjoin(cmd, ": No such file or directory\n");
+	if (!str)
+		error_exit(MALLOC);
+	free(cmd);
+	len = ft_strlen(str);
+	write(2, str, len);
+	free(str);
+	exit(127);
 }

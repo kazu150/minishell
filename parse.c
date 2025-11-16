@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:35:42 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/14 01:29:29 by codespace        ###   ########.fr       */
+/*   Updated: 2025/11/16 13:38:22 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,8 @@ t_cmd	*parse_input(char *input)
 	if (!input)
 		return (NULL);
 	tokens = tokenize(input);
+	if (!tokens)
+		return 0;
 	head_cmd = NULL;
 	current = NULL;
 	i = 0;
@@ -112,8 +114,7 @@ t_cmd	*parse_input(char *input)
 			handle_argument(tokens, &i, &head_cmd, &current);
 	}
 	if (!head_cmd)
-		return (ft_putendl_fd("minishell: syntax error", 2), free_all(tokens),
-			NULL);
+		return (syntax_error(), free_all(tokens), NULL);
 	handle_redirect_only(head_cmd);
 	free_all(tokens);
 	return (head_cmd);

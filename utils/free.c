@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 18:53:34 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/14 00:40:32 by codespace        ###   ########.fr       */
+/*   Updated: 2025/11/16 13:35:00 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	free_all(char **array)
 	free(array);
 }
 
+
 static void	free_redirs(t_redir *redirs)
 {
 	t_redir	*current;
@@ -40,7 +41,6 @@ static void	free_redirs(t_redir *redirs)
 		redirs = current;
 	}
 }
-
 void	free_cmds(t_cmd *cmds)
 {
 	t_cmd	*current;

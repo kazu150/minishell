@@ -6,17 +6,14 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 14:45:29 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/23 13:36:20 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/15 16:57:24 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	count_tokens(const char *str, int count, int in_word)
+static int	count_tokens(const char *str, int count, int in_word, char current_quote)
 {
-	char	current_quote;
-
-	current_quote = ' ';
 	while (*str)
 	{
 		if (is_quote(*str) && current_quote != *str)
@@ -38,6 +35,8 @@ static int	count_tokens(const char *str, int count, int in_word)
 		}
 		str++;
 	}
+	if (current_quote != ' ')
+		return (syntax_error(), 0);
 	return (count);
 }
 
@@ -101,7 +100,9 @@ char	**tokenize(const char *str)
 	i = 0;
 	while (str[i] != 0)
 		i++;
-	tokens_count = count_tokens(str, 0, 0);
+	tokens_count = count_tokens(str, 0, 0, ' ');
+	if (tokens_count == 0)
+		return (NULL);
 	dest = malloc(sizeof(char *) * (tokens_count + 1));
 	if (dest == NULL)
 		return (NULL);

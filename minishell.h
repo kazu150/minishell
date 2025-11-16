@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 03:25:07 by codespace        ###   ########.fr       */
+/*   Updated: 2025/11/16 13:37:24 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,18 @@ typedef struct s_fds
 	int				write_fd;
 }					t_fds;
 
+typedef struct s_pipe_fds
+{
+	int				prev_read_fd;
+	int				pipe_fd[2];
+}					t_pipe_fds;
+
+void				parent_process(t_pipe_fds *pipe_fds, pid_t pid,
+						int *status);
+int					run_normal_command(t_cmd *cmds, t_pipe_fds *pipe_fds,
+						t_env **env_list, int *exit_status);
+int					run_last_command(t_cmd *cmds, t_pipe_fds *pipe_fds,
+						t_env **env_list, int *exit_status);
 t_cmd				*parse_input(char *input);
 void				free_all(char **array);
 t_cmd				*new_cmd(void);
@@ -98,7 +110,7 @@ int					is_redirect(char *s);
 int					is_valid_target(char *s);
 void				redir_add_back(t_redir **lst, t_redir *new);
 t_cmd				*check_current_cmd(t_cmd **head_cmd, t_cmd **current);
-
+void 				syntax_error();
 int					output(pid_t pid, char **argv, int d_pipe[2], char **envp);
 int					input_child_process(char **argv, int d_pipe[2],
 						char **envp);
@@ -133,7 +145,6 @@ char				**expand_args(char **args, t_env *env_list,
 						int exit_status);
 t_fds				expand_redirs(t_redir *redirs, t_env *env_list,
 						int exit_status);
-
 int					setup_heredoc(char *target);
 int					ft_echo(char **args);
 int					ft_cd(char *path, t_env **env_list);
@@ -150,9 +161,12 @@ int					is_valid_export_key(const char *key);
 int					ft_export(char **args, t_env **env_list);
 void				ft_exit(t_cmd *cmds, t_env **env_list);
 void				free_exit(void *target);
-int					exec_builtin_fn(t_cmd *cmds, t_env **env_list, int exit_status);
+int					exec_builtin_fn(t_cmd *cmds, t_env **env_list,
+						int exit_status);
 void				free_all(char **array);
 void				free_cmds(t_cmd *cmds);
 void				free_key_value(char *key, char *value);
+char				**env_list_to_envp(t_env *env_list);
+void				sig_int_handler(int signo);
 
 #endif

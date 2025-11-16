@@ -1,43 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_exit.c                                          :+:      :+:    :+:   */
+/*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/16 17:15:12 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 13:35:31 by kaisogai         ###   ########.fr       */
+/*   Created: 2025/11/15 15:32:07 by kaisogai          #+#    #+#             */
+/*   Updated: 2025/11/15 15:33:11 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_env_list(t_env **env_list)
+void	sig_int_handler(int signo)
 {
-	t_env	*target;
-	t_env	*current;
-
-	target = *env_list;
-	while (target)
-	{
-		current = target->next;
-		free(target->key);
-		free(target->value);
-		free(target);
-		target = current;
-	}
-	*env_list = NULL;
-}
-
-void	ft_exit(t_cmd *cmds, t_env **env_list)
-{
-	if (cmds)
-	{
-		free_cmds(cmds);
-	}
-	if (env_list && *env_list)
-		free_env_list(env_list);
-	free_exit(NULL);
-	rl_clear_history();
-	exit(0);
+	(void)signo;
+	write(1, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
 }
