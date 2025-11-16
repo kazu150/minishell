@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 14:45:29 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/15 16:57:24 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/16 14:25:37 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	count_tokens(const char *str, int count, int in_word, char current_quote)
+static int	count_tokens(const char *str, int count, int in_word,
+	char current_quote)
 {
 	while (*str)
 	{

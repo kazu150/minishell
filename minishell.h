@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 13:37:24 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/16 14:46:44 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,12 @@ typedef struct s_env
 	struct s_env	*next;
 }					t_env;
 
+typedef struct s_var
+{
+	int				start;
+	int				end;
+}					t_var;
+
 typedef struct s_fds
 {
 	int				read_fd;
@@ -100,6 +106,7 @@ int					run_normal_command(t_cmd *cmds, t_pipe_fds *pipe_fds,
 						t_env **env_list, int *exit_status);
 int					run_last_command(t_cmd *cmds, t_pipe_fds *pipe_fds,
 						t_env **env_list, int *exit_status);
+void				append_arg(t_cmd *cmd, char *token);
 t_cmd				*parse_input(char *input);
 void				free_all(char **array);
 t_cmd				*new_cmd(void);
@@ -110,7 +117,7 @@ int					is_redirect(char *s);
 int					is_valid_target(char *s);
 void				redir_add_back(t_redir **lst, t_redir *new);
 t_cmd				*check_current_cmd(t_cmd **head_cmd, t_cmd **current);
-void 				syntax_error();
+void				syntax_error(void);
 int					output(pid_t pid, char **argv, int d_pipe[2], char **envp);
 int					input_child_process(char **argv, int d_pipe[2],
 						char **envp);
@@ -134,8 +141,8 @@ int					ft_strcmp(char *s1, char *s2);
 char				*store_before_dollor(char *result, char *str,
 						int dollar_pos);
 char				*ft_getenv(t_env *env_list, char *key);
-char				*expand_and_add_var(char *result, char *str, int var_start,
-						int var_end, t_env *env_list);
+char				*expand_and_add_var(char *result, char *str, t_var var,
+						t_env *env_list);
 char				*add_after_var(char *result, char *str, int var_end,
 						t_env *env_list, int exit_status);
 char				*expand_with_var(char *str, t_env *env_list, int exit_stat);

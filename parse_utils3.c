@@ -1,39 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error.c                                            :+:      :+:    :+:   */
+/*   parse_utils3.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/15 15:42:13 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 14:48:10 by cyang            ###   ########.fr       */
+/*   Created: 2025/11/16 14:27:32 by cyang             #+#    #+#             */
+/*   Updated: 2025/11/16 14:28:48 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	error_exit(char *error_target)
+void	append_arg(t_cmd *cmd, char *token)
 {
-	perror(error_target);
-	exit(EXIT_FAILURE);
-}
+	char	**old;
+	char	**new;
+	int		n;
 
-void	syntax_error(void)
-{
-	ft_putendl_fd("minishell: syntax error", 2);
-}
-
-void	execve_error_exit(char *cmd)
-{
-	char	*str;
-	int		len;
-
-	str = ft_strjoin(cmd, ": No such file or directory\n");
-	if (!str)
+	if (!cmd || !token)
+		return ;
+	old = cmd->args;
+	n = 0;
+	while (old && old[n])
+		n++;
+	new = malloc(sizeof(char *) * (n + 2));
+	if (!new)
 		error_exit(MALLOC);
-	free(cmd);
-	len = ft_strlen(str);
-	write(2, str, len);
-	free(str);
-	exit(127);
+	if (old)
+		ft_memcpy(new, old, sizeof(char *) * n);
+	new[n] = ft_strdup(token);
+	new[n + 1] = NULL;
+	free(old);
+	cmd->args = new;
 }

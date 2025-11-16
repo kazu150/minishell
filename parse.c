@@ -3,39 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:35:42 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 13:38:22 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/16 14:29:31 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	append_arg(t_cmd *cmd, char *token)
-{
-	char	**old;
-	char	**new;
-	int		n;
-
-	if (!cmd || !token)
-		return ;
-	old = cmd->args;
-	n = 0;
-	while (old && old[n])
-		n++;
-	new = malloc(sizeof(char *) * (n + 2));
-	if (!new)
-		error_exit(MALLOC);
-	if (old)
-		ft_memcpy(new, old, sizeof(char *) * n);
-	new[n] = ft_strdup(token);
-	new[n + 1] = NULL;
-	free(old);
-	cmd->args = new;
-}
-
-static int	handle_redirect(char **tokens, int *i, t_cmd **head_cmd, t_cmd **current)
+static int	handle_redirect(char **tokens, int *i, t_cmd **head_cmd,
+	t_cmd **current)
 {
 	t_redir	*redir;
 
@@ -51,7 +29,8 @@ static int	handle_redirect(char **tokens, int *i, t_cmd **head_cmd, t_cmd **curr
 	return (0);
 }
 
-static void	handle_argument(char **tokens, int *i, t_cmd **head_cmd, t_cmd **current)
+static void	handle_argument(char **tokens, int *i, t_cmd **head_cmd,
+	t_cmd **current)
 {
 	check_current_cmd(head_cmd, current);
 	append_arg(*current, tokens[*i]);
@@ -92,7 +71,7 @@ t_cmd	*parse_input(char *input)
 		return (NULL);
 	tokens = tokenize(input);
 	if (!tokens)
-		return 0;
+		return (0);
 	head_cmd = NULL;
 	current = NULL;
 	i = 0;

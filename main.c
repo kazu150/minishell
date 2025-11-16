@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 14:18:53 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/16 14:47:13 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ t_cmd	*get_cmds_from_readline(t_env **env_list, t_cmd **cmds,
 static void	handle_redirect_without_cmd(t_cmd *cmds, t_env **env_list,
 		int *exit_status)
 {
-	int	status;
+	int		status;
 	pid_t	pid;
 
 	pid = fork();
@@ -91,7 +91,6 @@ void	readline_roop(t_pipe_fds *pipe_fds, int *exit_status, t_env **env_list)
 	while (1)
 	{
 		get_cmds_from_readline(env_list, &cmds, &cmds_first);
-		// 空コマンド　> < >> << + targetの対応
 		if (cmds && cmds->args && !cmds->args[0])
 		{
 			if (cmds->redirs)

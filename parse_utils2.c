@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 22:41:26 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/14 22:32:09 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/16 14:23:57 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ t_cmd	*new_cmd(void)
 	if (!node)
 		error_exit(MALLOC);
 	node->args = NULL;
-	// node->quiote_type = NULL;
 	node->redirs = NULL;
 	node->next = NULL;
 	return (node);
