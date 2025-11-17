@@ -3,14 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 17:15:12 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 13:35:31 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/17 04:11:54 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	is_numeric(const char *s)
+{
+	int	i;
+
+	i = 0;
+	if (!s || !*s)
+		return (0);
+	if (s[0] == '+' || s[0] == '-')
+		i ++;
+	if (!s[i])
+		return (0);
+	while (s[i])
+	{
+		if (s[i] < '0' || s[i] > '9')
+			return (0);
+		i++;
+	}
+	return (1);
+}
 
 void	free_env_list(t_env **env_list)
 {
@@ -29,15 +49,41 @@ void	free_env_list(t_env **env_list)
 	*env_list = NULL;
 }
 
-void	ft_exit(t_cmd *cmds, t_env **env_list)
+static void	cleanup_and_exit(t_cmd *cmds, t_env **env_list, int exit_code)
 {
 	if (cmds)
-	{
 		free_cmds(cmds);
-	}
 	if (env_list && *env_list)
 		free_env_list(env_list);
 	free_exit(NULL);
 	rl_clear_history();
-	exit(0);
+	exit(exit_code);
+}
+
+void	ft_exit(t_cmd *cmds, t_data *data)
+{
+	char	*arg;
+	int		exit_code;
+
+	printf("exit\n");
+	if (!cmds || !cmds->args || !cmds->args[0])
+		cleanup_and_exit(cmds, &data->env_list, data->exit_status);
+	if (!cmds->args[1])
+		cleanup_and_exit(cmds, &data->env_list, data->exit_status);
+	arg = cmds->args[1];
+	if (!is_numeric(arg))
+	{
+		ft_putstr_fd("minishell: exit: ", 2);
+		ft_putstr_fd(arg, 2);
+		ft_putendl_fd(": numeric argument required", 2);
+		cleanup_and_exit(cmds, &data->env_list, 2);
+	}
+	if (cmds->args[2])
+	{
+		ft_putendl_fd("minishell: exit: too many arguments", 2);
+		data->exit_status = 1;
+		return ;
+	}
+	exit_code = ft_atoi(arg);
+	cleanup_and_exit(cmds, &data->env_list, exit_code & 255);
 }

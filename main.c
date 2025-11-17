@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/17 02:15:13 by codespace        ###   ########.fr       */
+/*   Updated: 2025/11/17 03:34:08 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ t_cmd	*get_cmds_from_readline(t_data *data, t_cmd **cmds,
 	line = NULL;
 	line = readline("minishell> ");
 	if (line == NULL)
-		ft_exit(*cmds, &data->env_list);
+		ft_exit(NULL, data);
 	if (!ft_strlen(line) || is_all_space(line))
 	{
 		free(line);

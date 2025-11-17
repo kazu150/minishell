@@ -18,6 +18,7 @@ char	**env_list_to_envp(t_env *env_list)
 	int		count;
 	int		i;
 	char	**envp;
+	char	*tmp;
 
 	count = 0;
 	i = 0;
@@ -32,8 +33,9 @@ char	**env_list_to_envp(t_env *env_list)
 		return (NULL);
 	while (list_current)
 	{
-		envp[i] = ft_strjoin(list_current->key, "=");
-		envp[i] = ft_strjoin(envp[i], list_current->value);
+		tmp = ft_strjoin(list_current->key, "=");
+		envp[i] = ft_strjoin(tmp, list_current->value);
+		free(tmp);
 		i++;
 		list_current = list_current->next;
 	}
