@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   index.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/26 17:22:51 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 12:46:56 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/17 01:17:35 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,17 +52,17 @@ int	exec_fn(t_cmd *cmds, t_env **env_list)
 	return (result);
 }
 
-int	exec_builtin_fn(t_cmd *cmds, t_env **env_list, int exit_status)
+int	exec_builtin_fn(t_cmd *cmds, t_data *data)
 {
 	t_fds	fds;
 	int		result;
 
-	expand_args(cmds->args, *env_list, exit_status);
+	expand_args(cmds->args, data);
 	if (!is_builtin_fn(cmds->args[0]))
 		return (-1);
 	if (cmds->redirs)
-		fds = expand_redirs(cmds->redirs, *env_list, exit_status);
-	result = exec_fn(cmds, env_list);
+		fds = expand_redirs(cmds->redirs, data);
+	result = exec_fn(cmds, &data->env_list);
 	if (cmds->redirs)
 	{
 		dup2(fds.read_fd, STDIN_FILENO);

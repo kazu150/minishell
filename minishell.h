@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 14:46:44 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/17 01:10:44 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,12 +100,18 @@ typedef struct s_pipe_fds
 	int				pipe_fd[2];
 }					t_pipe_fds;
 
+typedef struct s_data
+{
+	t_env			*env_list;
+	int				exit_status;
+}					t_data;
+
 void				parent_process(t_pipe_fds *pipe_fds, pid_t pid,
 						int *status);
 int					run_normal_command(t_cmd *cmds, t_pipe_fds *pipe_fds,
-						t_env **env_list, int *exit_status);
+						t_data *data);
 int					run_last_command(t_cmd *cmds, t_pipe_fds *pipe_fds,
-						t_env **env_list, int *exit_status);
+						t_data *data);
 void				append_arg(t_cmd *cmd, char *token);
 t_cmd				*parse_input(char *input);
 void				free_all(char **array);
@@ -140,18 +146,18 @@ int					create_new_token(char **strs, const char *str, t_split s);
 int					ft_strcmp(char *s1, char *s2);
 char				*store_before_dollor(char *result, char *str,
 						int dollar_pos);
+char				*handle_dolloar_question(char *result, t_data *data);
 char				*ft_getenv(t_env *env_list, char *key);
 char				*expand_and_add_var(char *result, char *str, t_var var,
 						t_env *env_list);
 char				*add_after_var(char *result, char *str, int var_end,
-						t_env *env_list, int exit_status);
-char				*expand_with_var(char *str, t_env *env_list, int exit_stat);
-char				*expand_token(char *str, t_env *env_list, int exit_status);
-char				**expand_all(char **strs, t_env *env_list, int exit_status);
-char				**expand_args(char **args, t_env *env_list,
-						int exit_status);
-t_fds				expand_redirs(t_redir *redirs, t_env *env_list,
-						int exit_status);
+						t_data *data);
+char				*expand_with_var(char *str, t_data *data);
+char				*expand_token(char *str, t_data *data);
+char				**expand_all(char **strs, t_data *data);
+char				**expand_args(char **args, t_data *data);
+int 				find_unused_fd(int fd, t_fds fds);
+t_fds				expand_redirs(t_redir *redirs, t_data *data);
 int					setup_heredoc(char *target);
 int					ft_echo(char **args);
 int					ft_cd(char *path, t_env **env_list);
@@ -168,8 +174,7 @@ int					is_valid_export_key(const char *key);
 int					ft_export(char **args, t_env **env_list);
 void				ft_exit(t_cmd *cmds, t_env **env_list);
 void				free_exit(void *target);
-int					exec_builtin_fn(t_cmd *cmds, t_env **env_list,
-						int exit_status);
+int					exec_builtin_fn(t_cmd *cmds, t_data *data);
 void				free_all(char **array);
 void				free_cmds(t_cmd *cmds);
 void				free_key_value(char *key, char *value);

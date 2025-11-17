@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 20:59:29 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/02 18:38:58 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/16 13:35:43 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,17 @@ void	ft_setenv(char *target, char *value, t_env **env_list)
 	error_exit("ft_setenv");
 }
 
+static int	handle_cd_error(char *target_path, char *old_pwd)
+{
+	char	*error_msg;
+
+	error_msg = ft_strjoin("cd: ", target_path);
+	perror(error_msg);
+	free(error_msg);
+	free(old_pwd);
+	return (1);
+}
+
 int	ft_cd(char *path, t_env **env_list)
 {
 	char	*target_path;
@@ -48,7 +59,7 @@ int	ft_cd(char *path, t_env **env_list)
 		target_path = path;
 	res = chdir(target_path);
 	if (res < 0)
-		return (perror(ft_strjoin("cd: ", target_path)), 1);
+		return (handle_cd_error(target_path, old_pwd));
 	pwd = getcwd(NULL, 0);
 	ft_setenv("OLDPWD", old_pwd, env_list);
 	ft_setenv("PWD", pwd, env_list);

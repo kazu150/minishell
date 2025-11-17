@@ -57,6 +57,20 @@ t_env	*new_env(char *key, char *value)
 	return (node);
 }
 
+char	*ft_getenv(t_env *env_list, char *key)
+{
+	t_env	*current;
+
+	current = env_list;
+	while (current)
+	{
+		if (!ft_strcmp(current->key, key))
+			return (current->value);
+		current = current->next;
+	}
+	return (NULL);
+}
+
 void	add_env_back(t_env **env_list, t_env *new)
 {
 	t_env	*tmp;
