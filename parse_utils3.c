@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils3.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 14:27:32 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/16 14:28:48 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/16 15:55:22 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,4 +33,33 @@ void	append_arg(t_cmd *cmd, char *token)
 	new[n + 1] = NULL;
 	free(old);
 	cmd->args = new;
+}
+
+void	handle_argument(char **tokens, int *i, t_cmd **head_cmd,
+		t_cmd **current)
+{
+	check_current_cmd(head_cmd, current);
+	append_arg(*current, tokens[*i]);
+	(*i)++;
+}
+
+void	handle_pipe(t_cmd **head_cmd, t_cmd **current, int *i)
+{
+	*current = new_cmd();
+	cmd_add_back(head_cmd, *current);
+	(*i)++;
+}
+
+void	handle_redirect_only(t_cmd *head_cmd)
+{
+	if (head_cmd && !head_cmd->args)
+	{
+		if (head_cmd->redirs)
+		{
+			head_cmd->args = malloc(sizeof(char *) * 1);
+			if (!head_cmd->args)
+				error_exit(MALLOC);
+			head_cmd->args[0] = NULL;
+		}
+	}
 }

@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:35:42 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 22:26:22 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/18 18:48:28 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 static int	handle_redirect(char **tokens, int *i, t_cmd **head_cmd,
-	t_cmd **current)
+		t_cmd **current)
 {
 	t_redir	*redir;
 
@@ -29,34 +29,39 @@ static int	handle_redirect(char **tokens, int *i, t_cmd **head_cmd,
 	return (0);
 }
 
-static void	handle_argument(char **tokens, int *i, t_cmd **head_cmd,
+int	handle_current_token(char **tokens, int *i, t_cmd **head_cmd,
 	t_cmd **current)
 {
-	check_current_cmd(head_cmd, current);
-	append_arg(*current, tokens[*i]);
-	(*i)++;
-}
-
-static void	handle_pipe(t_cmd **head_cmd, t_cmd **current, int *i)
-{
-	*current = new_cmd();
-	cmd_add_back(head_cmd, *current);
-	(*i)++;
-}
-
-// > < >> << + targetしかない場合の対応
-static void	handle_redirect_only(t_cmd *head_cmd)
-{
-	if (head_cmd && !head_cmd->args)
+	if (is_redirect(tokens[*i]))
 	{
-		if (head_cmd->redirs)
+		if (handle_redirect(tokens, i, head_cmd, current) == -1)
 		{
-			head_cmd->args = malloc(sizeof(char *) * 1);
-			if (!head_cmd->args)
-				error_exit(MALLOC);
-			head_cmd->args[0] = NULL;
+			free_all(tokens);
+			free_cmds(head_cmd);
+			return (-1);
 		}
 	}
+	else if (ft_strncmp(tokens[*i], "|", 2) == 0)
+		handle_pipe(head_cmd, current, i);
+	else
+		handle_argument(tokens, i, head_cmd, current);
+	return 0;
+
+	// if (is_redirect(tokens[*i]))
+	// {
+	// 	if (handle_redirect(tokens, i, head_cmd, current) == -1)
+	// 	{
+	// 		free_all(tokens);
+	// 		if (*head_cmd)
+	// 			free_cmds(*head_cmd);
+	// 		return (-1);
+	// 	}
+	// }
+	// else if (ft_strncmp(tokens[*i], "|", 2) == 0)
+	// 	handle_pipe(head_cmd, current, i);
+	// else
+	// 	handle_argument(tokens, i, head_cmd, current);
+	// return (0);
 }
 
 // input: cat input.txt|grep hello >out.txt
@@ -77,19 +82,8 @@ t_cmd	*parse_input(char *input)
 	i = 0;
 	while (tokens[i])
 	{
-		if (is_redirect(tokens[i]))
-		{
-			if (handle_redirect(tokens, &i, &head_cmd, &current) == -1)
-			{
-				free_all(tokens);
-				free_cmds(&head_cmd);
-				return (NULL);
-			}
-		}
-		else if (ft_strncmp(tokens[i], "|", 2) == 0)
-			handle_pipe(&head_cmd, &current, &i);
-		else
-			handle_argument(tokens, &i, &head_cmd, &current);
+		if (handle_current_token(tokens, &i, &head_cmd, &current) == -1)
+			return (NULL);
 	}
 	if (!head_cmd)
 		return (syntax_error(), free_all(tokens), NULL);

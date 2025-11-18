@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 19:12:11 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 22:25:05 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/18 18:43:31 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,18 +74,15 @@ char	*pathjoin(const char *path1, const char *path2)
 	return (full_path);
 }
 
-char	*build_command_path(t_cmd *cmds, t_env **env_list)
+char	*build_command_path(t_cmd *cmds, t_env **env_list, int i,
+		int has_permission_error)
 {
 	char	*command_path;
-	int		i;
 	char	**paths;
-	int		has_permission_error;
 
 	if (cmds->args[0][0] == '/' || cmds->args[0][0] == '.')
 		return (cmds->args[0]);
-	has_permission_error = 0;
 	paths = get_default_paths(env_list);
-	i = 0;
 	command_path = NULL;
 	while (paths && paths[i])
 	{

@@ -18,6 +18,7 @@ char	**env_list_to_envp(t_env *env_list)
 	int		count;
 	int		i;
 	char	**envp;
+	char	*tmp;
 
 	count = 0;
 	i = 0;
@@ -32,8 +33,9 @@ char	**env_list_to_envp(t_env *env_list)
 		return (NULL);
 	while (list_current)
 	{
-		envp[i] = ft_strjoin(list_current->key, "=");
-		envp[i] = ft_strjoin(envp[i], list_current->value);
+		tmp = ft_strjoin(list_current->key, "=");
+		envp[i] = ft_strjoin(tmp, list_current->value);
+		free(tmp);
 		i++;
 		list_current = list_current->next;
 	}
@@ -55,6 +57,20 @@ t_env	*new_env(char *key, char *value)
 		node->value = strdup("");
 	node->next = NULL;
 	return (node);
+}
+
+char	*ft_getenv(t_env *env_list, char *key)
+{
+	t_env	*current;
+
+	current = env_list;
+	while (current)
+	{
+		if (!ft_strcmp(current->key, key))
+			return (current->value);
+		current = current->next;
+	}
+	return (NULL);
 }
 
 void	add_env_back(t_env **env_list, t_env *new)

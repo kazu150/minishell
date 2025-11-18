@@ -3,32 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 22:27:56 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/18 18:49:16 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	is_all_space(char *line)
-{
-	int	i;
-
-	i = 0;
-	if (!line)
-		return (1);
-	while (line[i])
-	{
-		if (line[i] != ' ' && line[i] != '\t')
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
-t_cmd	*get_cmds_from_readline(t_env **env_list, t_cmd **cmds,
+t_cmd	*get_cmds_from_readline(t_data *data, t_cmd **cmds,
 		t_cmd **cmds_first)
 {
 	char	*line;
@@ -38,7 +22,7 @@ t_cmd	*get_cmds_from_readline(t_env **env_list, t_cmd **cmds,
 	line = NULL;
 	line = readline("minishell> ");
 	if (line == NULL)
-		ft_exit(cmds, env_list);
+		ft_exit(cmds, data);
 	if (!ft_strlen(line) || is_all_space(line))
 	{
 		free(line);
@@ -51,8 +35,7 @@ t_cmd	*get_cmds_from_readline(t_env **env_list, t_cmd **cmds,
 	return (*cmds);
 }
 
-static void	handle_redirect_without_cmd(t_cmd *cmds, t_env **env_list,
-		int *exit_status)
+static void	handle_redirect_without_cmd(t_cmd *cmds, t_data *data)
 {
 	int		status;
 	pid_t	pid;
@@ -62,48 +45,48 @@ static void	handle_redirect_without_cmd(t_cmd *cmds, t_env **env_list,
 		error_exit(FORK);
 	if (pid == 0)
 	{
-		expand_redirs(cmds->redirs, *env_list, *exit_status);
+		expand_redirs(cmds->redirs, data);
 		exit(0);
 	}
 	else
 	{
 		waitpid(pid, &status, 0);
-		*exit_status = status >> 8;
+		data->exit_status = status >> 8;
 	}
 }
 
-void	initialize(t_pipe_fds *pipe_fds, int *exit_status, t_env **env_list)
+static void	initialize(t_pipe_fds *pipe_fds, t_data *data)
 {
 	pipe_fds->pipe_fd[0] = -1;
 	pipe_fds->pipe_fd[1] = -1;
 	pipe_fds->prev_read_fd = -1;
-	*exit_status = 0;
+	data->exit_status = 0;
 	signal(SIGINT, sig_int_handler);
 	signal(SIGQUIT, SIG_IGN);
-	*env_list = init_env();
+	data->env_list = init_env();
 }
 
-void	readline_roop(t_pipe_fds *pipe_fds, int *exit_status, t_env **env_list)
+static void	readline_roop(t_pipe_fds *pipe_fds, t_data *data)
 {
 	t_cmd	*cmds;
 	t_cmd	*cmds_first;
 
 	while (1)
 	{
-		get_cmds_from_readline(env_list, &cmds, &cmds_first);
+		get_cmds_from_readline(data, &cmds, &cmds_first);
 		if (cmds && cmds->args && !cmds->args[0])
 		{
 			if (cmds->redirs)
-				handle_redirect_without_cmd(cmds, env_list, exit_status);
+				handle_redirect_without_cmd(cmds, data);
 			free_cmds(&cmds);
 			continue ;
 		}
 		while (cmds)
 		{
 			if (cmds->next)
-				run_normal_command(cmds, pipe_fds, env_list, exit_status);
+				run_normal_command(cmds, pipe_fds, data);
 			else
-				run_last_command(cmds, pipe_fds, env_list, exit_status);
+				run_last_command(cmds, pipe_fds, data);
 			cmds = cmds->next;
 		}
 		free_cmds(&cmds_first);
@@ -113,10 +96,9 @@ void	readline_roop(t_pipe_fds *pipe_fds, int *exit_status, t_env **env_list)
 int	main(void)
 {
 	t_pipe_fds	pipe_fds;
-	t_env		*env_list;
-	int			exit_status;
+	t_data		data;
 
-	initialize(&pipe_fds, &exit_status, &env_list);
-	readline_roop(&pipe_fds, &exit_status, &env_list);
+	initialize(&pipe_fds, &data);
+	readline_roop(&pipe_fds, &data);
 	return (0);
 }
