@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 15:34:41 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 14:41:57 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/17 03:36:47 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ static int	execute(t_cmd *cmds, t_env *env_list)
 	envp = env_list_to_envp(env_list);
 	if (execve(cmd, cmds->args, envp) == -1)
 	{
+		free_all(envp);
 		execve_error_exit(cmd);
 	}
 	return (0);
@@ -61,8 +62,7 @@ void	parent_process(t_pipe_fds *pipe_fds, pid_t pid, int *exit_status)
 	*exit_status = status >> 8;
 }
 
-int	run_normal_command(t_cmd *cmds, t_pipe_fds *pipe_fds, t_env **env_list,
-		int *exit_status)
+int	run_normal_command(t_cmd *cmds, t_pipe_fds *pipe_fds, t_data *data)
 {
 	pid_t	pid;
 	int		builtin_status;
@@ -75,31 +75,31 @@ int	run_normal_command(t_cmd *cmds, t_pipe_fds *pipe_fds, t_env **env_list,
 	{
 		if (!cmds->redirs)
 			connect_pipe(cmds, pipe_fds);
-		builtin_status = exec_builtin_fn(cmds, env_list, *exit_status);
+		builtin_status = exec_builtin_fn(cmds, data);
 		if (builtin_status != -1)
 		{
-			*exit_status = builtin_status;
-			free_cmds(cmds);
-			ft_exit(cmds, env_list);
+			data->exit_status = builtin_status;
+			// free_cmds(cmds);
+			// ft_exit(cmds, data);
+			exit(builtin_status);
 		}
-		expand_redirs(cmds->redirs, *env_list, *exit_status);
-		return (execute(cmds, *env_list));
+		expand_redirs(cmds->redirs, data);
+		return (execute(cmds, data->env_list));
 	}
 	else
-		parent_process(pipe_fds, pid, exit_status);
+		parent_process(pipe_fds, pid, &data->exit_status);
 	return (0);
 }
 
-int	run_last_command(t_cmd *cmds, t_pipe_fds *pipe_fds, t_env **env_list,
-		int *exit_status)
+int	run_last_command(t_cmd *cmds, t_pipe_fds *pipe_fds, t_data *data)
 {
 	pid_t	pid;
 	int		builtin_status;
 
-	builtin_status = exec_builtin_fn(cmds, env_list, *exit_status);
+	builtin_status = exec_builtin_fn(cmds, data);
 	if (builtin_status != -1)
 	{
-		*exit_status = builtin_status;
+		data->exit_status = builtin_status;
 		return (0);
 	}
 	pid = fork();
@@ -109,10 +109,10 @@ int	run_last_command(t_cmd *cmds, t_pipe_fds *pipe_fds, t_env **env_list,
 	{
 		if (!cmds->redirs)
 			connect_pipe(cmds, pipe_fds);
-		expand_redirs(cmds->redirs, *env_list, *exit_status);
-		return (execute(cmds, *env_list));
+		expand_redirs(cmds->redirs, data);
+		return (execute(cmds, data->env_list));
 	}
 	else
-		parent_process(pipe_fds, pid, exit_status);
+		parent_process(pipe_fds, pid, &data->exit_status);
 	return (0);
 }
