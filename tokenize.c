@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 14:45:29 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 14:25:37 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/17 20:33:52 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 static int	count_tokens(const char *str, int count, int in_word,
-	char current_quote)
+		char current_quote)
 {
 	while (*str)
 	{
-		if (is_quote(*str) && current_quote != *str)
+		if (is_quote(*str) && current_quote == ' ')
 			current_quote = *str;
 		else if (is_quote(*str) && current_quote == *str)
 			current_quote = ' ';
