@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:35:42 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 15:53:11 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/18 18:48:28 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,7 @@ int	handle_current_token(char **tokens, int *i, t_cmd **head_cmd,
 		if (handle_redirect(tokens, i, head_cmd, current) == -1)
 		{
 			free_all(tokens);
-			if (*head_cmd)
-				free_cmds(*head_cmd);
+			free_cmds(head_cmd);
 			return (-1);
 		}
 	}
@@ -46,7 +45,23 @@ int	handle_current_token(char **tokens, int *i, t_cmd **head_cmd,
 		handle_pipe(head_cmd, current, i);
 	else
 		handle_argument(tokens, i, head_cmd, current);
-	return (0);
+	return 0;
+
+	// if (is_redirect(tokens[*i]))
+	// {
+	// 	if (handle_redirect(tokens, i, head_cmd, current) == -1)
+	// 	{
+	// 		free_all(tokens);
+	// 		if (*head_cmd)
+	// 			free_cmds(*head_cmd);
+	// 		return (-1);
+	// 	}
+	// }
+	// else if (ft_strncmp(tokens[*i], "|", 2) == 0)
+	// 	handle_pipe(head_cmd, current, i);
+	// else
+	// 	handle_argument(tokens, i, head_cmd, current);
+	// return (0);
 }
 
 // input: cat input.txt|grep hello >out.txt

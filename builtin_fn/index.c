@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   index.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/26 17:22:51 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/17 04:03:49 by codespace        ###   ########.fr       */
+/*   Updated: 2025/11/18 18:51:52 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,18 +40,15 @@ static int	exec_fn(t_cmd *cmds, t_data *data)
 		result = ft_echo(cmds->args);
 	else if (!ft_strcmp(cmds->args[0], "pwd"))
 		result = ft_pwd();
-	else if (!ft_strcmp(cmds->args[0], "cd"))
+	if (!ft_strcmp(cmds->args[0], "cd"))
 		result = ft_cd(cmds->args[1], &data->env_list);
-	else if (!ft_strcmp(cmds->args[0], "env"))
+	if (!ft_strcmp(cmds->args[0], "env"))
 		result = ft_env(cmds->args, data->env_list);
-	else if (!ft_strcmp(cmds->args[0], "export"))
+	if (!ft_strcmp(cmds->args[0], "export"))
 		result = ft_export(cmds->args, &data->env_list);
-	else if (!ft_strcmp(cmds->args[0], "exit"))
-	{
-		ft_exit(cmds, data);
-		result = data->exit_status;
-	}
-	else if (!ft_strcmp(cmds->args[0], "unset"))
+	if (!ft_strcmp(cmds->args[0], "exit"))
+		ft_exit(&cmds, data);
+	if (!ft_strcmp(cmds->args[0], "unset"))
 		result = ft_unset(cmds->args, &data->env_list);
 	return (result);
 }
@@ -76,3 +73,32 @@ int	exec_builtin_fn(t_cmd *cmds, t_data *data)
 	}
 	return (result);
 }
+
+
+
+// <<<<<<< HEAD
+// 	if (!ft_strcmp(cmds->args[0], "cd"))
+// 		result = ft_cd(cmds->args[1], env_list);
+// 	if (!ft_strcmp(cmds->args[0], "env"))
+// 		result = ft_env(cmds->args, *env_list);
+// 	if (!ft_strcmp(cmds->args[0], "export"))
+// 		result = ft_export(cmds->args, env_list);
+// 	if (!ft_strcmp(cmds->args[0], "exit"))
+// 		ft_exit(&cmds, env_list);
+// 	if (!ft_strcmp(cmds->args[0], "unset"))
+// 		result = ft_unset(cmds->args, env_list);
+// =======
+// 	else if (!ft_strcmp(cmds->args[0], "cd"))
+// 		result = ft_cd(cmds->args[1], &data->env_list);
+// 	else if (!ft_strcmp(cmds->args[0], "env"))
+// 		result = ft_env(cmds->args, data->env_list);
+// 	else if (!ft_strcmp(cmds->args[0], "export"))
+// 		result = ft_export(cmds->args, &data->env_list);
+// 	else if (!ft_strcmp(cmds->args[0], "exit"))
+// 	{
+// 		ft_exit(cmds, data);
+// 		result = data->exit_status;
+// 	}
+// 	else if (!ft_strcmp(cmds->args[0], "unset"))
+// 		result = ft_unset(cmds->args, &data->env_list);
+// >>>>>>> main

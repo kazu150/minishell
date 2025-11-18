@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 19:12:11 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 17:25:10 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/18 18:43:31 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,7 @@ void	handle_command_path_error(t_cmd *cmds, int has_permission_error,
 	if (paths)
 		free_split(paths);
 	free(str);
-	if (cmds)
-	{
-		free_cmds(cmds);
-	}
+	free_cmds(&cmds);
 	if (has_permission_error)
 		exit(126);
 	else

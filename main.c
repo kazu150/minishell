@@ -6,7 +6,7 @@
 /*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/18 18:15:37 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/18 18:49:16 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_cmd	*get_cmds_from_readline(t_data *data, t_cmd **cmds,
 	line = NULL;
 	line = readline("minishell> ");
 	if (line == NULL)
-		ft_exit(NULL, data);
+		ft_exit(cmds, data);
 	if (!ft_strlen(line) || is_all_space(line))
 	{
 		free(line);
@@ -78,7 +78,7 @@ static void	readline_roop(t_pipe_fds *pipe_fds, t_data *data)
 		{
 			if (cmds->redirs)
 				handle_redirect_without_cmd(cmds, data);
-			free_cmds(cmds);
+			free_cmds(&cmds);
 			continue ;
 		}
 		while (cmds)
@@ -89,7 +89,7 @@ static void	readline_roop(t_pipe_fds *pipe_fds, t_data *data)
 				run_last_command(cmds, pipe_fds, data);
 			cmds = cmds->next;
 		}
-		free_cmds(cmds_first);
+		free_cmds(&cmds_first);
 	}
 }
 

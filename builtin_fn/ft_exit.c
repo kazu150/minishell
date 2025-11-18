@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 17:15:12 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/17 04:11:54 by codespace        ###   ########.fr       */
+/*   Updated: 2025/11/18 18:42:23 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	free_env_list(t_env **env_list)
 	*env_list = NULL;
 }
 
-static void	cleanup_and_exit(t_cmd *cmds, t_env **env_list, int exit_code)
+static void	cleanup_and_exit(t_cmd **cmds, t_env **env_list, int exit_code)
 {
 	if (cmds)
 		free_cmds(cmds);
@@ -60,17 +60,17 @@ static void	cleanup_and_exit(t_cmd *cmds, t_env **env_list, int exit_code)
 	exit(exit_code);
 }
 
-void	ft_exit(t_cmd *cmds, t_data *data)
+void	ft_exit(t_cmd **cmds, t_data *data)
 {
 	char	*arg;
 	int		exit_code;
 
 	printf("exit\n");
-	if (!cmds || !cmds->args || !cmds->args[0])
+	if (!*cmds || !(*cmds)->args || !(*cmds)->args[0])
 		cleanup_and_exit(cmds, &data->env_list, data->exit_status);
-	if (!cmds->args[1])
+	if (!(*cmds)->args[1])
 		cleanup_and_exit(cmds, &data->env_list, data->exit_status);
-	arg = cmds->args[1];
+	arg = (*cmds)->args[1];
 	if (!is_numeric(arg))
 	{
 		ft_putstr_fd("minishell: exit: ", 2);
@@ -78,7 +78,7 @@ void	ft_exit(t_cmd *cmds, t_data *data)
 		ft_putendl_fd(": numeric argument required", 2);
 		cleanup_and_exit(cmds, &data->env_list, 2);
 	}
-	if (cmds->args[2])
+	if ((*cmds)->args[2])
 	{
 		ft_putendl_fd("minishell: exit: too many arguments", 2);
 		data->exit_status = 1;

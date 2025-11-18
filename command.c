@@ -6,7 +6,7 @@
 /*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 15:34:41 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/18 18:13:47 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/18 18:45:06 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,7 @@ int	run_normal_command(t_cmd *cmds, t_pipe_fds *pipe_fds, t_data *data)
 		if (builtin_status != -1)
 		{
 			data->exit_status = builtin_status;
-			// free_cmds(cmds);
-			// ft_exit(cmds, data);
+			free_cmds(&cmds);
 			exit(builtin_status);
 		}
 		expand_redirs(cmds->redirs, data);
