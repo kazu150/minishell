@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 19:12:11 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 13:36:57 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/16 17:25:10 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,18 +77,15 @@ char	*pathjoin(const char *path1, const char *path2)
 	return (full_path);
 }
 
-char	*build_command_path(t_cmd *cmds, t_env **env_list)
+char	*build_command_path(t_cmd *cmds, t_env **env_list, int i,
+		int has_permission_error)
 {
 	char	*command_path;
-	int		i;
 	char	**paths;
-	int		has_permission_error;
 
 	if (cmds->args[0][0] == '/' || cmds->args[0][0] == '.')
 		return (cmds->args[0]);
-	has_permission_error = 0;
 	paths = get_default_paths(env_list);
-	i = 0;
 	command_path = NULL;
 	while (paths && paths[i])
 	{

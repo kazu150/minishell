@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/17 04:14:25 by codespace        ###   ########.fr       */
+/*   Updated: 2025/11/18 18:14:36 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,8 @@ char				**tokenize(const char *str);
 void				free_split(char **args);
 void				handle_command_path_error(t_cmd *cmds,
 						int has_permission_error, char **paths);
-char				*build_command_path(t_cmd *cmds, t_env **env_list);
+char				*build_command_path(t_cmd *cmds, t_env **env_list, int i,
+						int has_permission_error);
 void				execve_error_exit(char *cmd);
 int					is_quote(char c);
 int					free_strs(char **strs, int count);
@@ -180,5 +181,11 @@ void				free_cmds(t_cmd *cmds);
 void				free_key_value(char *key, char *value);
 char				**env_list_to_envp(t_env *env_list);
 void				sig_int_handler(int signo);
-
+void				handle_argument(char **tokens, int *i, t_cmd **head_cmd,
+						t_cmd **current);
+void				handle_pipe(t_cmd **head_cmd, t_cmd **current, int *i);
+void				handle_redirect_only(t_cmd *head_cmd);
+int					is_all_space(char *line);
+int					update_existing_env(t_env *env_list, char *key,
+						char *value);
 #endif

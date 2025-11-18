@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/10 21:07:16 by cyang             #+#    #+#             */
-/*   Updated: 2025/10/27 09:40:17 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/16 17:18:11 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,24 @@ int	ft_env(char **args, t_env *env_list)
 	while (current)
 	{
 		printf("%s=%s\n", current->key, current->value);
+		current = current->next;
+	}
+	return (0);
+}
+
+int	update_existing_env(t_env *env_list, char *key, char *value)
+{
+	t_env	*current;
+
+	current = env_list;
+	while (current)
+	{
+		if (!(ft_strcmp(current->key, key)))
+		{
+			free(current->value);
+			current->value = ft_strdup(value);
+			return (1);
+		}
 		current = current->next;
 	}
 	return (0);

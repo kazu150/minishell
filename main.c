@@ -3,30 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/17 03:34:08 by codespace        ###   ########.fr       */
+/*   Updated: 2025/11/18 18:15:37 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	is_all_space(char *line)
-{
-	int	i;
-
-	i = 0;
-	if (!line)
-		return (1);
-	while (line[i])
-	{
-		if (line[i] != ' ' && line[i] != '\t')
-			return (0);
-		i++;
-	}
-	return (1);
-}
 
 t_cmd	*get_cmds_from_readline(t_data *data, t_cmd **cmds,
 		t_cmd **cmds_first)
@@ -105,11 +89,7 @@ static void	readline_roop(t_pipe_fds *pipe_fds, t_data *data)
 				run_last_command(cmds, pipe_fds, data);
 			cmds = cmds->next;
 		}
-		if (cmds_first)
-		{
-			free_cmds(cmds_first);
-			cmds_first = NULL;
-		}
+		free_cmds(cmds_first);
 	}
 }
 
