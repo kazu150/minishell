@@ -3,14 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 15:59:02 by cyang             #+#    #+#             */
-/*   Updated: 2025/10/26 13:53:57 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/19 12:46:56 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	is_n_option(char *s)
+{
+	int	i;
+
+	if (s == NULL)
+		return (0);
+	if (s[0] != '-')
+		return (0);
+	if (s[1] == '\0')
+		return (0);
+	i = 1;
+	while (s[i])
+	{
+		if (s[i] != 'n')
+			return (0);
+		i++;
+	}
+	return (1);
+}
 
 int	ft_echo(char **args)
 {
@@ -19,10 +39,10 @@ int	ft_echo(char **args)
 
 	i = 1;
 	newline = 1;
-	if (args[1] != NULL && !ft_strcmp(args[1], "-n"))
+	while (args[i] != NULL && is_n_option(args[i]))
 	{
-		i = 2;
 		newline = 0;
+		i++;
 	}
 	while (args[i])
 	{

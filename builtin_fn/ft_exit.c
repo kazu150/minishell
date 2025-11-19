@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <yang@student.42tokyo.jp>            +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 17:15:12 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/18 16:08:37 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/19 12:13:49 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	ft_exit(t_cmd **cmds, t_data *data)
 	char	*arg;
 	int		exit_code;
 
-	if(cmds && *cmds)
+	if (cmds && *cmds)
 		printf("exit\n");
 	if (!*cmds || !(*cmds)->args || !(*cmds)->args[0])
 		cleanup_and_exit(cmds, &data->env_list, data->exit_status);
