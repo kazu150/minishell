@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   index.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: cyang <yang@student.42tokyo.jp>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/26 17:22:51 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/18 18:51:52 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/18 15:43:45 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ int	exec_builtin_fn(t_cmd *cmds, t_data *data)
 	t_fds	fds;
 	int		result;
 
+	if (!cmds || !cmds->args || !cmds->args[0])
+		return (-1);
 	expand_args(cmds->args, data);
 	if (!is_builtin_fn(cmds->args[0]))
 		return (-1);
@@ -73,8 +75,6 @@ int	exec_builtin_fn(t_cmd *cmds, t_data *data)
 	}
 	return (result);
 }
-
-
 
 // <<<<<<< HEAD
 // 	if (!ft_strcmp(cmds->args[0], "cd"))
