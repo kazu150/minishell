@@ -6,7 +6,7 @@
 /*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/18 18:45:23 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/20 12:55:16 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@
 # include <sys/wait.h>
 # include <termios.h>
 # include <unistd.h>
+
+extern volatile sig_atomic_t	g_sigint_received;
 
 # define DUP2 "dup2"
 # define PIPE "pipe"
@@ -181,6 +183,8 @@ void				free_cmds(t_cmd **cmds);
 void				free_key_value(char *key, char *value);
 char				**env_list_to_envp(t_env *env_list);
 void				sig_int_handler(int signo);
+void				set_parent_signals(void);
+void				set_default_signals(void);
 void				handle_argument(char **tokens, int *i, t_cmd **head_cmd,
 						t_cmd **current);
 void				handle_pipe(t_cmd **head_cmd, t_cmd **current, int *i);
