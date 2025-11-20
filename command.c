@@ -6,7 +6,7 @@
 /*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 15:34:41 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/20 12:51:38 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/20 13:29:15 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,15 @@ static void	connect_pipe(t_cmd *cmds, t_pipe_fds *pipe_fds)
 
 void	parent_process(t_pipe_fds *pipe_fds, pid_t pid, int *exit_status)
 {
-	int	status;
+	int		status;
+	void	(*old_sigint)(int);
 
+	old_sigint = signal(SIGINT, SIG_IGN);
 	pipe_fds->prev_read_fd = pipe_fds->pipe_fd[0];
 	if (pipe_fds->pipe_fd[1] != -1)
 		close(pipe_fds->pipe_fd[1]);
 	waitpid(pid, &status, 0);
+	signal(SIGINT, old_sigint);
 	*exit_status = status >> 8;
 }
 
