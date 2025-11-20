@@ -6,7 +6,7 @@
 /*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 15:34:41 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/20 13:29:15 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/20 14:56:42 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ int	run_last_command(t_cmd *cmds, t_pipe_fds *pipe_fds, t_data *data)
 	if (pid == 0)
 	{
 		set_default_signals();
-		g_sigint_received;
+		g_sigint_received = 0;
 		if (!cmds->redirs)
 			connect_pipe(cmds, pipe_fds);
 		expand_redirs(cmds->redirs, data);
