@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 15:34:41 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/18 18:45:06 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/20 18:24:47 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,17 +95,29 @@ int	run_last_command(t_cmd *cmds, t_pipe_fds *pipe_fds, t_data *data)
 	pid_t	pid;
 	int		builtin_status;
 
-	builtin_status = exec_builtin_fn(cmds, data);
-	if (builtin_status != -1)
+	if (pipe_fds->prev_read_fd == -1)
 	{
-		data->exit_status = builtin_status;
-		return (0);
+		builtin_status = exec_builtin_fn(cmds, data);
+		if (builtin_status != -1)
+		{
+			data->exit_status = builtin_status;
+			return (0);
+		}
 	}
 	pid = fork();
 	if (pid == -1)
 		error_exit(FORK);
 	if (pid == 0)
 	{
+		if (pipe_fds->prev_read_fd != -1)
+		{
+			builtin_status = exec_builtin_fn(cmds, data);
+			if (builtin_status != -1)
+			{
+				data->exit_status = builtin_status;
+				exit(builtin_status);
+			}
+		}
 		if (!cmds->redirs)
 			connect_pipe(cmds, pipe_fds);
 		expand_redirs(cmds->redirs, data);

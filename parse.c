@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <yang@student.42tokyo.jp>            +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:35:42 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/18 16:02:38 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/20 18:27:11 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,25 +46,7 @@ int	handle_current_token(char **tokens, int *i, t_cmd **head_cmd,
 	else
 		handle_argument(tokens, i, head_cmd, current);
 	return (0);
-
-	// if (is_redirect(tokens[*i]))
-	// {
-	// 	if (handle_redirect(tokens, i, head_cmd, current) == -1)
-	// 	{
-	// 		free_all(tokens);
-	// 		if (*head_cmd)
-	// 			free_cmds(*head_cmd);
-	// 		return (-1);
-	// 	}
-	// }
-	// else if (ft_strncmp(tokens[*i], "|", 2) == 0)
-	// 	handle_pipe(head_cmd, current, i);
-	// else
-	// 	handle_argument(tokens, i, head_cmd, current);
-	// return (0);
 }
-
-// input: cat input.txt|grep hello >out.txt
 
 static int	invalid_pipe_syntax(char **tokens)
 {

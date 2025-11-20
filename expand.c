@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 13:53:03 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/19 13:30:48 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/20 18:27:52 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static char	*remove_quotes(char *s)
 	size_t	len;
 	char	quote;
 	char	*res;
-	
+
 	if (!s)
 		return (NULL);
 	len = ft_strlen(s);
