@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 15:34:41 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/20 18:24:47 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/20 18:30:03 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,15 @@ static void	connect_pipe(t_cmd *cmds, t_pipe_fds *pipe_fds)
 
 void	parent_process(t_pipe_fds *pipe_fds, pid_t pid, int *exit_status)
 {
-	int	status;
+	int		status;
+	void	(*old_sigint)(int);
 
+	old_sigint = signal(SIGINT, SIG_IGN);
 	pipe_fds->prev_read_fd = pipe_fds->pipe_fd[0];
 	if (pipe_fds->pipe_fd[1] != -1)
 		close(pipe_fds->pipe_fd[1]);
 	waitpid(pid, &status, 0);
+	signal(SIGINT, old_sigint);
 	*exit_status = status >> 8;
 }
 
@@ -73,6 +76,8 @@ int	run_normal_command(t_cmd *cmds, t_pipe_fds *pipe_fds, t_data *data)
 		error_exit(FORK);
 	if (pid == 0)
 	{
+		set_default_signals();
+		g_sigint_received = 0;
 		if (!cmds->redirs)
 			connect_pipe(cmds, pipe_fds);
 		builtin_status = exec_builtin_fn(cmds, data);
@@ -109,6 +114,8 @@ int	run_last_command(t_cmd *cmds, t_pipe_fds *pipe_fds, t_data *data)
 		error_exit(FORK);
 	if (pid == 0)
 	{
+		set_default_signals();
+		g_sigint_received = 0;
 		if (pipe_fds->prev_read_fd != -1)
 		{
 			builtin_status = exec_builtin_fn(cmds, data);

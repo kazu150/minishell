@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/20 18:20:59 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/20 18:30:19 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ static void	handle_redirect_without_cmd(t_cmd *cmds, t_data *data)
 		error_exit(FORK);
 	if (pid == 0)
 	{
+		set_default_signals();
+		g_sigint_received = 0;
 		expand_redirs(cmds->redirs, data);
 		exit(0);
 	}
@@ -57,8 +59,7 @@ static void	handle_redirect_without_cmd(t_cmd *cmds, t_data *data)
 static void	initialize(t_data *data)
 {
 	data->exit_status = 0;
-	signal(SIGINT, sig_int_handler);
-	signal(SIGQUIT, SIG_IGN);
+	set_parent_signals();
 	data->env_list = init_env();
 }
 
@@ -79,6 +80,13 @@ static void	readline_roop(t_data *data)
 	{
 		init_fds(&pipe_fds);
 		get_cmds_from_readline(data, &cmds, &cmds_first);
+		if (g_sigint_received)
+		{
+			g_sigint_received = 0;
+			if (cmds_first)
+				free_cmds(&cmds_first);
+			continue;
+		}
 		if (cmds && cmds->args && !cmds->args[0])
 		{
 			if (cmds->redirs)
