@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: cyang <yang@student.42tokyo.jp>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:35:42 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/18 18:48:28 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/18 16:02:38 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	handle_current_token(char **tokens, int *i, t_cmd **head_cmd,
 		handle_pipe(head_cmd, current, i);
 	else
 		handle_argument(tokens, i, head_cmd, current);
-	return 0;
+	return (0);
 
 	// if (is_redirect(tokens[*i]))
 	// {
@@ -65,6 +65,30 @@ int	handle_current_token(char **tokens, int *i, t_cmd **head_cmd,
 }
 
 // input: cat input.txt|grep hello >out.txt
+
+static int	invalid_pipe_syntax(char **tokens)
+{
+	int	i;
+
+	if (!tokens || !tokens[0])
+		return (0);
+	if (ft_strcmp(tokens[0], "|") == 0)
+		return (1);
+	i = 0;
+	while (tokens[i])
+	{
+		if (ft_strcmp(tokens[i], "||") == 0)
+			return (1);
+		if (ft_strcmp(tokens[i], "|") == 0)
+		{
+			if (!tokens[i + 1] || ft_strcmp(tokens[i + 1], "|") == 0)
+				return (1);
+		}
+		i++;
+	}
+	return (0);
+}
+
 t_cmd	*parse_input(char *input)
 {
 	char	**tokens;
@@ -77,6 +101,12 @@ t_cmd	*parse_input(char *input)
 	tokens = tokenize(input);
 	if (!tokens)
 		return (0);
+	if (invalid_pipe_syntax(tokens))
+	{
+		syntax_error();
+		free_all(tokens);
+		return (NULL);
+	}
 	head_cmd = NULL;
 	current = NULL;
 	i = 0;
