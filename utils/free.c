@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: cyang <yang@student.42tokyo.jp>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 18:53:34 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/18 18:43:25 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/18 14:48:16 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ void	free_cmds(t_cmd **cmds)
 	current = *cmds;
 	// if (cmds == NULL)
 	// 	return ;
-
 	while (current)
 	{
 		next = current->next;

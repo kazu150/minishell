@@ -3,33 +3,73 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 13:53:03 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/17 02:10:51 by codespace        ###   ########.fr       */
+/*   Updated: 2025/11/19 13:30:48 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static char	*remove_quotes(char *s)
+{
+	size_t	i;
+	size_t	j;
+	size_t	len;
+	char	quote;
+	char	*res;
+	
+	if (!s)
+		return (NULL);
+	len = ft_strlen(s);
+	res = malloc(len + 1);
+	if (!res)
+		return (ft_strdup(s));
+	i = 0;
+	j = 0;
+	while (s[i])
+	{
+		if (s[i] == '"' || s[i] == '\'')
+		{
+			quote = s[i++];
+			while (s[i] && s[i] != quote)
+				res[j++] = s[i++];
+			if (s[i] == quote)
+				i++;
+		}
+		else
+			res[j++] = s[i++];
+	}
+	res[j] = '\0';
+	return (res);
+}
 
 char	**expand_all(char **strs, t_data *data)
 {
 	int		i;
 	char	*old;
 	char	*expanded;
+	char	*clean;
 
 	i = 0;
 	while (strs[i])
 	{
 		old = strs[i];
-		expanded = expand_token(strs[i], data);
+		expanded = expand_token(old, data);
 		if (expanded != old)
 		{
+			clean = remove_quotes(expanded);
+			free(expanded);
 			free(old);
-			strs[i] = expanded;
+			strs[i] = clean;
 		}
 		else
-			strs[i] = old;
+		{
+			clean = remove_quotes(old);
+			free(old);
+			strs[i] = clean;
+		}
 		i++;
 	}
 	return (strs);
@@ -52,6 +92,7 @@ static int	handle_input_redir(t_redir *redirs, t_data *data, t_fds *fds)
 	int		fd;
 	char	*target;
 
+	fd = 0;
 	target = expand_token(redirs->target, data);
 	if (redirs->type == R_IN)
 		fd = open(target, O_RDONLY);
@@ -77,6 +118,7 @@ static int	handle_output_redir(t_redir *redirs, t_data *data, t_fds *fds)
 	int		fd;
 	char	*target;
 
+	fd = 0;
 	target = expand_token(redirs->target, data);
 	if (redirs->type == R_OUT)
 		fd = open(target, O_WRONLY | O_CREAT | O_TRUNC, 0644);
