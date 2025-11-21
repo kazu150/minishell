@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 18:53:34 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/20 18:27:34 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/21 17:11:02 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ void	free_cmds(t_cmd **cmds)
 		next = current->next;
 		if (current->args)
 			free_all(current->args);
+		if (current->assigns)
+			ft_lstclear(&current->assigns, free);
 		free_redirs(current->redirs);
 		free(current);
 		current = next;

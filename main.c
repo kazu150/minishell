@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/20 18:30:19 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/21 17:10:08 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ static void	readline_roop(t_data *data)
 				free_cmds(&cmds_first);
 			continue;
 		}
-		if (cmds && cmds->args && !cmds->args[0])
+		if (cmds && cmds->args && !cmds->args[0] && !cmds->assigns)
 		{
 			if (cmds->redirs)
 				handle_redirect_without_cmd(cmds, data);
