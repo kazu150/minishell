@@ -6,7 +6,7 @@
 /*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 22:41:26 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/16 14:23:57 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/21 16:56:33 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ t_cmd	*new_cmd(void)
 	if (!node)
 		error_exit(MALLOC);
 	node->args = NULL;
+	node->assigns = NULL;
 	node->redirs = NULL;
 	node->next = NULL;
 	return (node);

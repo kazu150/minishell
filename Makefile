@@ -6,7 +6,7 @@
 #    By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/03 16:26:12 by kaisogai          #+#    #+#              #
-#    Updated: 2025/11/18 18:18:07 by cyang            ###   ########.fr        #
+#    Updated: 2025/11/21 16:50:49 by cyang            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ OBJS	= $(SRCS:.c=.o)
 all: $(LIBFT) $(NAME)
 
 $(LIBFT):
-	make -s -C libft
+	make bonus -s -C libft
 
 $(NAME): $(LIBFT) $(OBJS)
 		$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(READLINE) -o $(NAME)

@@ -6,16 +6,29 @@
 /*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 18:39:47 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/19 13:31:44 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/21 16:45:40 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	handle_no_equal_case(char *arg)
+static int	handle_no_equal_case(char *arg, t_env *env_list)
 {
+	t_env	*target;
+
 	if (!is_valid_export_key(arg))
 		return (handle_export_error(arg));
+	target = env_list;
+	while (target)
+	{
+		if (ft_strcmp(target->key, arg) == 0)
+		{
+			target->is_exported = 1;
+			return (0);
+		}
+		target = target->next;
+	}
+	add_env_back(&env_list, new_env(arg, NULL, 1));
 	return (0);
 }
 
@@ -25,10 +38,11 @@ static int	process_key_value(char *arg, t_env **env_list)
 	char	*key;
 	char	*value;
 	int		exit_code;
+	t_env	*target;
 
 	equal_pos = ft_strchr(arg, '=');
 	if (!equal_pos)
-		return (handle_no_equal_case(arg));
+		return (handle_no_equal_case(arg, *env_list));
 	if (equal_pos == arg)
 		return (handle_export_error(arg));
 	key = ft_substr(arg, 0, equal_pos - arg);
@@ -41,8 +55,21 @@ static int	process_key_value(char *arg, t_env **env_list)
 		free_key_value(key, value);
 		return (exit_code);
 	}
-	if (!update_existing_env(*env_list, key, value))
-		add_env_back(env_list, new_env(key, value));
+	if (update_existing_env(*env_list, key, value))
+	{
+		target = *env_list;
+		while (target)
+		{
+			if (ft_strcmp(target->key, key) == 0)
+			{
+				target->is_exported = 1;
+				break ;
+			}
+			target = target->next;
+		}
+	}
+	else
+		add_env_back(env_list, new_env(key, value, 1));
 	return (free_key_value(key, value), 0);
 }
 
@@ -55,7 +82,7 @@ static t_env	*find_next_min(t_env *env_list, char *last_key)
 	current = env_list;
 	while (current)
 	{
-		if (last_key == NULL || ft_strcmp(current->key, last_key) > 0)
+		if (current->is_exported && (last_key == NULL || ft_strcmp(current->key, last_key) > 0))
 		{
 			if (min_env == NULL || ft_strcmp(current->key, min_env->key) < 0)
 				min_env = current;
