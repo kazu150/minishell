@@ -6,7 +6,7 @@
 /*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 15:34:41 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/21 16:44:27 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/21 18:26:51 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,43 @@ static char	**build_envp_with_assigns(t_env *env_list, t_list *assigns)
 	}
 	new_envp[j] = NULL;
 	return (new_envp);
+}
+
+static void	export_temporary_assigns(t_list *assigns, t_data *data)
+{
+	t_list	*tmp;
+	char	*equal;
+	char	*key;
+	char	*value;
+	t_env	*node;
+
+	tmp = assigns;
+	while (tmp)
+	{
+		equal = ft_strchr((char *)tmp->content, '=');
+		if (equal)
+		{
+			key = ft_substr((char *)tmp->content, 0, equal - (char *)tmp->content);
+			value = ft_strdup(equal + 1);
+			if (update_existing_env(data->env_list, key, value))
+			{
+				node = data->env_list;
+				while (node)
+				{
+					if (!ft_strcmp(node->key, key))
+					{
+						node->is_exported = 1;
+						break;
+					}
+					node = node->next;
+				}
+			}
+			else
+				add_env_back(&data->env_list, new_env(key, value, 1));
+			free_key_value(key, value);
+		}
+		tmp = tmp->next;
+	}
 }
 
 static int	execute(t_cmd *cmds, t_env *env_list)
@@ -149,6 +186,8 @@ int	run_normal_command(t_cmd *cmds, t_pipe_fds *pipe_fds, t_data *data)
 			expand_redirs(cmds->redirs, data);
 			exit(0);
 		}
+		if (cmds->assigns)
+			export_temporary_assigns(cmds->assigns, data);
 		builtin_status = exec_builtin_fn(cmds, data);
 		if (builtin_status != -1)
 		{
@@ -194,6 +233,8 @@ int	run_last_command(t_cmd *cmds, t_pipe_fds *pipe_fds, t_data *data)
 		g_sigint_received = 0;
 		if (pipe_fds->prev_read_fd != -1)
 		{
+			if (cmds->assigns)
+				export_temporary_assigns(cmds->assigns, data);
 			builtin_status = exec_builtin_fn(cmds, data);
 			if (builtin_status != -1)
 			{

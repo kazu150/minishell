@@ -6,7 +6,7 @@
 /*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:35:42 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/21 17:02:59 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/21 18:47:27 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ static int	is_assignment(char *str)
 	return (1);
 }
 
+// parseされた内容をコマンドとassign　それぞれに分類される
 static void	separate_assignments(t_cmd *cmd)
 {
 	int		i;
