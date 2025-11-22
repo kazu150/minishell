@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 17:15:12 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/22 07:41:36 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/22 14:17:43 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,6 @@ static void	cleanup_and_exit(t_cmd **cmds, t_env **env_list,
 		free_cmds(cmds);
 	if (env_list && *env_list)
 		free_env_list(env_list);
-	if (exit_code > 255)
-		exit_code = 255;
 	free_exit(NULL, exit_code);
 }
 
