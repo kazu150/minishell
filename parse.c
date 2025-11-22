@@ -6,42 +6,45 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:35:42 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/22 15:13:06 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/22 16:42:04 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	is_assignment(char *str)
+void classify_assignments(t_cmd **cmd, int i, int count)
 {
-	int		i;
-	char	*equal_pos;
+	char	**new_args;
+	int		j;
 
-	if (!str)
-		return (0);
-	equal_pos = ft_strchr(str, '=');
-	if(!equal_pos || equal_pos == str)
-		return (0);
-	if (ft_isdigit(str[0]))
-		return (0);
-	i = 0;
-	while (str + i < equal_pos)
+	if (count == 0)
 	{
-		if (!ft_isalnum(str[i]) && str[i] != '_')
-			return (0);
-		i++;
+		free_all((*cmd)->args);
+		(*cmd)->args = malloc(sizeof(char *));
+		if (!(*cmd)->args)
+			error_exit(MALLOC);
+		(*cmd)->args[0] = NULL;
+		return ;
 	}
-	return (1);
+	new_args = malloc(sizeof(char *) * (count + 1));
+	if (!new_args)
+		error_exit(MALLOC);
+	j = 0;
+	while (j < count)
+	{
+		new_args[j] = ft_strdup((*cmd)->args[i + j]);
+		j++;
+	}
+	new_args[j] = NULL;
+	free_all((*cmd)->args);
+	(*cmd)->args = new_args;
 }
 
-// parseされた内容をコマンドとassign　それぞれに分類される
 static void	separate_assignments(t_cmd *cmd)
 {
 	int		i;
-	int		j;
-	int		count;
-	char	**new_args;
 	t_list	*new_node;
+	int		count;
 
 	while (cmd)
 	{
@@ -59,88 +62,14 @@ static void	separate_assignments(t_cmd *cmd)
 			count = 0;
 			while (cmd->args[i + count])
 				count++;
-			if (count == 0)
-			{
-				free_all(cmd->args);
-				cmd->args = malloc(sizeof(char *));
-				if (!cmd->args)
-					error_exit(MALLOC);
-				cmd->args[0] = NULL;
-			}
-			else
-			{
-				new_args = malloc(sizeof(char *) * (count + 1));
-				if (!new_args)
-					error_exit(MALLOC);
-				j = 0;
-				while (j < count)
-				{
-					new_args[j] = ft_strdup(cmd->args[i + j]);
-					j++;
-				}
-				new_args[j] = NULL;
-				free_all(cmd->args);
-				cmd->args = new_args;
-			}
+			classify_assignments(&cmd, i, count);
 		}
 		cmd = cmd->next;
 	}
 }
 
-static int		take_off_quotes(char *str)
-{
-	int		i;
-	int		j;
-	char	quote;
-	int		has_quote;
-
-	i = 0;
-	j = 0;
-	has_quote = 0;
-	while (str[i])
-	{
-		if (str[i] == '\'' || str[i] == '\"')
-		{
-			has_quote = 1;
-			quote = str[i++];
-			while (str[i] && str[i] != quote)
-			{
-				str[j++] = str[i++];
-			}
-			if (str[i] == quote)
-				i++;
-		}
-		else
-			str[j++] = str[i++];
-	}
-	str[j] = '\0';
-	return (has_quote);
-}
-
-static int	handle_redirect(char **tokens, int *i, t_cmd **head_cmd,
-		t_cmd **current)
-{
-	t_redir	*redir;
-	int		is_quoted;
-
-	check_current_cmd(head_cmd, current);
-	if (!tokens[*i + 1] || !is_valid_target(tokens[*i + 1]))
-	{
-		ft_putendl_fd("minishell: syntax error", 2);
-		return (-1);
-	}
-	is_quoted = 0;
-	if (get_redir_type(tokens[*i]) == R_HDOC)
-		is_quoted = take_off_quotes(tokens[*i + 1]);
-	redir = new_redir(get_redir_type(tokens[*i]), tokens[*i + 1]);
-	redir->heredoc_quote = is_quoted;
-	redir_add_back(&(*current)->redirs, redir);
-	*i = *i + 2;
-	return (0);
-}
-
 int	handle_current_token(char **tokens, int *i, t_cmd **head_cmd,
-	t_cmd **current)
+		t_cmd **current)
 {
 	if (is_redirect(tokens[*i]))
 	{
@@ -181,12 +110,31 @@ static int	invalid_pipe_syntax(char **tokens)
 	return (0);
 }
 
+int	parse_tokens(char **tokens, t_cmd **head_cmd)
+{
+	int		i;
+	t_cmd	*current;
+
+	i = 0;
+	current = NULL;
+	while (tokens[i])
+	{
+		if (handle_current_token(tokens, &i, head_cmd, &current) == -1)
+			return (1);
+	}
+	if (!*head_cmd)
+		return (syntax_error(), free_all(tokens), 1);
+	handle_redirect_only(*head_cmd);
+	separate_assignments(*head_cmd);
+	free_all(tokens);
+	return (0);
+}
+
 t_cmd	*parse_input(char *input)
 {
 	char	**tokens;
-	int		i;
 	t_cmd	*head_cmd;
-	t_cmd	*current;
+	int		has_error;
 
 	if (!input)
 		return (NULL);
@@ -200,18 +148,9 @@ t_cmd	*parse_input(char *input)
 		return (NULL);
 	}
 	head_cmd = NULL;
-	current = NULL;
-	i = 0;
-	while (tokens[i])
-	{
-		if (handle_current_token(tokens, &i, &head_cmd, &current) == -1)
-			return (NULL);
-	}
-	if (!head_cmd)
-		return (syntax_error(), free_all(tokens), NULL);
-	handle_redirect_only(head_cmd);
-	separate_assignments(head_cmd);
-	free_all(tokens);
+	has_error = parse_tokens(tokens, &head_cmd);
+	if (has_error)
+		return (NULL);
 	return (head_cmd);
 }
 

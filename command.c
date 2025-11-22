@@ -6,7 +6,7 @@
 /*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 15:34:41 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/22 16:08:34 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/22 23:02:34 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,13 @@ int	run_normal_command(t_cmd *cmds, t_pipe_fds *pipe_fds, t_data *data)
 	if (pid == -1)
 		error_exit(FORK);
 	if (pid == 0)
-		run_normal_command_child(cmds, pipe_fds, data);
+		return (run_normal_command_child(cmds, pipe_fds, data));
 	else
 		parent_process(pipe_fds, pid, &data->exit_status);
 	return (0);
 }
 
-static void	builtin_without_pipe(t_cmd *cmds, t_data *data)
+static int	builtin_without_pipe(t_cmd *cmds, t_data *data)
 {
 	int	builtin_status;
 
@@ -62,14 +62,15 @@ static void	builtin_without_pipe(t_cmd *cmds, t_data *data)
 		expand_redirs(cmds->redirs, data);
 		if (cmds->assigns)
 			handle_assignment_only(cmds->assigns, data);
-		return ;
+		return (1);
 	}
 	builtin_status = exec_builtin_fn(cmds, data);
 	if (builtin_status != -1)
 	{
 		data->exit_status = builtin_status;
-		return ;
+		return (1);
 	}
+	return (0);
 }
 
 int	run_last_command_child(t_cmd *cmds, t_pipe_fds *pipe_fds, t_data *data)
@@ -99,12 +100,15 @@ int	run_last_command(t_cmd *cmds, t_pipe_fds *pipe_fds, t_data *data)
 	pid_t	pid;
 
 	if (pipe_fds->prev_read_fd == -1)
-		builtin_without_pipe(cmds, data);
+	{
+		if (builtin_without_pipe(cmds, data))
+			return (0);
+	}
 	pid = fork();
 	if (pid == -1)
 		error_exit(FORK);
 	if (pid == 0)
-		run_last_command_child(cmds, pipe_fds, data);
+		return (run_last_command_child(cmds, pipe_fds, data));
 	else
 		parent_process(pipe_fds, pid, &data->exit_status);
 	return (0);

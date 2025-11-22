@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 14:27:32 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/16 15:55:22 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/22 16:15:47 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,26 @@ void	handle_redirect_only(t_cmd *head_cmd)
 			head_cmd->args[0] = NULL;
 		}
 	}
+}
+
+int	handle_redirect(char **tokens, int *i, t_cmd **head_cmd,
+		t_cmd **current)
+{
+	t_redir	*redir;
+	int		is_quoted;
+
+	check_current_cmd(head_cmd, current);
+	if (!tokens[*i + 1] || !is_valid_target(tokens[*i + 1]))
+	{
+		ft_putendl_fd("minishell: syntax error", 2);
+		return (-1);
+	}
+	is_quoted = 0;
+	if (get_redir_type(tokens[*i]) == R_HDOC)
+		is_quoted = take_off_quotes(tokens[*i + 1]);
+	redir = new_redir(get_redir_type(tokens[*i]), tokens[*i + 1]);
+	redir->heredoc_quote = is_quoted;
+	redir_add_back(&(*current)->redirs, redir);
+	*i = *i + 2;
+	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/10 21:07:16 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/21 16:38:22 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/22 16:15:04 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,25 @@ int	update_existing_env(t_env *env_list, char *key, char *value)
 		current = current->next;
 	}
 	return (0);
+}
+
+void	update_env_list(t_env **env_list, char *key, char *value)
+{
+	t_env	*target;
+
+	if (update_existing_env(*env_list, key, value))
+	{
+		target = *env_list;
+		while (target)
+		{
+			if (ft_strcmp(target->key, key) == 0)
+			{
+				target->is_exported = 1;
+				break ;
+			}
+			target = target->next;
+		}
+	}
+	else
+		add_env_back(env_list, new_env(key, value, 1));
 }
