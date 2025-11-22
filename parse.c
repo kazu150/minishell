@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:35:42 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/22 15:13:06 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/22 16:07:32 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static int	is_assignment(char *str)
 	if (!str)
 		return (0);
 	equal_pos = ft_strchr(str, '=');
-	if(!equal_pos || equal_pos == str)
+	if (!equal_pos || equal_pos == str)
 		return (0);
 	if (ft_isdigit(str[0]))
 		return (0);
@@ -34,7 +34,6 @@ static int	is_assignment(char *str)
 	return (1);
 }
 
-// parseされた内容をコマンドとassign　それぞれに分類される
 static void	separate_assignments(t_cmd *cmd)
 {
 	int		i;
@@ -87,7 +86,7 @@ static void	separate_assignments(t_cmd *cmd)
 	}
 }
 
-static int		take_off_quotes(char *str)
+static int	take_off_quotes(char *str)
 {
 	int		i;
 	int		j;
@@ -104,9 +103,7 @@ static int		take_off_quotes(char *str)
 			has_quote = 1;
 			quote = str[i++];
 			while (str[i] && str[i] != quote)
-			{
 				str[j++] = str[i++];
-			}
 			if (str[i] == quote)
 				i++;
 		}
@@ -140,7 +137,7 @@ static int	handle_redirect(char **tokens, int *i, t_cmd **head_cmd,
 }
 
 int	handle_current_token(char **tokens, int *i, t_cmd **head_cmd,
-	t_cmd **current)
+		t_cmd **current)
 {
 	if (is_redirect(tokens[*i]))
 	{
@@ -181,12 +178,31 @@ static int	invalid_pipe_syntax(char **tokens)
 	return (0);
 }
 
+int	parse_tokens(char **tokens, t_cmd **head_cmd)
+{
+	int		i;
+	t_cmd	*current;
+
+	i = 0;
+	current = NULL;
+	while (tokens[i])
+	{
+		if (handle_current_token(tokens, &i, head_cmd, &current) == -1)
+			return (1);
+	}
+	if (!*head_cmd)
+		return (syntax_error(), free_all(tokens), 1);
+	handle_redirect_only(*head_cmd);
+	separate_assignments(*head_cmd);
+	free_all(tokens);
+	return (0);
+}
+
 t_cmd	*parse_input(char *input)
 {
 	char	**tokens;
-	int		i;
 	t_cmd	*head_cmd;
-	t_cmd	*current;
+	int		has_error;
 
 	if (!input)
 		return (NULL);
@@ -200,18 +216,9 @@ t_cmd	*parse_input(char *input)
 		return (NULL);
 	}
 	head_cmd = NULL;
-	current = NULL;
-	i = 0;
-	while (tokens[i])
-	{
-		if (handle_current_token(tokens, &i, &head_cmd, &current) == -1)
-			return (NULL);
-	}
-	if (!head_cmd)
-		return (syntax_error(), free_all(tokens), NULL);
-	handle_redirect_only(head_cmd);
-	separate_assignments(head_cmd);
-	free_all(tokens);
+	has_error = parse_tokens(tokens, &head_cmd);
+	if (has_error)
+		return (NULL);
 	return (head_cmd);
 }
 
