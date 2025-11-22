@@ -6,7 +6,7 @@
 /*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 15:27:46 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/22 16:07:29 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/22 23:43:33 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,38 @@ void	handle_assignment_only(t_list *assigns, t_data *data)
 	}
 }
 
+static char	**create_new_envp_array(char **base_envp, int count, t_list *assigns, int i)
+{
+	char	**new_envp;
+	int		j;
+	t_list	*tmp;
+
+	new_envp = malloc(sizeof(char *) * (count + i + 1));
+	if (!new_envp)
+		error_exit(MALLOC);
+	j = 0;
+	while (j < count)
+	{
+		new_envp[j] = base_envp[j];
+		j++;
+	}
+	tmp = assigns;
+	while (tmp)
+	{
+		new_envp[j] = ft_strdup((char *)tmp->content);
+		j++;
+		tmp = tmp->next;
+	}
+	new_envp[j] = NULL;
+	return (new_envp);
+}
+
 char	**build_envp_with_assigns(t_env *env_list, t_list *assigns)
 {
 	char	**base_envp;
 	char	**new_envp;
 	int		count;
 	int		i;
-	int		j;
 	t_list	*tmp;
 
 	base_envp = env_list_to_envp(env_list);
@@ -55,24 +80,25 @@ char	**build_envp_with_assigns(t_env *env_list, t_list *assigns)
 		i++;
 		tmp = tmp->next;
 	}
-	new_envp = malloc(sizeof(char *) * (count + i + 1));
-	if (!new_envp)
-		error_exit(MALLOC);
-	j = 0;
-	while (j < count)
-	{
-		new_envp[j] = base_envp[j];
-		j++;
-	}
+	new_envp = create_new_envp_array(base_envp, count, assigns, i);
+	// new_envp = malloc(sizeof(char *) * (count + i + 1));
+	// if (!new_envp)
+	// 	error_exit(MALLOC);
+	// j = 0;
+	// while (j < count)
+	// {
+	// 	new_envp[j] = base_envp[j];
+	// 	j++;
+	// }
 	free(base_envp);
-	tmp = assigns;
-	while (tmp)
-	{
-		new_envp[j] = ft_strdup((char *)tmp->content);
-		j++;
-		tmp = tmp->next;
-	}
-	new_envp[j] = NULL;
+	// tmp = assigns;
+	// while (tmp)
+	// {
+	// 	new_envp[j] = ft_strdup((char *)tmp->content);
+	// 	j++;
+	// 	tmp = tmp->next;
+	// }
+	// new_envp[j] = NULL;
 	return (new_envp);
 }
 
