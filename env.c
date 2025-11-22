@@ -25,7 +25,7 @@ char	**env_list_to_envp(t_env *env_list)
 	list_current = env_list;
 	while (list_current)
 	{
-		if (list_current->is_exported)
+		if (list_current->is_exported && list_current->value)
 			count++;
 		list_current = list_current->next;
 	}
@@ -35,7 +35,7 @@ char	**env_list_to_envp(t_env *env_list)
 	list_current = env_list;
 	while (list_current)
 	{
-		if (list_current->is_exported)
+		if (list_current->is_exported && list_current->value)
 		{
 			tmp = ft_strjoin(list_current->key, "=");
 			envp[i] = ft_strjoin(tmp, list_current->value);
@@ -59,7 +59,7 @@ t_env	*new_env(char *key, char *value, int is_exported)
 	if (value)
 		node->value = strdup(value);
 	else
-		node->value = strdup("");
+		node->value = NULL;
 	node->is_exported = is_exported;
 	node->next = NULL;
 	return (node);
