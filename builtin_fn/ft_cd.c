@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 20:59:29 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/16 13:35:43 by codespace        ###   ########.fr       */
+/*   Updated: 2025/11/22 09:31:07 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ int	ft_cd(char *path, t_env **env_list)
 	home = ft_getenv(*env_list, "HOME");
 	if (path == NULL)
 		target_path = home;
+	else if (path[0] == '~')
+		target_path = ft_strjoin(home, &path[1]);
 	else
 		target_path = path;
 	res = chdir(target_path);
@@ -63,5 +65,7 @@ int	ft_cd(char *path, t_env **env_list)
 	pwd = getcwd(NULL, 0);
 	ft_setenv("OLDPWD", old_pwd, env_list);
 	ft_setenv("PWD", pwd, env_list);
+	if (path && path[0] == '~')
+		free(target_path);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/22 14:29:56 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/22 13:38:00 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ typedef struct s_redir
 {
 	t_redir_type	type;
 	char			*target;
+	int				heredoc_quote;
 	struct s_redir	*next;
 }					t_redir;
 
@@ -161,7 +162,7 @@ char				**expand_all(char **strs, t_data *data);
 char				**expand_args(char **args, t_data *data);
 int					find_unused_fd(int fd, t_fds fds);
 t_fds				expand_redirs(t_redir *redirs, t_data *data);
-int					setup_heredoc(char *target);
+int					setup_heredoc(char *target, int quoted, t_data *data);
 int					ft_echo(char **args);
 int					ft_cd(char *path, t_env **env_list);
 int					ft_pwd(void);
