@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/22 15:14:53 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/22 15:45:23 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,4 +205,5 @@ void							handle_redirect_only(t_cmd *head_cmd);
 int								is_all_space(char *line);
 int								update_existing_env(t_env *env_list, char *key,
 									char *value);
+void							update_env_list(t_env **env_list, char *key, char *value);
 #endif
