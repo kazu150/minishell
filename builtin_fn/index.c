@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   index.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <yang@student.42tokyo.jp>            +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/26 17:22:51 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/18 15:43:45 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/22 14:30:47 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static int	exec_fn(t_cmd *cmds, t_data *data)
 	if (!ft_strcmp(cmds->args[0], "export"))
 		result = ft_export(cmds->args, &data->env_list);
 	if (!ft_strcmp(cmds->args[0], "exit"))
-		ft_exit(&cmds, data);
+		result = ft_exit(&cmds, data);
 	if (!ft_strcmp(cmds->args[0], "unset"))
 		result = ft_unset(cmds->args, &data->env_list);
 	return (result);

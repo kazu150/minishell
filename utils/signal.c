@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 15:32:07 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/20 13:03:23 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/22 14:47:24 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 volatile sig_atomic_t	g_sigint_received = 0;
-
 
 void	sig_int_handler(int signo)
 {

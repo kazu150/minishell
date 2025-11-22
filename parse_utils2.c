@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 22:41:26 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/21 16:56:33 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/22 15:15:10 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ t_redir	*new_redir(t_redir_type type, char *target)
 		error_exit(MALLOC);
 	node->type = type;
 	node->target = ft_strdup(target);
+	node->heredoc_quote = 0;
 	if (!node->target)
 	{
 		free(node);

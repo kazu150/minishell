@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 16:25:02 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/09/30 15:03:31 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/22 07:30:47 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ typedef struct s_list
 }					t_list;
 
 int					ft_atoi(const char *nptr);
+long long			ft_atoll(const char *nptr);
 void				ft_bzero(void *s, size_t n);
 void				*ft_calloc(size_t nmemb, size_t size);
 int					ft_isalnum(int c);

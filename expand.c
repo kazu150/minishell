@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 13:53:03 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/20 18:27:52 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/21 19:31:53 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ static int	handle_input_redir(t_redir *redirs, t_data *data, t_fds *fds)
 	if (redirs->type == R_IN)
 		fd = open(target, O_RDONLY);
 	else if (redirs->type == R_HDOC)
-		fd = setup_heredoc(redirs->target);
+		fd = setup_heredoc(redirs->target, redirs->heredoc_quote, data);
 	if (fd == -1)
 	{
 		perror(target);
