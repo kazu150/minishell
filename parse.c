@@ -6,33 +6,11 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:35:42 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/22 16:07:32 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/22 16:11:47 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	is_assignment(char *str)
-{
-	int		i;
-	char	*equal_pos;
-
-	if (!str)
-		return (0);
-	equal_pos = ft_strchr(str, '=');
-	if (!equal_pos || equal_pos == str)
-		return (0);
-	if (ft_isdigit(str[0]))
-		return (0);
-	i = 0;
-	while (str + i < equal_pos)
-	{
-		if (!ft_isalnum(str[i]) && str[i] != '_')
-			return (0);
-		i++;
-	}
-	return (1);
-}
 
 static void	separate_assignments(t_cmd *cmd)
 {
@@ -84,56 +62,6 @@ static void	separate_assignments(t_cmd *cmd)
 		}
 		cmd = cmd->next;
 	}
-}
-
-static int	take_off_quotes(char *str)
-{
-	int		i;
-	int		j;
-	char	quote;
-	int		has_quote;
-
-	i = 0;
-	j = 0;
-	has_quote = 0;
-	while (str[i])
-	{
-		if (str[i] == '\'' || str[i] == '\"')
-		{
-			has_quote = 1;
-			quote = str[i++];
-			while (str[i] && str[i] != quote)
-				str[j++] = str[i++];
-			if (str[i] == quote)
-				i++;
-		}
-		else
-			str[j++] = str[i++];
-	}
-	str[j] = '\0';
-	return (has_quote);
-}
-
-static int	handle_redirect(char **tokens, int *i, t_cmd **head_cmd,
-		t_cmd **current)
-{
-	t_redir	*redir;
-	int		is_quoted;
-
-	check_current_cmd(head_cmd, current);
-	if (!tokens[*i + 1] || !is_valid_target(tokens[*i + 1]))
-	{
-		ft_putendl_fd("minishell: syntax error", 2);
-		return (-1);
-	}
-	is_quoted = 0;
-	if (get_redir_type(tokens[*i]) == R_HDOC)
-		is_quoted = take_off_quotes(tokens[*i + 1]);
-	redir = new_redir(get_redir_type(tokens[*i]), tokens[*i + 1]);
-	redir->heredoc_quote = is_quoted;
-	redir_add_back(&(*current)->redirs, redir);
-	*i = *i + 2;
-	return (0);
 }
 
 int	handle_current_token(char **tokens, int *i, t_cmd **head_cmd,
