@@ -15,7 +15,7 @@
 char	**env_list_to_envp(t_env *env_list)
 {
 	t_env	*list_current;
-	int 	i;
+	int		i;
 	char	**envp;
 	char	*tmp;
 
