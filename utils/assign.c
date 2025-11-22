@@ -6,7 +6,7 @@
 /*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 15:27:46 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/23 00:02:39 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/23 00:09:24 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,69 +87,44 @@ char	**build_envp_with_assigns(t_env *env_list, t_list *assigns)
 	return (new_envp);
 }
 
-void	create_temporary_assigns(t_list *tmp, t_data *data, char *equal)
+static void	create_temporary_assigns(t_list *tmp, t_data *data, char *equal)
 {
 	char	*key;
 	char	*value;
 	t_env	*node;
 
-		key = ft_substr((char *)tmp->content, 0,
-				equal - (char *)tmp->content);
-		value = ft_strdup(equal + 1);
-		if (update_existing_env(data->env_list, key, value))
+	key = ft_substr((char *)tmp->content, 0,
+			equal - (char *)tmp->content);
+	value = ft_strdup(equal + 1);
+	if (update_existing_env(data->env_list, key, value))
+	{
+		node = data->env_list;
+		while (node)
 		{
-			node = data->env_list;
-			while (node)
+			if (!ft_strcmp(node->key, key))
 			{
-				if (!ft_strcmp(node->key, key))
-				{
-					node->is_exported = 1;
-					break ;
-				}
-				node = node->next;
+				node->is_exported = 1;
+				break ;
 			}
+			node = node->next;
 		}
-		else
-			add_env_back(&data->env_list, new_env(key, value, 1));
-		free_key_value(key, value);
+	}
+	else
+		add_env_back(&data->env_list, new_env(key, value, 1));
+	free_key_value(key, value);
 }
-
 
 void	export_temporary_assigns(t_list *assigns, t_data *data)
 {
 	t_list	*tmp;
 	char	*equal;
-	// char	*key;
-	// char	*value;
-	// t_env	*node;
 
 	tmp = assigns;
 	while (tmp)
 	{
 		equal = ft_strchr((char *)tmp->content, '=');
 		if (equal)
-		{
 			create_temporary_assigns(tmp, data, equal);
-		// 	key = ft_substr((char *)tmp->content, 0,
-		// 			equal - (char *)tmp->content);
-		// 	value = ft_strdup(equal + 1);
-		// 	if (update_existing_env(data->env_list, key, value))
-		// 	{
-		// 		node = data->env_list;
-		// 		while (node)
-		// 		{
-		// 			if (!ft_strcmp(node->key, key))
-		// 			{
-		// 				node->is_exported = 1;
-		// 				break ;
-		// 			}
-		// 			node = node->next;
-		// 		}
-		// 	}
-			// else
-			// 	add_env_back(&data->env_list, new_env(key, value, 1));
-			// free_key_value(key, value);
-		}
 		tmp = tmp->next;
 	}
 }
