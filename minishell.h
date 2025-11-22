@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/22 14:49:01 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/22 15:14:53 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ typedef struct s_redir
 typedef struct s_cmd
 {
 	char						**args;
+	t_list						*assigns;
 	t_redir						*redirs;
 	struct s_cmd				*next;
 }								t_cmd;
@@ -82,6 +83,7 @@ typedef struct s_env
 {
 	char						*key;
 	char						*value;
+	int							is_exported;
 	struct s_env				*next;
 }								t_env;
 
@@ -177,7 +179,8 @@ int								ft_pwd(void);
 int								ft_unset(char **arg, t_env **env_list);
 void							message_exit(char *message, int exit_type);
 
-t_env							*new_env(char *key, char *value);
+t_env							*new_env(char *key, char *value,
+									int is_exported);
 void							add_env_back(t_env **lst, t_env *new);
 t_env							*init_env(void);
 int								ft_env(char **args, t_env *env_list);

@@ -23,27 +23,32 @@ char	**env_list_to_envp(t_env *env_list)
 	count = 0;
 	i = 0;
 	list_current = env_list;
-	while (env_list)
+	while (list_current)
 	{
-		count++;
-		env_list = env_list->next;
+		if (list_current->is_exported)
+			count++;
+		list_current = list_current->next;
 	}
 	envp = malloc(sizeof(char *) * (count + 1));
 	if (!envp)
 		return (NULL);
+	list_current = env_list;
 	while (list_current)
 	{
-		tmp = ft_strjoin(list_current->key, "=");
-		envp[i] = ft_strjoin(tmp, list_current->value);
-		free(tmp);
-		i++;
+		if (list_current->is_exported)
+		{
+			tmp = ft_strjoin(list_current->key, "=");
+			envp[i] = ft_strjoin(tmp, list_current->value);
+			free(tmp);
+			i++;
+		}
 		list_current = list_current->next;
 	}
 	envp[i] = 0;
 	return (envp);
 }
 
-t_env	*new_env(char *key, char *value)
+t_env	*new_env(char *key, char *value, int is_exported)
 {
 	t_env	*node;
 
@@ -55,6 +60,7 @@ t_env	*new_env(char *key, char *value)
 		node->value = strdup(value);
 	else
 		node->value = strdup("");
+	node->is_exported = is_exported;
 	node->next = NULL;
 	return (node);
 }
@@ -102,7 +108,7 @@ t_env	*init_env(void)
 	{
 		env_split = ft_split(environ[i], '=');
 		if (env_split && env_split[0])
-			add_env_back(&env_list, new_env(env_split[0], env_split[1]));
+			add_env_back(&env_list, new_env(env_split[0], env_split[1], 1));
 		free_split(env_split);
 		i++;
 	}

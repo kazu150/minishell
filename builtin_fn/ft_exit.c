@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 17:15:12 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/22 14:29:28 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/22 15:12:33 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,12 +91,9 @@ int	ft_exit(t_cmd **cmds, t_data *data)
 {
 	char	*exit_code;
 
-	if (cmds && *cmds)
-		printf("exit\n");
+	printf("exit\n");
 	if (!*cmds || !(*cmds)->args || !(*cmds)->args[0] || !(*cmds)->args[1])
-	{
 		cleanup_and_exit(cmds, &data->env_list, data->exit_status);
-	}
 	exit_code = (*cmds)->args[1];
 	if ((*cmds)->args[2])
 	{
