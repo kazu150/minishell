@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 17:19:43 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/22 17:19:57 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/22 17:23:43 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	count_list(t_env *list_current)
 {
-	int count;
+	int	count;
 
 	count = 0;
 	while (list_current)
