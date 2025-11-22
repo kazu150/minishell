@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/22 17:26:40 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/22 17:46:51 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,4 +214,6 @@ int								find_unused_fd(int fd, t_fds fds);
 int								count_list(t_env *list_current);
 void							classify_assignments(t_cmd **cmd, int i,
 									int count);
+void							initialize(t_data *data);
+void							init_fds(t_pipe_fds *pipe_fds);
 #endif
