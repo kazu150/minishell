@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/22 13:38:00 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/22 14:49:01 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,20 +39,20 @@ extern volatile sig_atomic_t	g_sigint_received;
 # define MALLOC "malloc"
 # define PIPE_SIGN "|"
 
-extern char			**environ;
+extern char						**environ;
 typedef enum e_node_type
 {
 	NODE_COMMAND,
 	NODE_PIPE,
 	NODE_REDIR
-}					t_node_type;
+}								t_node_type;
 
 typedef struct s_split
 {
-	int				i;
-	int				j;
-	int				token_len;
-}					t_split;
+	int							i;
+	int							j;
+	int							token_len;
+}								t_split;
 
 typedef enum e_redir_type
 {
@@ -61,136 +61,145 @@ typedef enum e_redir_type
 	R_OUT,
 	R_APP,
 	R_HDOC
-}					t_redir_type;
+}								t_redir_type;
 
 typedef struct s_redir
 {
-	t_redir_type	type;
-	char			*target;
-	int				heredoc_quote;
-	struct s_redir	*next;
-}					t_redir;
+	t_redir_type				type;
+	char						*target;
+	int							heredoc_quote;
+	struct s_redir				*next;
+}								t_redir;
 
 typedef struct s_cmd
 {
-	char			**args;
-	t_redir			*redirs;
-	struct s_cmd	*next;
-}					t_cmd;
+	char						**args;
+	t_redir						*redirs;
+	struct s_cmd				*next;
+}								t_cmd;
 
 typedef struct s_env
 {
-	char			*key;
-	char			*value;
-	struct s_env	*next;
-}					t_env;
+	char						*key;
+	char						*value;
+	struct s_env				*next;
+}								t_env;
 
 typedef struct s_var
 {
-	int				start;
-	int				end;
-}					t_var;
+	int							start;
+	int							end;
+}								t_var;
 
 typedef struct s_fds
 {
-	int				read_fd;
-	int				write_fd;
-}					t_fds;
+	int							read_fd;
+	int							write_fd;
+}								t_fds;
 
 typedef struct s_pipe_fds
 {
-	int				prev_read_fd;
-	int				pipe_fd[2];
-}					t_pipe_fds;
+	int							prev_read_fd;
+	int							pipe_fd[2];
+}								t_pipe_fds;
 
 typedef struct s_data
 {
-	t_env			*env_list;
-	int				exit_status;
-}					t_data;
+	t_env						*env_list;
+	int							exit_status;
+}								t_data;
 
-void				parent_process(t_pipe_fds *pipe_fds, pid_t pid,
-						int *status);
-int					run_normal_command(t_cmd *cmds, t_pipe_fds *pipe_fds,
-						t_data *data);
-int					run_last_command(t_cmd *cmds, t_pipe_fds *pipe_fds,
-						t_data *data);
-void				append_arg(t_cmd *cmd, char *token);
-t_cmd				*parse_input(char *input);
-void				free_all(char **array);
-t_cmd				*new_cmd(void);
-void				cmd_add_back(t_cmd **lst, t_cmd *new);
-t_redir				*new_redir(t_redir_type type, char *target);
-t_redir_type		get_redir_type(char *token);
-int					is_redirect(char *s);
-int					is_valid_target(char *s);
-void				redir_add_back(t_redir **lst, t_redir *new);
-t_cmd				*check_current_cmd(t_cmd **head_cmd, t_cmd **current);
-void				syntax_error(void);
-int					output(pid_t pid, char **argv, int d_pipe[2], char **envp);
-int					input_child_process(char **argv, int d_pipe[2],
-						char **envp);
-int					output_child_process(char **argv, int pipe_in, char **envp);
-void				error_exit(char *error_target);
-char				**tokenize(const char *str);
-void				free_split(char **args);
-void				handle_command_path_error(t_cmd *cmds,
-						int has_permission_error, char **paths);
-char				*build_command_path(t_cmd *cmds, t_env **env_list, int i,
-						int has_permission_error);
-void				execve_error_exit(char *cmd);
-int					is_quote(char c);
-int					free_strs(char **strs, int count);
-int					is_delimiter(char str);
-int					is_letter(const char str);
-int					is_shift_operator(const char *str);
-void				copy_strs(int word_length, char *strs, const char *str);
-int					create_new_token(char **strs, const char *str, t_split s);
+void							parent_process(t_pipe_fds *pipe_fds, pid_t pid,
+									int *status);
+int								run_normal_command(t_cmd *cmds,
+									t_pipe_fds *pipe_fds, t_data *data);
+int								run_last_command(t_cmd *cmds,
+									t_pipe_fds *pipe_fds, t_data *data);
+void							append_arg(t_cmd *cmd, char *token);
+t_cmd							*parse_input(char *input);
+void							free_all(char **array);
+t_cmd							*new_cmd(void);
+void							cmd_add_back(t_cmd **lst, t_cmd *new);
+t_redir							*new_redir(t_redir_type type, char *target);
+t_redir_type					get_redir_type(char *token);
+int								is_redirect(char *s);
+int								is_valid_target(char *s);
+void							redir_add_back(t_redir **lst, t_redir *new);
+t_cmd							*check_current_cmd(t_cmd **head_cmd,
+									t_cmd **current);
+void							syntax_error(void);
+int								output(pid_t pid, char **argv, int d_pipe[2],
+									char **envp);
+int								input_child_process(char **argv, int d_pipe[2],
+									char **envp);
+int								output_child_process(char **argv, int pipe_in,
+									char **envp);
+void							error_exit(char *error_target);
+char							**tokenize(const char *str);
+void							free_split(char **args);
+void							handle_command_path_error(t_cmd *cmds,
+									int has_permission_error, char **paths);
+char							*build_command_path(t_cmd *cmds,
+									t_env **env_list, int i,
+									int has_permission_error);
+void							execve_error_exit(char *cmd);
+int								is_quote(char c);
+int								free_strs(char **strs, int count);
+int								is_delimiter(char str);
+int								is_letter(const char str);
+int								is_shift_operator(const char *str);
+void							copy_strs(int word_length, char *strs,
+									const char *str);
+int								create_new_token(char **strs, const char *str,
+									t_split s);
 
-int					ft_strcmp(char *s1, char *s2);
-char				*store_before_dollor(char *result, char *str,
-						int dollar_pos);
-char				*handle_dolloar_question(char *result, t_data *data);
-char				*ft_getenv(t_env *env_list, char *key);
-char				*expand_and_add_var(char *result, char *str, t_var var,
-						t_env *env_list);
-char				*add_after_var(char *result, char *str, int var_end,
-						t_data *data);
-char				*expand_with_var(char *str, t_data *data);
-char				*expand_token(char *str, t_data *data);
-char				**expand_all(char **strs, t_data *data);
-char				**expand_args(char **args, t_data *data);
-int					find_unused_fd(int fd, t_fds fds);
-t_fds				expand_redirs(t_redir *redirs, t_data *data);
-int					setup_heredoc(char *target, int quoted, t_data *data);
-int					ft_echo(char **args);
-int					ft_cd(char *path, t_env **env_list);
-int					ft_pwd(void);
-int					ft_unset(char **arg, t_env **env_list);
-void				message_exit(char *message, int exit_type);
+int								ft_strcmp(char *s1, char *s2);
+char							*store_before_dollor(char *result, char *str,
+									int dollar_pos);
+char							*handle_dolloar_question(char *result,
+									t_data *data);
+char							*ft_getenv(t_env *env_list, char *key);
+char							*expand_and_add_var(char *result, char *str,
+									t_var var, t_env *env_list);
+char							*add_after_var(char *result, char *str,
+									int var_end, t_data *data);
+char							*expand_with_var(char *str, t_data *data);
+char							*expand_token(char *str, t_data *data);
+char							**expand_all(char **strs, t_data *data);
+char							**expand_args(char **args, t_data *data);
+int								find_unused_fd(int fd, t_fds fds);
+t_fds							expand_redirs(t_redir *redirs, t_data *data);
+int								setup_heredoc(char *target, int quoted,
+									t_data *data);
+int								ft_echo(char **args);
+int								ft_cd(char *path, t_env **env_list);
+int								ft_pwd(void);
+int								ft_unset(char **arg, t_env **env_list);
+void							message_exit(char *message, int exit_type);
 
-t_env				*new_env(char *key, char *value);
-void				add_env_back(t_env **lst, t_env *new);
-t_env				*init_env(void);
-int					ft_env(char **args, t_env *env_list);
-int					handle_export_error(char *invalid_key);
-int					is_valid_export_key(const char *key);
-int					ft_export(char **args, t_env **env_list);
-int					ft_exit(t_cmd **cmds, t_data *data);
-void				free_exit(void *target, int exit_status);
-int					exec_builtin_fn(t_cmd *cmds, t_data *data);
-void				free_all(char **array);
-void				free_cmds(t_cmd **cmds);
-void				free_key_value(char *key, char *value);
-char				**env_list_to_envp(t_env *env_list);
-void				sig_int_handler(int signo);
-void				set_parent_signals(void);
-void				set_default_signals(void);
-void				handle_argument(char **tokens, int *i, t_cmd **head_cmd,
-						t_cmd **current);
-void				handle_pipe(t_cmd **head_cmd, t_cmd **current, int *i);
-void				handle_redirect_only(t_cmd *head_cmd);
-int					is_all_space(char *line);
-int					update_existing_env(t_env *env_list, char *key,
-						char *value);
+t_env							*new_env(char *key, char *value);
+void							add_env_back(t_env **lst, t_env *new);
+t_env							*init_env(void);
+int								ft_env(char **args, t_env *env_list);
+int								handle_export_error(char *invalid_key);
+int								is_valid_export_key(const char *key);
+int								ft_export(char **args, t_env **env_list);
+int								ft_exit(t_cmd **cmds, t_data *data);
+void							free_exit(void *target, int exit_status);
+int								exec_builtin_fn(t_cmd *cmds, t_data *data);
+void							free_all(char **array);
+void							free_cmds(t_cmd **cmds);
+void							free_key_value(char *key, char *value);
+char							**env_list_to_envp(t_env *env_list);
+void							sig_int_handler(int signo);
+void							set_parent_signals(void);
+void							set_default_signals(void);
+void							handle_argument(char **tokens, int *i,
+									t_cmd **head_cmd, t_cmd **current);
+void							handle_pipe(t_cmd **head_cmd, t_cmd **current,
+									int *i);
+void							handle_redirect_only(t_cmd *head_cmd);
+int								is_all_space(char *line);
+int								update_existing_env(t_env *env_list, char *key,
+									char *value);
 #endif

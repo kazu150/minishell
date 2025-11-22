@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 16:27:49 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/22 07:30:19 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/22 14:46:40 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ static int	is_space(char c)
 
 long long	ft_atoll(const char *nptr)
 {
-	int	i;
-	int	is_minus;
+	int			i;
+	int			is_minus;
 	long long	result;
 
 	is_minus = 0;

@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 18:53:34 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/20 18:27:34 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/22 14:47:11 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,6 @@ void	free_cmds(t_cmd **cmds)
 	t_cmd	*next;
 
 	current = *cmds;
-	// if (cmds == NULL)
-	// 	return ;
 	while (current)
 	{
 		next = current->next;

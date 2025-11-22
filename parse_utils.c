@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 22:38:03 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/22 07:33:45 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/22 14:47:57 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	message_exit(char *message, int exit_type)
 	exit(exit_type);
 }
 
-void	free_exit(void *target,  int exit_status)
+void	free_exit(void *target, int exit_status)
 {
 	free(target);
 	if (exit_status)

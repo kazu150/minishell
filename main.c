@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/20 18:30:19 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/22 14:48:29 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ static void	readline_roop(t_data *data)
 			g_sigint_received = 0;
 			if (cmds_first)
 				free_cmds(&cmds_first);
-			continue;
+			continue ;
 		}
 		if (cmds && cmds->args && !cmds->args[0])
 		{
