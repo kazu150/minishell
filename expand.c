@@ -6,13 +6,13 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 13:53:03 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/22 16:48:58 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/22 17:44:58 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*remove_quotes(char *s, size_t	i, size_t	j)
+static char	*remove_quotes(char *s, size_t i, size_t j)
 {
 	size_t	len;
 	char	quote;
@@ -66,6 +66,7 @@ char	**expand_all(char **strs, t_data *data)
 	}
 	return (strs);
 }
+
 static int	handle_input_redir(t_redir *redirs, t_data *data, t_fds *fds)
 {
 	int		fd;
