@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 14:55:23 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/02 19:13:47 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/21 19:30:18 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,10 @@ static int	write_all(int fd, const void *buf, size_t len)
 	return (0);
 }
 
-int	setup_heredoc(char *target)
+int	setup_heredoc(char *target, int quoted, t_data *data)
 {
 	char	*line;
+	char	*expanded_line;
 	int		fds[2];
 
 	pipe(fds);
@@ -47,6 +48,12 @@ int	setup_heredoc(char *target)
 		{
 			free(line);
 			break ;
+		}
+		if (!quoted)
+		{
+			expanded_line = expand_with_var(line, data);
+			free(line);
+			line = expanded_line;
 		}
 		if (write_all(fds[1], line, ft_strlen(line)) < 0)
 			return (-1);
