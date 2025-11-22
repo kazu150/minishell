@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/10 21:07:16 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/22 15:44:26 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/22 16:15:04 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	update_existing_env(t_env *env_list, char *key, char *value)
 	return (0);
 }
 
-void update_env_list(t_env **env_list, char *key, char *value)
+void	update_env_list(t_env **env_list, char *key, char *value)
 {
 	t_env	*target;
 

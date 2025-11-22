@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 18:39:47 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/22 15:44:35 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/22 16:15:21 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,8 @@ static t_env	*find_next_min(t_env *env_list, char *last_key)
 	current = env_list;
 	while (current)
 	{
-		if (current->is_exported && (last_key == NULL || ft_strcmp(current->key, last_key) > 0))
+		if (current->is_exported && (last_key == NULL || ft_strcmp(current->key,
+					last_key) > 0))
 		{
 			if (min_env == NULL || ft_strcmp(current->key, min_env->key) < 0)
 				min_env = current;
