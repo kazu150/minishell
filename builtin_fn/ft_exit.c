@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 17:15:12 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/22 14:17:43 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/22 14:29:28 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int	fits_in_ll(char *s)
 	return (0);
 }
 
-void	ft_exit(t_cmd **cmds, t_data *data)
+int	ft_exit(t_cmd **cmds, t_data *data)
 {
 	char	*exit_code;
 
@@ -102,7 +102,7 @@ void	ft_exit(t_cmd **cmds, t_data *data)
 	{
 		ft_putendl_fd("minishell: exit: too many arguments", 2);
 		data->exit_status = 1;
-		return ;
+		return (1);
 	}
 	if (!is_numeric(exit_code) || !fits_in_ll(exit_code))
 	{
@@ -112,4 +112,5 @@ void	ft_exit(t_cmd **cmds, t_data *data)
 		cleanup_and_exit(cmds, &data->env_list, 2);
 	}
 	cleanup_and_exit(cmds, &data->env_list, ft_atoll(exit_code));
+	return (0);
 }
