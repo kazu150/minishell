@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/22 15:14:53 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/22 16:36:03 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,8 @@ void							copy_strs(int word_length, char *strs,
 									const char *str);
 int								create_new_token(char **strs, const char *str,
 									t_split s);
-
+int								is_assignment(char *str);
+int								take_off_quotes(char *str);
 int								ft_strcmp(char *s1, char *s2);
 char							*store_before_dollor(char *result, char *str,
 									int dollar_pos);
@@ -199,10 +200,14 @@ void							set_parent_signals(void);
 void							set_default_signals(void);
 void							handle_argument(char **tokens, int *i,
 									t_cmd **head_cmd, t_cmd **current);
+int								handle_redirect(char **tokens, int *i,
+									t_cmd **head_cmd, t_cmd **current);
 void							handle_pipe(t_cmd **head_cmd, t_cmd **current,
 									int *i);
 void							handle_redirect_only(t_cmd *head_cmd);
 int								is_all_space(char *line);
 int								update_existing_env(t_env *env_list, char *key,
+									char *value);
+void							update_env_list(t_env **env_list, char *key,
 									char *value);
 #endif
