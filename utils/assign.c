@@ -6,7 +6,7 @@
 /*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 15:27:46 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/22 23:43:33 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/23 00:02:39 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ void	handle_assignment_only(t_list *assigns, t_data *data)
 		equal = ft_strchr((char *)tmp->content, '=');
 		if (equal)
 		{
-			key = ft_substr((char *)tmp->content, 0, equal - (char *)tmp->content);
+			key = ft_substr((char *)tmp->content, 0,
+					equal - (char *)tmp->content);
 			value = ft_strdup(equal + 1);
 			if (!update_existing_env(data->env_list, key, value))
 				add_env_back(&data->env_list, new_env(key, value, 0));
@@ -35,7 +36,8 @@ void	handle_assignment_only(t_list *assigns, t_data *data)
 	}
 }
 
-static char	**create_new_envp_array(char **base_envp, int count, t_list *assigns, int i)
+static char	**create_new_envp_array(char **base_envp, int count,
+	t_list *assigns, int i)
 {
 	char	**new_envp;
 	int		j;
@@ -81,34 +83,45 @@ char	**build_envp_with_assigns(t_env *env_list, t_list *assigns)
 		tmp = tmp->next;
 	}
 	new_envp = create_new_envp_array(base_envp, count, assigns, i);
-	// new_envp = malloc(sizeof(char *) * (count + i + 1));
-	// if (!new_envp)
-	// 	error_exit(MALLOC);
-	// j = 0;
-	// while (j < count)
-	// {
-	// 	new_envp[j] = base_envp[j];
-	// 	j++;
-	// }
 	free(base_envp);
-	// tmp = assigns;
-	// while (tmp)
-	// {
-	// 	new_envp[j] = ft_strdup((char *)tmp->content);
-	// 	j++;
-	// 	tmp = tmp->next;
-	// }
-	// new_envp[j] = NULL;
 	return (new_envp);
 }
+
+void	create_temporary_assigns(t_list *tmp, t_data *data, char *equal)
+{
+	char	*key;
+	char	*value;
+	t_env	*node;
+
+		key = ft_substr((char *)tmp->content, 0,
+				equal - (char *)tmp->content);
+		value = ft_strdup(equal + 1);
+		if (update_existing_env(data->env_list, key, value))
+		{
+			node = data->env_list;
+			while (node)
+			{
+				if (!ft_strcmp(node->key, key))
+				{
+					node->is_exported = 1;
+					break ;
+				}
+				node = node->next;
+			}
+		}
+		else
+			add_env_back(&data->env_list, new_env(key, value, 1));
+		free_key_value(key, value);
+}
+
 
 void	export_temporary_assigns(t_list *assigns, t_data *data)
 {
 	t_list	*tmp;
 	char	*equal;
-	char	*key;
-	char	*value;
-	t_env	*node;
+	// char	*key;
+	// char	*value;
+	// t_env	*node;
 
 	tmp = assigns;
 	while (tmp)
@@ -116,24 +129,26 @@ void	export_temporary_assigns(t_list *assigns, t_data *data)
 		equal = ft_strchr((char *)tmp->content, '=');
 		if (equal)
 		{
-			key = ft_substr((char *)tmp->content, 0, equal - (char *)tmp->content);
-			value = ft_strdup(equal + 1);
-			if (update_existing_env(data->env_list, key, value))
-			{
-				node = data->env_list;
-				while (node)
-				{
-					if (!ft_strcmp(node->key, key))
-					{
-						node->is_exported = 1;
-						break ;
-					}
-					node = node->next;
-				}
-			}
-			else
-				add_env_back(&data->env_list, new_env(key, value, 1));
-			free_key_value(key, value);
+			create_temporary_assigns(tmp, data, equal);
+		// 	key = ft_substr((char *)tmp->content, 0,
+		// 			equal - (char *)tmp->content);
+		// 	value = ft_strdup(equal + 1);
+		// 	if (update_existing_env(data->env_list, key, value))
+		// 	{
+		// 		node = data->env_list;
+		// 		while (node)
+		// 		{
+		// 			if (!ft_strcmp(node->key, key))
+		// 			{
+		// 				node->is_exported = 1;
+		// 				break ;
+		// 			}
+		// 			node = node->next;
+		// 		}
+		// 	}
+			// else
+			// 	add_env_back(&data->env_list, new_env(key, value, 1));
+			// free_key_value(key, value);
 		}
 		tmp = tmp->next;
 	}
