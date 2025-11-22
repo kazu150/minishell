@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/22 16:36:03 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/22 17:20:54 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,4 +210,6 @@ int								update_existing_env(t_env *env_list, char *key,
 									char *value);
 void							update_env_list(t_env **env_list, char *key,
 									char *value);
+int								find_unused_fd(int fd, t_fds fds);
+int								count_list(t_env *list_current);
 #endif

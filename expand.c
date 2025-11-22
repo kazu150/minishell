@@ -3,19 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 13:53:03 by cyang             #+#    #+#             */
-/*   Updated: 2025/11/21 19:31:53 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/22 16:48:58 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*remove_quotes(char *s)
+static char	*remove_quotes(char *s, size_t	i, size_t	j)
 {
-	size_t	i;
-	size_t	j;
 	size_t	len;
 	char	quote;
 	char	*res;
@@ -26,8 +24,6 @@ static char	*remove_quotes(char *s)
 	res = malloc(len + 1);
 	if (!res)
 		return (ft_strdup(s));
-	i = 0;
-	j = 0;
 	while (s[i])
 	{
 		if (s[i] == '"' || s[i] == '\'')
@@ -59,34 +55,17 @@ char	**expand_all(char **strs, t_data *data)
 		expanded = expand_token(old, data);
 		if (expanded != old)
 		{
-			clean = remove_quotes(expanded);
+			clean = remove_quotes(expanded, 0, 0);
 			free(expanded);
-			free(old);
-			strs[i] = clean;
 		}
 		else
-		{
-			clean = remove_quotes(old);
-			free(old);
-			strs[i] = clean;
-		}
+			clean = remove_quotes(old, 0, 0);
+		free(old);
+		strs[i] = clean;
 		i++;
 	}
 	return (strs);
 }
-
-int	find_unused_fd(int fd, t_fds fds)
-{
-	int	new_fd;
-
-	new_fd = fd + 1;
-	if (fds.read_fd == new_fd)
-		new_fd++;
-	if (fds.write_fd == new_fd)
-		new_fd++;
-	return (new_fd);
-}
-
 static int	handle_input_redir(t_redir *redirs, t_data *data, t_fds *fds)
 {
 	int		fd;
