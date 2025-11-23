@@ -1,27 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env_utils.c                                        :+:      :+:    :+:   */
+/*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/22 17:19:43 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/23 12:55:08 by cyang            ###   ########.fr       */
+/*   Created: 2025/11/22 16:03:44 by cyang             #+#    #+#             */
+/*   Updated: 2025/11/22 16:04:22 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	count_list(t_env *list_current)
+int	execute(t_cmd *cmds, t_env *env_list)
 {
-	int	count;
+	char	*cmd;
+	char	**envp;
 
-	count = 0;
-	while (list_current)
+	if (!cmds->args || cmds->args[0] == NULL)
 	{
-		if (list_current->is_exported && list_current->value)
-			count++;
-		list_current = list_current->next;
+		if (cmds->redirs)
+			exit(0);
+		else
+			handle_command_path_error(cmds, 1, 0);
 	}
-	return (count);
+	cmd = build_command_path(cmds, &env_list, 0, 0);
+	envp = build_envp_with_assigns(env_list, cmds->assigns);
+	if (execve(cmd, cmds->args, envp) == -1)
+	{
+		free_all(envp);
+		execve_error_exit(cmd);
+	}
+	return (0);
 }

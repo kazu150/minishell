@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/22 17:53:03 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/23 12:54:42 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,7 @@ static void	readline_roop(t_data *data)
 		if (g_sigint_received)
 		{
 			g_sigint_received = 0;
-			if (cmds_first)
-				free_cmds(&cmds_first);
-			continue ;
+			data->exit_status = 130;
 		}
 		if (cmds && cmds->args && !cmds->args[0] && !cmds->assigns)
 		{

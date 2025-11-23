@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/22 17:46:51 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/23 12:55:55 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@
 # include "libft/libft.h"
 # include <errno.h>
 # include <fcntl.h>
+# include <stdio.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
 # include <stdarg.h>
-# include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
 # include <sys/types.h>
@@ -119,6 +119,12 @@ int								run_last_command(t_cmd *cmds,
 									t_pipe_fds *pipe_fds, t_data *data);
 void							append_arg(t_cmd *cmd, char *token);
 t_cmd							*parse_input(char *input);
+void							handle_assignment_only(t_list *assigns,
+									t_data *data);
+char							**build_envp_with_assigns(t_env *env_list,
+									t_list *assigns);
+void							export_temporary_assigns(t_list *assigns,
+									t_data *data);
 void							free_all(char **array);
 t_cmd							*new_cmd(void);
 void							cmd_add_back(t_cmd **lst, t_cmd *new);
@@ -130,6 +136,8 @@ void							redir_add_back(t_redir **lst, t_redir *new);
 t_cmd							*check_current_cmd(t_cmd **head_cmd,
 									t_cmd **current);
 void							syntax_error(void);
+int								execute(t_cmd *cmds, t_env *env_list);
+void							connect_pipe(t_cmd *cmds, t_pipe_fds *pipe_fds);
 int								output(pid_t pid, char **argv, int d_pipe[2],
 									char **envp);
 int								input_child_process(char **argv, int d_pipe[2],
