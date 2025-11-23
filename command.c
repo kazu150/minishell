@@ -6,7 +6,7 @@
 /*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 15:34:41 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/23 14:48:26 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/23 16:09:37 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	run_normal_command(t_cmd *cmds, t_pipe_fds *pipe_fds, t_data *data)
 	if (pid == 0)
 		return (run_normal_command_child(cmds, pipe_fds, data));
 	else
-		parent_process(pipe_fds, pid, &data->exit_status);
+		parent_process(pipe_fds);
 	return (0);
 }
 
@@ -101,11 +101,8 @@ int	run_last_command(t_cmd *cmds, t_pipe_fds *pipe_fds, t_data *data)
 	int		status;
 	pid_t	wait_pid;
 
-	if (pipe_fds->prev_read_fd == -1)
-	{
-		if (builtin_without_pipe(cmds, data))
-			return (0);
-	}
+	if (pipe_fds->prev_read_fd == -1 && builtin_without_pipe(cmds, data))
+		return (0);
 	pid = fork();
 	if (pid == -1)
 		error_exit(FORK);
@@ -113,9 +110,12 @@ int	run_last_command(t_cmd *cmds, t_pipe_fds *pipe_fds, t_data *data)
 		return (run_last_command_child(cmds, pipe_fds, data));
 	else
 	{
-		parent_process(pipe_fds, pid, &data->exit_status);
-		while ((wait_pid = waitpid(-1, &status, 0)) > 0)
+		parent_process(pipe_fds);
+		while (1)
 		{
+			wait_pid = waitpid(-1, &status, 0);
+			if (wait_pid <= 0)
+				break ;
 			if (wait_pid == pid)
 				data->exit_status = status >> 8;
 		}

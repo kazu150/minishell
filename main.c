@@ -6,7 +6,7 @@
 /*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/23 12:54:42 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/23 15:39:10 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,9 @@ static void	readline_roop(t_data *data)
 			free_cmds(&cmds);
 			continue ;
 		}
+		signal(SIGINT, SIG_IGN);
 		command_roop(&cmds, &pipe_fds, &data);
+		set_parent_signals();
 		free_cmds(&cmds_first);
 	}
 }
