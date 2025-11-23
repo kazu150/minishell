@@ -6,39 +6,11 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:35:42 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/22 16:42:04 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/22 17:26:30 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void classify_assignments(t_cmd **cmd, int i, int count)
-{
-	char	**new_args;
-	int		j;
-
-	if (count == 0)
-	{
-		free_all((*cmd)->args);
-		(*cmd)->args = malloc(sizeof(char *));
-		if (!(*cmd)->args)
-			error_exit(MALLOC);
-		(*cmd)->args[0] = NULL;
-		return ;
-	}
-	new_args = malloc(sizeof(char *) * (count + 1));
-	if (!new_args)
-		error_exit(MALLOC);
-	j = 0;
-	while (j < count)
-	{
-		new_args[j] = ft_strdup((*cmd)->args[i + j]);
-		j++;
-	}
-	new_args[j] = NULL;
-	free_all((*cmd)->args);
-	(*cmd)->args = new_args;
-}
 
 static void	separate_assignments(t_cmd *cmd)
 {

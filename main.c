@@ -6,7 +6,7 @@
 /*   By: kaisogai <kaisogai@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:32:14 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/22 15:04:59 by kaisogai         ###   ########.fr       */
+/*   Updated: 2025/11/22 17:53:03 by kaisogai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,18 +56,16 @@ static void	handle_redirect_without_cmd(t_cmd *cmds, t_data *data)
 	}
 }
 
-static void	initialize(t_data *data)
+static void	command_roop(t_cmd **cmds, t_pipe_fds *pipe_fds, t_data **data)
 {
-	data->exit_status = 0;
-	set_parent_signals();
-	data->env_list = init_env();
-}
-
-static void	init_fds(t_pipe_fds *pipe_fds)
-{
-	pipe_fds->pipe_fd[0] = -1;
-	pipe_fds->pipe_fd[1] = -1;
-	pipe_fds->prev_read_fd = -1;
+	while (*cmds)
+	{
+		if ((*cmds)->next)
+			run_normal_command(*cmds, pipe_fds, *data);
+		else
+			run_last_command(*cmds, pipe_fds, *data);
+		*cmds = (*cmds)->next;
+	}
 }
 
 static void	readline_roop(t_data *data)
@@ -94,14 +92,7 @@ static void	readline_roop(t_data *data)
 			free_cmds(&cmds);
 			continue ;
 		}
-		while (cmds)
-		{
-			if (cmds->next)
-				run_normal_command(cmds, &pipe_fds, data);
-			else
-				run_last_command(cmds, &pipe_fds, data);
-			cmds = cmds->next;
-		}
+		command_roop(&cmds, &pipe_fds, &data);
 		free_cmds(&cmds_first);
 	}
 }
