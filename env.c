@@ -15,21 +15,13 @@
 char	**env_list_to_envp(t_env *env_list)
 {
 	t_env	*list_current;
-	int		count;
 	int		i;
 	char	**envp;
 	char	*tmp;
 
-	count = 0;
 	i = 0;
 	list_current = env_list;
-	while (list_current)
-	{
-		if (list_current->is_exported && list_current->value)
-			count++;
-		list_current = list_current->next;
-	}
-	envp = malloc(sizeof(char *) * (count + 1));
+	envp = malloc(sizeof(char *) * (count_list(list_current) + 1));
 	if (!envp)
 		return (NULL);
 	list_current = env_list;

@@ -6,7 +6,7 @@
 /*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/22 22:37:25 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/23 12:55:55 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,9 +119,12 @@ int								run_last_command(t_cmd *cmds,
 									t_pipe_fds *pipe_fds, t_data *data);
 void							append_arg(t_cmd *cmd, char *token);
 t_cmd							*parse_input(char *input);
-void							handle_assignment_only(t_list *assigns, t_data *data);
-char							**build_envp_with_assigns(t_env *env_list, t_list *assigns);
-void							export_temporary_assigns(t_list *assigns, t_data *data);
+void							handle_assignment_only(t_list *assigns,
+									t_data *data);
+char							**build_envp_with_assigns(t_env *env_list,
+									t_list *assigns);
+void							export_temporary_assigns(t_list *assigns,
+									t_data *data);
 void							free_all(char **array);
 t_cmd							*new_cmd(void);
 void							cmd_add_back(t_cmd **lst, t_cmd *new);
@@ -215,4 +218,10 @@ int								update_existing_env(t_env *env_list, char *key,
 									char *value);
 void							update_env_list(t_env **env_list, char *key,
 									char *value);
+int								find_unused_fd(int fd, t_fds fds);
+int								count_list(t_env *list_current);
+void							classify_assignments(t_cmd **cmd, int i,
+									int count);
+void							initialize(t_data *data);
+void							init_fds(t_pipe_fds *pipe_fds);
 #endif
