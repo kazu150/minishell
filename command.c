@@ -6,7 +6,7 @@
 /*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 15:34:41 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/23 12:54:36 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/23 14:48:26 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,8 @@ int	run_last_command_child(t_cmd *cmds, t_pipe_fds *pipe_fds, t_data *data)
 int	run_last_command(t_cmd *cmds, t_pipe_fds *pipe_fds, t_data *data)
 {
 	pid_t	pid;
+	int		status;
+	pid_t	wait_pid;
 
 	if (pipe_fds->prev_read_fd == -1)
 	{
@@ -110,6 +112,13 @@ int	run_last_command(t_cmd *cmds, t_pipe_fds *pipe_fds, t_data *data)
 	if (pid == 0)
 		return (run_last_command_child(cmds, pipe_fds, data));
 	else
+	{
 		parent_process(pipe_fds, pid, &data->exit_status);
+		while ((wait_pid = waitpid(-1, &status, 0)) > 0)
+		{
+			if (wait_pid == pid)
+				data->exit_status = status >> 8;
+		}
+	}
 	return (0);
 }
