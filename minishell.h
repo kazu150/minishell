@@ -6,7 +6,7 @@
 /*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 18:43:44 by kaisogai          #+#    #+#             */
-/*   Updated: 2025/11/23 12:55:55 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/23 15:47:07 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,8 +111,7 @@ typedef struct s_data
 	int							exit_status;
 }								t_data;
 
-void							parent_process(t_pipe_fds *pipe_fds, pid_t pid,
-									int *status);
+void							parent_process(t_pipe_fds *pipe_fds);
 int								run_normal_command(t_cmd *cmds,
 									t_pipe_fds *pipe_fds, t_data *data);
 int								run_last_command(t_cmd *cmds,
