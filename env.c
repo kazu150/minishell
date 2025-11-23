@@ -47,9 +47,9 @@ t_env	*new_env(char *key, char *value, int is_exported)
 	node = malloc(sizeof(t_env));
 	if (!node)
 		return (NULL);
-	node->key = strdup(key);
+	node->key = ft_strdup(key);
 	if (value)
-		node->value = strdup(value);
+		node->value = ft_strdup(value);
 	else
 		node->value = NULL;
 	node->is_exported = is_exported;
