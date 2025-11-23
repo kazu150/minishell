@@ -6,27 +6,14 @@
 /*   By: cyang <cyang@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 13:54:04 by codespace         #+#    #+#             */
-/*   Updated: 2025/11/23 12:56:21 by cyang            ###   ########.fr       */
+/*   Updated: 2025/11/23 13:05:51 by cyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// static int	is_quoted_no_vars(char *str, int len)
-// {
-// 	return ((str[0] == '\'' && str[len - 1] == '\'')
-// 		|| (str[0] == '\"' && str[len - 1] == '\"'
-// 			&& !ft_strchr(str, '$')));
-// }
-
 static char	*expand_double_quoted_with_vars(char *str, t_data *data)
 {
-	// char	*without_quote;
-	// char	*transform;
-
-	// without_quote = ft_substr(str, 1, len - 2);
-	// transform = expand_with_var(without_quote, data);
-	// free(without_quote);
 	return (expand_with_var(str, data));
 }
 
@@ -38,8 +25,6 @@ char	*expand_token(char *str, t_data *data)
 	if (!str)
 		return (NULL);
 	len = ft_strlen(str);
-	// if (is_quoted_no_vars(str, len))
-	// 	return (ft_substr(str, 1, len - 2));
 	if (str[0] == '\"' && str[len - 1] == '\"' && ft_strchr(str, '$'))
 		return (expand_double_quoted_with_vars(str, data));
 	else if (!ft_strchr(str, '\'') && !ft_strchr(str, '\"') && ft_strchr(str,
